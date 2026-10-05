@@ -1,0 +1,255 @@
+@model SearchViewModel
+@{
+    ViewData["Title"] = "Search";
+    var q = Model.Query;
+    string Num(decimal? v) => v is null ? "" : v.Value.ToString("0.##");
+    string Money(decimal? v) => v is null ? "—" : v.Value.ToString("N2");
+    string Band(decimal? from, decimal? to, string unit) =>
+        from is null && to is null ? "" : $"{(from is null ? "0" : Num(from))}–{(to is null ? "∞" : Num(to))} {unit}";
+}
+
+<h1 class="h3">Rate search</h1>
+
+@if (Model.ConfigError is not null)
+{
+    <div class="alert alert-danger">@Model.ConfigError</div>
+}
+@foreach (var n in Model.Notices)
+{
+    <div class="alert alert-warning py-1 mb-1">@n</div>
+}
+@if (Model.WithheldCarrierCodes > 0)
+{
+    <div class="alert alert-danger py-1">
+        @Model.WithheldCarrierCodes carrier code(s) do not follow the anonymised pattern and are withheld from display. Report this to the data owner.
+    </div>
+}
+
+<form method="post" asp-controller="Search" asp-action="Index" id="search-form" class="mb-4">
+    <input type="hidden" name="search" id="search-flag" value="true" />
+
+    <div class="row g-2 mb-2">
+        <div class="col-auto">
+            <label class="form-label d-block">Mode</label>
+            <div class="btn-group" role="group">
+                @foreach (var m in Enum.GetValues<TariffMode>())
+                {
+                    <input type="radio" class="btn-check reload" name="Mode" id="mode-@m" value="@m" checked="@(q.Mode == m)" />
+                    <label class="btn btn-outline-primary" for="mode-@m">@m</label>
+                }
+            </div>
+        </div>
+        <div class="col-auto">
+            <label class="form-label" for="ShipDate">Ship date</label>
+            <input type="date" class="form-control" name="ShipDate" id="ShipDate" value="@q.ShipDate?.ToString("yyyy-MM-dd")" />
+        </div>
+        <div class="col-auto">
+            <label class="form-label" for="Carrier">Carrier</label>
+            <select class="form-select reload" name="Carrier" id="Carrier">
+                <option value="">(all)</option>
+                @foreach (var c in Model.Carriers)
+                {
+                    <option value="@c" selected="@(q.Carrier == c)">@c</option>
+                }
+            </select>
+        </div>
+    </div>
+
+    <div class="row g-2 mb-2">
+        @foreach (var f in Model.Filters)
+        {
+            <div class="col-6 col-md-3 col-xl-2">
+                <label class="form-label" for="f-@f.Key">@f.Label</label>
+                <select class="form-select" name="@FilterName(f.Key)" id="f-@f.Key" disabled="@f.Disabled">
+                    <option value="">(any)</option>
+                    @foreach (var o in f.Options)
+                    {
+                        <option value="@o" selected="@(f.Selected == o)">@o</option>
+                    }
+                </select>
+                @if (f.Disabled)
+                {
+                    <div class="form-text">@f.DisabledNote</div>
+                }
+                else if (q.Carrier is null && f.Carriers.Count > 0 && f.Carriers.Count < Model.Carriers.Count)
+                {
+                    <div class="form-text">Only @string.Join(", ", f.Carriers) — choosing a value excludes every other carrier.</div>
+                }
+            </div>
+        }
+    </div>
+
+    <div class="row g-2 mb-2">
+        @foreach (var side in new[] { ("Origin", q.OriginCountry, q.OriginPlaceType, q.OriginPlace, Model.OriginCountries),
+                                      ("Dest", q.DestCountry, q.DestPlaceType, q.DestPlace, Model.DestCountries) })
+        {
+            var (prefix, country, placeType, place, countries) = side;
+            <div class="col-md-6">
+                <fieldset class="border rounded p-2">
+                    <legend class="fs-6 mb-1">@(prefix == "Origin" ? "Origin" : "Destination")</legend>
+                    <div class="row g-2">
+                        <div class="col-4">
+                            <select class="form-select" name="@(prefix)Country" aria-label="@prefix country">
+                                <option value="">(any country)</option>
+                                @foreach (var c in countries)
+                                {
+                                    <option value="@c" selected="@(country == c)">@c</option>
+                                }
+                            </select>
+                        </div>
+                        @if (Model.SupportsPlaces)
+                        {
+                            <div class="col-3">
+                                <select class="form-select" name="@(prefix)PlaceType" aria-label="@prefix place type">
+                                    <option value="">(no place)</option>
+                                    @foreach (var t in Model.PlaceTypes)
+                                    {
+                                        <option value="@t" selected="@(placeType == t)">@t</option>
+                                    }
+                                </select>
+                            </div>
+                            <div class="col-5">
+                                <input class="form-control" name="@(prefix)Place" value="@place" placeholder="city / postcode / region" aria-label="@prefix place" />
+                            </div>
+                        }
+                        else
+                        {
+                            <div class="col-8 form-text">This tariff is country to country; places do not apply.</div>
+                        }
+                    </div>
+                </fieldset>
+            </div>
+        }
+    </div>
+    <p class="form-text mt-0">
+        A lane answers only in its own terms: a postcode matches only postcode lanes (by prefix), a city only city lanes,
+        a bare country only country lanes or zone lanes whose zone chart covers that country.
+    </p>
+
+    <div class="row g-2 mb-3 align-items-end">
+        <div class="col-6 col-md-2">
+            <label class="form-label" for="WeightKg">Weight (kg)</label>
+            <input type="number" step="any" min="0" class="form-control" name="WeightKg" id="WeightKg" value="@Num(q.WeightKg)" />
+        </div>
+        <div class="col-6 col-md-2">
+            <label class="form-label" for="VolumeCbm">Volume (m³)</label>
+            <input type="number" step="any" min="0" class="form-control" name="VolumeCbm" id="VolumeCbm" value="@Num(q.VolumeCbm)" />
+        </div>
+        <div class="col-md-4">
+            <label class="form-label">or L × W × H (cm) × pieces</label>
+            <div class="input-group">
+                <input type="number" step="any" min="0" class="form-control" name="LengthCm" value="@Num(q.LengthCm)" aria-label="Length cm" />
+                <input type="number" step="any" min="0" class="form-control" name="WidthCm" value="@Num(q.WidthCm)" aria-label="Width cm" />
+                <input type="number" step="any" min="0" class="form-control" name="HeightCm" value="@Num(q.HeightCm)" aria-label="Height cm" />
+                <input type="number" min="1" class="form-control" name="Pieces" value="@q.Pieces" aria-label="Pieces" />
+            </div>
+        </div>
+        <div class="col-6 col-md-2">
+            <label class="form-label" for="DistanceKm">Distance (km)</label>
+            <input type="number" step="any" min="0" class="form-control" name="DistanceKm" id="DistanceKm" value="@Num(q.DistanceKm)"
+                   disabled="@(!Model.SupportsDistance)" />
+            @if (!Model.SupportsDistance)
+            {
+                <div class="form-text">Not priced by distance.</div>
+            }
+        </div>
+        <div class="col-6 col-md-2">
+            <button type="submit" class="btn btn-primary w-100">Search</button>
+        </div>
+    </div>
+</form>
+
+@if (Model.Searched)
+{
+    @foreach (var gap in Model.AdderGaps)
+    {
+        <div class="alert alert-info py-1 mb-1">
+            <strong>@gap.CarrierCode</strong> @gap.ServiceType lane @gap.LaneCode:
+            no band covers this weight (@Num(gap.ChargeableKg) kg chargeable); this carrier charges an adder above @Num(gap.TopBandKg) kg —
+            see the <a asp-controller="Lane" asp-action="Detail" asp-route-carrierCode="@gap.CarrierCode" asp-route-laneCode="@gap.LaneCode">lane detail</a>.
+        </div>
+    }
+
+    @if (Model.Results.Count == 0)
+    {
+        @if (Model.AdderGaps.Count == 0)
+        {
+            <div class="alert alert-secondary">No lane matches this question.</div>
+        }
+    }
+    else
+    {
+        <p class="text-muted small mb-1">
+            @Model.Results.Count row(s)@(Model.Truncated ? $" — truncated at {TariffRepository.MaxResults}; narrow the search" : "").
+            Rows are grouped by currency and ordered cheapest first within each currency; totals are never compared across currencies.
+        </p>
+        <div class="table-responsive">
+            <table class="table table-sm table-striped table-hover align-middle small">
+                <thead class="table-light">
+                    <tr>
+                        <th>Carrier</th><th>Service</th><th>Lane</th><th>Band</th>
+                        <th class="text-end">Rate</th><th>Basis</th><th class="text-end">Chg. kg</th>
+                        <th class="text-end">Base freight</th><th class="text-end">Surcharges</th><th class="text-end">Fuel</th>
+                        <th class="text-end">Est. total</th><th>Ccy</th><th>Valid</th><th>Source</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var r in Model.Results)
+                    {
+                        <tr>
+                            <td>@r.CarrierCode</td>
+                            <td>@r.ServiceType</td>
+                            <td>
+                                <a asp-controller="Lane" asp-action="Detail" asp-route-carrierCode="@r.CarrierCode" asp-route-laneCode="@r.LaneCode">@r.LaneCode</a>
+                                <div class="text-muted">@r.OriginDesc → @r.DestDesc</div>
+                            </td>
+                            <td>@Band(r.WeightFromKg, r.WeightToKg, "kg") @Band(r.DistanceFromKm, r.DistanceToKm, "km")</td>
+                            <td class="text-end">@Num(r.Rate)</td>
+                            <td>@r.ChargeBasis @if (r.MinCharge is not null) { <div class="text-muted">min @Num(r.MinCharge)</div> }</td>
+                            <td class="text-end">@Num(r.ChargeableKg)</td>
+                            <td class="text-end">@Money(r.BaseFreight)</td>
+                            <td class="text-end" title="@r.SurchargeCodes">
+                                @Money(r.SurchargeAmount)
+                                @if (r.SurchargeCodes is not null) { <div class="text-muted">@r.SurchargeCodes</div> }
+                            </td>
+                            <td class="text-end">@(r.HasFuelRule ? Money(r.FuelAmount) : "no rule")</td>
+                            <td class="text-end fw-semibold">
+                                @if (r.EstimatedTotal is null) { <span class="text-muted fw-normal">— @r.NoTotalReason</span> }
+                                else { @Money(r.EstimatedTotal) }
+                            </td>
+                            <td>@r.Currency</td>
+                            <td class="text-nowrap">@r.ValidFrom?.ToString("yyyy-MM-dd") – @(r.ValidTo?.ToString("yyyy-MM-dd") ?? "open")</td>
+                            <td class="text-muted">@r.SourceRef / @r.SourceSheet / @r.SourceRow</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    }
+}
+
+@section Scripts {
+    <script>
+        // Mode or carrier change: re-post without searching so the server reloads every list and clears stale filters.
+        document.querySelectorAll('.reload').forEach(el => el.addEventListener('change', () => {
+            document.getElementById('search-flag').value = 'false';
+            document.getElementById('search-form').submit();
+        }));
+    </script>
+}
+
+@functions {
+    static string FilterName(string key) => key switch
+    {
+        "service" => "Service",
+        "piece" => "PieceType",
+        "delivery" => "DeliveryAddress",
+        "lanetype" => "LaneType",
+        "ratetag" => "RateTag",
+        "cargo" => "CargoType",
+        "temperature" => "Temperature",
+        "equipment" => "Equipment",
+        "oversize" => "OversizeClass",
+        _ => key
+    };
+}
