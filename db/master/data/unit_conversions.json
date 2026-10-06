@@ -1,0 +1,55 @@
+{
+ "_comment": "Exact conversion factors (value_in_to = value_in_from * factor).",
+ "units": [
+  {
+   "from_unit": "LB",
+   "to_unit": "KG",
+   "factor": 0.45359237
+  },
+  {
+   "from_unit": "KG",
+   "to_unit": "LB",
+   "factor": 2.2046226218
+  },
+  {
+   "from_unit": "OZ",
+   "to_unit": "KG",
+   "factor": 0.028349523125
+  },
+  {
+   "from_unit": "IN",
+   "to_unit": "CM",
+   "factor": 2.54
+  },
+  {
+   "from_unit": "CM",
+   "to_unit": "IN",
+   "factor": 0.3937007874
+  },
+  {
+   "from_unit": "CUFT",
+   "to_unit": "CBM",
+   "factor": 0.028316846592
+  },
+  {
+   "from_unit": "CBM",
+   "to_unit": "CUFT",
+   "factor": 35.3146667215
+  },
+  {
+   "from_unit": "MI",
+   "to_unit": "KM",
+   "factor": 1.609344
+  },
+  {
+   "from_unit": "KM",
+   "to_unit": "MI",
+   "factor": 0.6213711922
+  },
+  {
+   "from_unit": "CWT_US",
+   "to_unit": "KG",
+   "factor": 45.359237
+  }
+ ]
+}

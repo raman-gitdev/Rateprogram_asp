@@ -1,0 +1,43 @@
+/* Same look as the Angular front end (Rateprogram/frontend/src/styles.css). */
+* { box-sizing: border-box; }
+body { margin: 0; font: 14px/1.4 system-ui, Segoe UI, Arial, sans-serif; color: #1c2430; background: #f6f7f9; }
+section { padding: 12px 16px; }
+.top { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; padding: 10px 16px; background: #1d3557; color: #fff; }
+.top nav { margin-left: auto; display: flex; gap: 6px; flex-wrap: wrap; }
+.top .button { background: transparent; color: #fff; border: 1px solid #ffffff55; }
+.top .button.on { background: #fff; color: #1d3557; }
+.top .button.off { opacity: .6; cursor: default; }
+.top .muted { color: #b8c4d6; }
+.muted { color: #6b7280; }
+.small { font-size: 12px; }
+.err { margin: 10px 0; padding: 8px 10px; background: #fde8e8; color: #9b1c1c; border-radius: 4px; }
+.notice { margin: 6px 0; padding: 6px 10px; background: #fff8e6; color: #9a5b00; border-radius: 4px; }
+.info { margin: 6px 0; padding: 6px 10px; background: #e8eefc; color: #1c2430; border-radius: 4px; }
+.warn { color: #9a5b00; }
+button, .button, input[type=submit] {
+    font: inherit; padding: 5px 10px; border: 1px solid #c7ccd4; background: #fff; color: #1c2430;
+    border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;
+}
+.primary, input[type=submit].primary { background: #1d6fd8; border-color: #1d6fd8; color: #fff; }
+a.link { color: #1d6fd8; padding: 0 2px; }
+button:disabled { opacity: .6; cursor: default; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 10px; }
+fieldset { border: 1px solid #d5dae1; border-radius: 6px; background: #fff; margin: 0; padding: 8px 10px; min-width: 0; }
+legend { font-weight: 600; padding: 0 4px; }
+label { display: block; margin: 4px 0; font-size: 13px; }
+label input, label select { display: block; width: 100%; margin-top: 2px; padding: 4px 6px; font: inherit; border: 1px solid #c7ccd4; border-radius: 4px; }
+label select:disabled, label input:disabled { background: #f1f3f6; color: #6b7280; }
+.dims { display: grid; grid-template-columns: repeat(4, 1fr); gap: 4px; margin-top: 4px; }
+.dims span { grid-column: 1 / -1; font-size: 12px; }
+.dims input { width: 100%; padding: 4px; font: inherit; border: 1px solid #c7ccd4; border-radius: 4px; }
+fieldset p { margin: 6px 0 2px; }
+.actions { display: flex; gap: 8px; align-items: end; }
+.scroll { overflow-x: auto; background: #fff; border: 1px solid #d5dae1; border-radius: 6px; }
+table { border-collapse: collapse; width: 100%; }
+th, td { padding: 5px 8px; border-bottom: 1px solid #e5e8ec; text-align: left; vertical-align: top; }
+th { background: #eef1f5; font-size: 12px; white-space: nowrap; position: sticky; top: 0; }
+td.num { text-align: right; white-space: nowrap; font-variant-numeric: tabular-nums; }
+td.total { font-weight: 600; }
+tr.min td { background: #fff8e6; }
+.tag { display: inline-block; font-size: 11px; padding: 0 4px; border-radius: 3px; background: #e8eefc; color: #1d4ed8; margin-left: 4px; }
+h3 { margin: 14px 0 8px; } h4 { margin: 12px 0 6px; }

@@ -1,0 +1,14 @@
+{
+  "_comment": "Country codes printed on carrier rate cards that are not ISO 3166-1 alpha-2. iso_code = the ISO country the territory belongs to (null when ISO has no code). Found in B1C04 zone sheets.",
+  "B1C04": [
+    {"carrier_code": "IC", "name": "Canary Islands", "iso_code": "ES", "note": "Spanish islands priced separately from mainland Spain; IC is only an ISO 'exceptionally reserved' code"},
+    {"carrier_code": "KV", "name": "Kosovo", "iso_code": "XK", "note": "XK is the code in common use; it is user-assigned, not official ISO"},
+    {"carrier_code": "XB", "name": "Bonaire", "iso_code": "BQ", "note": "Part of BQ (Bonaire, Sint Eustatius and Saba)"},
+    {"carrier_code": "XC", "name": "Curacao", "iso_code": "CW", "note": ""},
+    {"carrier_code": "XE", "name": "St. Eustatius", "iso_code": "BQ", "note": "Part of BQ (Bonaire, Sint Eustatius and Saba)"},
+    {"carrier_code": "XM", "name": "St. Maarten", "iso_code": "SX", "note": "Dutch part of the island"},
+    {"carrier_code": "XN", "name": "Nevis", "iso_code": "KN", "note": "Part of Saint Kitts and Nevis"},
+    {"carrier_code": "XS", "name": "Somalia (Hargeisa)", "iso_code": "SO", "note": "Somaliland region, priced separately from the rest of Somalia"},
+    {"carrier_code": "XY", "name": "St. Barthelemy", "iso_code": "BL", "note": ""}
+  ]
+}

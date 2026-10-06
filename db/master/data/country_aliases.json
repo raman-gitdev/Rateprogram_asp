@@ -1,0 +1,6113 @@
+{
+ "_comment": "Every known spelling -> ISO code. alias_norm = upper case, single spaces.",
+ "aliases": [
+  {
+   "alias_norm": "ABW",
+   "alias": "ABW",
+   "country_code": "AW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AD",
+   "alias": "AD",
+   "country_code": "AD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AE",
+   "alias": "AE",
+   "country_code": "AE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AF",
+   "alias": "AF",
+   "country_code": "AF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AFG",
+   "alias": "AFG",
+   "country_code": "AF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AFGHANISTAN",
+   "alias": "Afghanistan",
+   "country_code": "AF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AG",
+   "alias": "AG",
+   "country_code": "AG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AGO",
+   "alias": "AGO",
+   "country_code": "AO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AI",
+   "alias": "AI",
+   "country_code": "AI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AIA",
+   "alias": "AIA",
+   "country_code": "AI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AL",
+   "alias": "AL",
+   "country_code": "AL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ALA",
+   "alias": "ALA",
+   "country_code": "AX",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ALB",
+   "alias": "ALB",
+   "country_code": "AL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ALBANIA",
+   "alias": "Albania",
+   "country_code": "AL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ALGERIA",
+   "alias": "Algeria",
+   "country_code": "DZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AM",
+   "alias": "AM",
+   "country_code": "AM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AMERICA",
+   "alias": "America",
+   "country_code": "US",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "AMERICAN SAM.",
+   "alias": "AMERICAN SAM.",
+   "country_code": "AS",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "AMERICAN SAMOA",
+   "alias": "American Samoa",
+   "country_code": "AS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AND",
+   "alias": "AND",
+   "country_code": "AD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ANDORRA",
+   "alias": "Andorra",
+   "country_code": "AD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ANGOLA",
+   "alias": "Angola",
+   "country_code": "AO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ANGUILLA",
+   "alias": "Anguilla",
+   "country_code": "AI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ANTARCTICA",
+   "alias": "Antarctica",
+   "country_code": "AQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ANTIGUA",
+   "alias": "ANTIGUA",
+   "country_code": "AG",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "ANTIGUA AND BARBUDA",
+   "alias": "Antigua and Barbuda",
+   "country_code": "AG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AO",
+   "alias": "AO",
+   "country_code": "AO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AQ",
+   "alias": "AQ",
+   "country_code": "AQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AR",
+   "alias": "AR",
+   "country_code": "AR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ARAB REPUBLIC OF EGYPT",
+   "alias": "Arab Republic of Egypt",
+   "country_code": "EG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ARE",
+   "alias": "ARE",
+   "country_code": "AE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ARG",
+   "alias": "ARG",
+   "country_code": "AR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ARGENTINA",
+   "alias": "Argentina",
+   "country_code": "AR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ARGENTINE REPUBLIC",
+   "alias": "Argentine Republic",
+   "country_code": "AR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ARM",
+   "alias": "ARM",
+   "country_code": "AM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ARMENIA",
+   "alias": "Armenia",
+   "country_code": "AM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ARUBA",
+   "alias": "Aruba",
+   "country_code": "AW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AS",
+   "alias": "AS",
+   "country_code": "AS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ASM",
+   "alias": "ASM",
+   "country_code": "AS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AT",
+   "alias": "AT",
+   "country_code": "AT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ATA",
+   "alias": "ATA",
+   "country_code": "AQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ATF",
+   "alias": "ATF",
+   "country_code": "TF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ATG",
+   "alias": "ATG",
+   "country_code": "AG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AU",
+   "alias": "AU",
+   "country_code": "AU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AUS",
+   "alias": "AUS",
+   "country_code": "AU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AUSTRALIA",
+   "alias": "Australia",
+   "country_code": "AU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AUSTRIA",
+   "alias": "Austria",
+   "country_code": "AT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AUT",
+   "alias": "AUT",
+   "country_code": "AT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AW",
+   "alias": "AW",
+   "country_code": "AW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AX",
+   "alias": "AX",
+   "country_code": "AX",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AZ",
+   "alias": "AZ",
+   "country_code": "AZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AZE",
+   "alias": "AZE",
+   "country_code": "AZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "AZERBAIJAN",
+   "alias": "Azerbaijan",
+   "country_code": "AZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BA",
+   "alias": "BA",
+   "country_code": "BA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BAHAMAS",
+   "alias": "Bahamas",
+   "country_code": "BS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BAHRAIN",
+   "alias": "Bahrain",
+   "country_code": "BH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BANGLADESH",
+   "alias": "Bangladesh",
+   "country_code": "BD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BARBADOS",
+   "alias": "Barbados",
+   "country_code": "BB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BB",
+   "alias": "BB",
+   "country_code": "BB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BD",
+   "alias": "BD",
+   "country_code": "BD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BDI",
+   "alias": "BDI",
+   "country_code": "BI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BE",
+   "alias": "BE",
+   "country_code": "BE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BEL",
+   "alias": "BEL",
+   "country_code": "BE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BELARUS",
+   "alias": "Belarus",
+   "country_code": "BY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BELGIUM",
+   "alias": "Belgium",
+   "country_code": "BE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BELIZE",
+   "alias": "Belize",
+   "country_code": "BZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BEN",
+   "alias": "BEN",
+   "country_code": "BJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BENIN",
+   "alias": "Benin",
+   "country_code": "BJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BERMUDA",
+   "alias": "Bermuda",
+   "country_code": "BM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BES",
+   "alias": "BES",
+   "country_code": "BQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BF",
+   "alias": "BF",
+   "country_code": "BF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BFA",
+   "alias": "BFA",
+   "country_code": "BF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BG",
+   "alias": "BG",
+   "country_code": "BG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BGD",
+   "alias": "BGD",
+   "country_code": "BD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BGR",
+   "alias": "BGR",
+   "country_code": "BG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BH",
+   "alias": "BH",
+   "country_code": "BH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BHR",
+   "alias": "BHR",
+   "country_code": "BH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BHS",
+   "alias": "BHS",
+   "country_code": "BS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BHUTAN",
+   "alias": "Bhutan",
+   "country_code": "BT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BI",
+   "alias": "BI",
+   "country_code": "BI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BIH",
+   "alias": "BIH",
+   "country_code": "BA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BJ",
+   "alias": "BJ",
+   "country_code": "BJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BL",
+   "alias": "BL",
+   "country_code": "BL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BLM",
+   "alias": "BLM",
+   "country_code": "BL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BLR",
+   "alias": "BLR",
+   "country_code": "BY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BLZ",
+   "alias": "BLZ",
+   "country_code": "BZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BM",
+   "alias": "BM",
+   "country_code": "BM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BMU",
+   "alias": "BMU",
+   "country_code": "BM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BN",
+   "alias": "BN",
+   "country_code": "BN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BO",
+   "alias": "BO",
+   "country_code": "BO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BOL",
+   "alias": "BOL",
+   "country_code": "BO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BOLIVARIAN REPUBLIC OF VENEZUELA",
+   "alias": "Bolivarian Republic of Venezuela",
+   "country_code": "VE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BOLIVIA",
+   "alias": "Bolivia",
+   "country_code": "BO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BOLIVIA, PLURINATIONAL STATE OF",
+   "alias": "Bolivia, Plurinational State of",
+   "country_code": "BO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BONAIRE",
+   "alias": "BONAIRE",
+   "country_code": "BQ",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "BONAIRE, SINT EUSTATIUS AND SABA",
+   "alias": "Bonaire, Sint Eustatius and Saba",
+   "country_code": "BQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BOSNIA & HERZEGOVINA",
+   "alias": "Bosnia & Herzegovina",
+   "country_code": "BA",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "BOSNIA AND HERZ.",
+   "alias": "BOSNIA AND HERZ.",
+   "country_code": "BA",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "BOSNIA AND HERZEGOVINA",
+   "alias": "Bosnia and Herzegovina",
+   "country_code": "BA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BOTSWANA",
+   "alias": "Botswana",
+   "country_code": "BW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BOUVET ISLAND",
+   "alias": "Bouvet Island",
+   "country_code": "BV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BQ",
+   "alias": "BQ",
+   "country_code": "BQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BR",
+   "alias": "BR",
+   "country_code": "BR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BRA",
+   "alias": "BRA",
+   "country_code": "BR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BRAZIL",
+   "alias": "Brazil",
+   "country_code": "BR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BRB",
+   "alias": "BRB",
+   "country_code": "BB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BRITISH INDIAN OCEAN TERRITORY",
+   "alias": "British Indian Ocean Territory",
+   "country_code": "IO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BRITISH VIRGIN ISLANDS",
+   "alias": "British Virgin Islands",
+   "country_code": "VG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BRN",
+   "alias": "BRN",
+   "country_code": "BN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BRUNEI",
+   "alias": "Brunei",
+   "country_code": "BN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BRUNEI DARUSSALAM",
+   "alias": "Brunei Darussalam",
+   "country_code": "BN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BS",
+   "alias": "BS",
+   "country_code": "BS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BT",
+   "alias": "BT",
+   "country_code": "BT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BTN",
+   "alias": "BTN",
+   "country_code": "BT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BULGARIA",
+   "alias": "Bulgaria",
+   "country_code": "BG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BURKINA FASO",
+   "alias": "Burkina Faso",
+   "country_code": "BF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BURMA",
+   "alias": "Burma",
+   "country_code": "MM",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "BURUNDI",
+   "alias": "Burundi",
+   "country_code": "BI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BV",
+   "alias": "BV",
+   "country_code": "BV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BVT",
+   "alias": "BVT",
+   "country_code": "BV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BW",
+   "alias": "BW",
+   "country_code": "BW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BWA",
+   "alias": "BWA",
+   "country_code": "BW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BY",
+   "alias": "BY",
+   "country_code": "BY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "BZ",
+   "alias": "BZ",
+   "country_code": "BZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CA",
+   "alias": "CA",
+   "country_code": "CA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CABO VERDE",
+   "alias": "Cabo Verde",
+   "country_code": "CV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CAF",
+   "alias": "CAF",
+   "country_code": "CF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CAMBODIA",
+   "alias": "Cambodia",
+   "country_code": "KH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CAMEROON",
+   "alias": "Cameroon",
+   "country_code": "CM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CAN",
+   "alias": "CAN",
+   "country_code": "CA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CANADA",
+   "alias": "Canada",
+   "country_code": "CA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CANARY ISLANDS",
+   "alias": "CANARY ISLANDS",
+   "country_code": "ES",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "CANARY ISLANDS, THE",
+   "alias": "Canary Islands, The",
+   "country_code": "ES",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "CAPE VERDE",
+   "alias": "Cape Verde",
+   "country_code": "CV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CAYMAN ISLANDS",
+   "alias": "Cayman Islands",
+   "country_code": "KY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CC",
+   "alias": "CC",
+   "country_code": "CC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CCK",
+   "alias": "CCK",
+   "country_code": "CC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CD",
+   "alias": "CD",
+   "country_code": "CD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CENTRAL AFRICAN",
+   "alias": "CENTRAL AFRICAN",
+   "country_code": "CF",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "CENTRAL AFRICAN REP",
+   "alias": "Central African Rep",
+   "country_code": "CF",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "CENTRAL AFRICAN REPUBLIC",
+   "alias": "Central African Republic",
+   "country_code": "CF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CF",
+   "alias": "CF",
+   "country_code": "CF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CG",
+   "alias": "CG",
+   "country_code": "CG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CH",
+   "alias": "CH",
+   "country_code": "CH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CHAD",
+   "alias": "Chad",
+   "country_code": "TD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CHE",
+   "alias": "CHE",
+   "country_code": "CH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CHILE",
+   "alias": "Chile",
+   "country_code": "CL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CHINA",
+   "alias": "China",
+   "country_code": "CN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CHL",
+   "alias": "CHL",
+   "country_code": "CL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CHN",
+   "alias": "CHN",
+   "country_code": "CN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CHRISTMAS ISLAND",
+   "alias": "Christmas Island",
+   "country_code": "CX",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CI",
+   "alias": "CI",
+   "country_code": "CI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CIV",
+   "alias": "CIV",
+   "country_code": "CI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CK",
+   "alias": "CK",
+   "country_code": "CK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CL",
+   "alias": "CL",
+   "country_code": "CL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CM",
+   "alias": "CM",
+   "country_code": "CM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CMR",
+   "alias": "CMR",
+   "country_code": "CM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CN",
+   "alias": "CN",
+   "country_code": "CN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CO",
+   "alias": "CO",
+   "country_code": "CO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COCOS (KEELING) ISLANDS",
+   "alias": "Cocos (Keeling) Islands",
+   "country_code": "CC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COD",
+   "alias": "COD",
+   "country_code": "CD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COG",
+   "alias": "COG",
+   "country_code": "CG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COK",
+   "alias": "COK",
+   "country_code": "CK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COL",
+   "alias": "COL",
+   "country_code": "CO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COLOMBIA",
+   "alias": "Colombia",
+   "country_code": "CO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COM",
+   "alias": "COM",
+   "country_code": "KM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COMMONWEALTH OF DOMINICA",
+   "alias": "Commonwealth of Dominica",
+   "country_code": "DM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COMMONWEALTH OF THE BAHAMAS",
+   "alias": "Commonwealth of the Bahamas",
+   "country_code": "BS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COMMONWEALTH OF THE NORTHERN MARIANA ISLANDS",
+   "alias": "Commonwealth of the Northern Mariana Islands",
+   "country_code": "MP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COMOROS",
+   "alias": "Comoros",
+   "country_code": "KM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CONGO",
+   "alias": "Congo",
+   "country_code": "CG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CONGO (DEMOCRATIC REPUBLIC)",
+   "alias": "Congo (Democratic Republic)",
+   "country_code": "CD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CONGO, DPR",
+   "alias": "Congo, DPR",
+   "country_code": "CD",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "CONGO, THE DEMOCRATIC REPUBLIC OF THE",
+   "alias": "Congo, The Democratic Republic of the",
+   "country_code": "CD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COOK ISLANDS",
+   "alias": "Cook Islands",
+   "country_code": "CK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COSTA RICA",
+   "alias": "Costa Rica",
+   "country_code": "CR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "COTE D IVOIRE",
+   "alias": "COTE D IVOIRE",
+   "country_code": "CI",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "CPV",
+   "alias": "CPV",
+   "country_code": "CV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CR",
+   "alias": "CR",
+   "country_code": "CR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CRI",
+   "alias": "CRI",
+   "country_code": "CR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CROATIA",
+   "alias": "Croatia",
+   "country_code": "HR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CU",
+   "alias": "CU",
+   "country_code": "CU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CUB",
+   "alias": "CUB",
+   "country_code": "CU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CUBA",
+   "alias": "Cuba",
+   "country_code": "CU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CURACAO",
+   "alias": "CURACAO",
+   "country_code": "CW",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "CURAÇAO",
+   "alias": "Curaçao",
+   "country_code": "CW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CUW",
+   "alias": "CUW",
+   "country_code": "CW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CV",
+   "alias": "CV",
+   "country_code": "CV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CW",
+   "alias": "CW",
+   "country_code": "CW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CX",
+   "alias": "CX",
+   "country_code": "CX",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CXR",
+   "alias": "CXR",
+   "country_code": "CX",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CY",
+   "alias": "CY",
+   "country_code": "CY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CYM",
+   "alias": "CYM",
+   "country_code": "KY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CYP",
+   "alias": "CYP",
+   "country_code": "CY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CYPRUS",
+   "alias": "Cyprus",
+   "country_code": "CY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CZ",
+   "alias": "CZ",
+   "country_code": "CZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CZE",
+   "alias": "CZE",
+   "country_code": "CZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CZECH REP., THE",
+   "alias": "Czech Rep., The",
+   "country_code": "CZ",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "CZECH REPUBLIC",
+   "alias": "Czech Republic",
+   "country_code": "CZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CZECH REPUBLIC, THE",
+   "alias": "Czech Republic, The",
+   "country_code": "CZ",
+   "source": "TARIFF_TABLE"
+  },
+  {
+   "alias_norm": "CZECHIA",
+   "alias": "Czechia",
+   "country_code": "CZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "CÔTE D'IVOIRE",
+   "alias": "Côte d'Ivoire",
+   "country_code": "CI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DE",
+   "alias": "DE",
+   "country_code": "DE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DEMOCRATIC PEOPLE'S REPUBLIC OF KOREA",
+   "alias": "Democratic People's Republic of Korea",
+   "country_code": "KP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DEMOCRATIC REPUBLIC OF SAO TOME AND PRINCIPE",
+   "alias": "Democratic Republic of Sao Tome and Principe",
+   "country_code": "ST",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DEMOCRATIC REPUBLIC OF TIMOR-LESTE",
+   "alias": "Democratic Republic of Timor-Leste",
+   "country_code": "TL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DEMOCRATIC SOCIALIST REPUBLIC OF SRI LANKA",
+   "alias": "Democratic Socialist Republic of Sri Lanka",
+   "country_code": "LK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DENMARK",
+   "alias": "Denmark",
+   "country_code": "DK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DEU",
+   "alias": "DEU",
+   "country_code": "DE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DJ",
+   "alias": "DJ",
+   "country_code": "DJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DJI",
+   "alias": "DJI",
+   "country_code": "DJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DJIBOUTI",
+   "alias": "Djibouti",
+   "country_code": "DJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DK",
+   "alias": "DK",
+   "country_code": "DK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DM",
+   "alias": "DM",
+   "country_code": "DM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DMA",
+   "alias": "DMA",
+   "country_code": "DM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DNK",
+   "alias": "DNK",
+   "country_code": "DK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DO",
+   "alias": "DO",
+   "country_code": "DO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DOM",
+   "alias": "DOM",
+   "country_code": "DO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DOMINICA",
+   "alias": "Dominica",
+   "country_code": "DM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DOMINICAN REP.",
+   "alias": "DOMINICAN REP.",
+   "country_code": "DO",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "DOMINICAN REPUBLIC",
+   "alias": "Dominican Republic",
+   "country_code": "DO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DZ",
+   "alias": "DZ",
+   "country_code": "DZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "DZA",
+   "alias": "DZA",
+   "country_code": "DZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "EAST TIMOR",
+   "alias": "EAST TIMOR",
+   "country_code": "TL",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "EASTERN REPUBLIC OF URUGUAY",
+   "alias": "Eastern Republic of Uruguay",
+   "country_code": "UY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "EC",
+   "alias": "EC",
+   "country_code": "EC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ECU",
+   "alias": "ECU",
+   "country_code": "EC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ECUADOR",
+   "alias": "Ecuador",
+   "country_code": "EC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "EE",
+   "alias": "EE",
+   "country_code": "EE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "EG",
+   "alias": "EG",
+   "country_code": "EG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "EGY",
+   "alias": "EGY",
+   "country_code": "EG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "EGYPT",
+   "alias": "Egypt",
+   "country_code": "EG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "EH",
+   "alias": "EH",
+   "country_code": "EH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "EL SALVADOR",
+   "alias": "El Salvador",
+   "country_code": "SV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ENGLAND",
+   "alias": "England",
+   "country_code": "GB",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "EQUATORIAL GUINEA",
+   "alias": "Equatorial Guinea",
+   "country_code": "GQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ER",
+   "alias": "ER",
+   "country_code": "ER",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ERI",
+   "alias": "ERI",
+   "country_code": "ER",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ERITREA",
+   "alias": "Eritrea",
+   "country_code": "ER",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ES",
+   "alias": "ES",
+   "country_code": "ES",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ESH",
+   "alias": "ESH",
+   "country_code": "EH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ESP",
+   "alias": "ESP",
+   "country_code": "ES",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "EST",
+   "alias": "EST",
+   "country_code": "EE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ESTONIA",
+   "alias": "Estonia",
+   "country_code": "EE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ESWATINI",
+   "alias": "Eswatini",
+   "country_code": "SZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ET",
+   "alias": "ET",
+   "country_code": "ET",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ETH",
+   "alias": "ETH",
+   "country_code": "ET",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ETHIOPIA",
+   "alias": "Ethiopia",
+   "country_code": "ET",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FALKLAND ISL.",
+   "alias": "FALKLAND ISL.",
+   "country_code": "FK",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "FALKLAND ISLANDS",
+   "alias": "Falkland Islands",
+   "country_code": "FK",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "FALKLAND ISLANDS (MALVINAS)",
+   "alias": "Falkland Islands (Malvinas)",
+   "country_code": "FK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FAROE ISLANDS",
+   "alias": "Faroe Islands",
+   "country_code": "FO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FEDERAL DEMOCRATIC REPUBLIC OF ETHIOPIA",
+   "alias": "Federal Democratic Republic of Ethiopia",
+   "country_code": "ET",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FEDERAL DEMOCRATIC REPUBLIC OF NEPAL",
+   "alias": "Federal Democratic Republic of Nepal",
+   "country_code": "NP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FEDERAL REPUBLIC OF GERMANY",
+   "alias": "Federal Republic of Germany",
+   "country_code": "DE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FEDERAL REPUBLIC OF NIGERIA",
+   "alias": "Federal Republic of Nigeria",
+   "country_code": "NG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FEDERAL REPUBLIC OF SOMALIA",
+   "alias": "Federal Republic of Somalia",
+   "country_code": "SO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FEDERATED STATES OF MICRONESIA",
+   "alias": "Federated States of Micronesia",
+   "country_code": "FM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FEDERATIVE REPUBLIC OF BRAZIL",
+   "alias": "Federative Republic of Brazil",
+   "country_code": "BR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FI",
+   "alias": "FI",
+   "country_code": "FI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FIJI",
+   "alias": "Fiji",
+   "country_code": "FJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FIN",
+   "alias": "FIN",
+   "country_code": "FI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FINLAND",
+   "alias": "Finland",
+   "country_code": "FI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FJ",
+   "alias": "FJ",
+   "country_code": "FJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FJI",
+   "alias": "FJI",
+   "country_code": "FJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FK",
+   "alias": "FK",
+   "country_code": "FK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FLK",
+   "alias": "FLK",
+   "country_code": "FK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FM",
+   "alias": "FM",
+   "country_code": "FM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FO",
+   "alias": "FO",
+   "country_code": "FO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FR",
+   "alias": "FR",
+   "country_code": "FR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FRA",
+   "alias": "FRA",
+   "country_code": "FR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FRANCE",
+   "alias": "France",
+   "country_code": "FR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FRENCH GUIANA",
+   "alias": "French Guiana",
+   "country_code": "GF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FRENCH GUYANA",
+   "alias": "FRENCH GUYANA",
+   "country_code": "GF",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "FRENCH POLYNESIA",
+   "alias": "French Polynesia",
+   "country_code": "PF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FRENCH REPUBLIC",
+   "alias": "French Republic",
+   "country_code": "FR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FRENCH SOUTHERN TERRITORIES",
+   "alias": "French Southern Territories",
+   "country_code": "TF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FRO",
+   "alias": "FRO",
+   "country_code": "FO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "FSM",
+   "alias": "FSM",
+   "country_code": "FM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GA",
+   "alias": "GA",
+   "country_code": "GA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GAB",
+   "alias": "GAB",
+   "country_code": "GA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GABON",
+   "alias": "Gabon",
+   "country_code": "GA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GABONESE REPUBLIC",
+   "alias": "Gabonese Republic",
+   "country_code": "GA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GAMBIA",
+   "alias": "Gambia",
+   "country_code": "GM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GB",
+   "alias": "GB",
+   "country_code": "GB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GBR",
+   "alias": "GBR",
+   "country_code": "GB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GD",
+   "alias": "GD",
+   "country_code": "GD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GE",
+   "alias": "GE",
+   "country_code": "GE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GEO",
+   "alias": "GEO",
+   "country_code": "GE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GEORGIA",
+   "alias": "Georgia",
+   "country_code": "GE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GERMANY",
+   "alias": "Germany",
+   "country_code": "DE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GF",
+   "alias": "GF",
+   "country_code": "GF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GG",
+   "alias": "GG",
+   "country_code": "GG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GGY",
+   "alias": "GGY",
+   "country_code": "GG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GH",
+   "alias": "GH",
+   "country_code": "GH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GHA",
+   "alias": "GHA",
+   "country_code": "GH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GHANA",
+   "alias": "Ghana",
+   "country_code": "GH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GI",
+   "alias": "GI",
+   "country_code": "GI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GIB",
+   "alias": "GIB",
+   "country_code": "GI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GIBRALTAR",
+   "alias": "Gibraltar",
+   "country_code": "GI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GIN",
+   "alias": "GIN",
+   "country_code": "GN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GL",
+   "alias": "GL",
+   "country_code": "GL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GLP",
+   "alias": "GLP",
+   "country_code": "GP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GM",
+   "alias": "GM",
+   "country_code": "GM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GMB",
+   "alias": "GMB",
+   "country_code": "GM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GN",
+   "alias": "GN",
+   "country_code": "GN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GNB",
+   "alias": "GNB",
+   "country_code": "GW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GNQ",
+   "alias": "GNQ",
+   "country_code": "GQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GP",
+   "alias": "GP",
+   "country_code": "GP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GQ",
+   "alias": "GQ",
+   "country_code": "GQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GR",
+   "alias": "GR",
+   "country_code": "GR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GRAND DUCHY OF LUXEMBOURG",
+   "alias": "Grand Duchy of Luxembourg",
+   "country_code": "LU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GRC",
+   "alias": "GRC",
+   "country_code": "GR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GRD",
+   "alias": "GRD",
+   "country_code": "GD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GREAT BRITAIN",
+   "alias": "Great Britain",
+   "country_code": "GB",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "GREECE",
+   "alias": "Greece",
+   "country_code": "GR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GREENLAND",
+   "alias": "Greenland",
+   "country_code": "GL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GRENADA",
+   "alias": "Grenada",
+   "country_code": "GD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GRL",
+   "alias": "GRL",
+   "country_code": "GL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GS",
+   "alias": "GS",
+   "country_code": "GS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GT",
+   "alias": "GT",
+   "country_code": "GT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GTM",
+   "alias": "GTM",
+   "country_code": "GT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GU",
+   "alias": "GU",
+   "country_code": "GU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GUADELOUPE",
+   "alias": "Guadeloupe",
+   "country_code": "GP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GUAM",
+   "alias": "Guam",
+   "country_code": "GU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GUATEMALA",
+   "alias": "Guatemala",
+   "country_code": "GT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GUERNSEY",
+   "alias": "Guernsey",
+   "country_code": "GG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GUF",
+   "alias": "GUF",
+   "country_code": "GF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GUINEA",
+   "alias": "Guinea",
+   "country_code": "GN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GUINEA REP.",
+   "alias": "Guinea Rep.",
+   "country_code": "GN",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "GUINEA REPUBLIC",
+   "alias": "GUINEA REPUBLIC",
+   "country_code": "GN",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "GUINEA-BISSAU",
+   "alias": "Guinea-Bissau",
+   "country_code": "GW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GUINEA-EQUAT.",
+   "alias": "GUINEA-EQUAT.",
+   "country_code": "GQ",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "GUINEA-EQUATORIAL",
+   "alias": "Guinea-Equatorial",
+   "country_code": "GQ",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "GUM",
+   "alias": "GUM",
+   "country_code": "GU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GUY",
+   "alias": "GUY",
+   "country_code": "GY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GUYANA",
+   "alias": "Guyana",
+   "country_code": "GY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GUYANA (BRITISH)",
+   "alias": "GUYANA (BRITISH)",
+   "country_code": "GY",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "GW",
+   "alias": "GW",
+   "country_code": "GW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "GY",
+   "alias": "GY",
+   "country_code": "GY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HAITI",
+   "alias": "Haiti",
+   "country_code": "HT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HASHEMITE KINGDOM OF JORDAN",
+   "alias": "Hashemite Kingdom of Jordan",
+   "country_code": "JO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HEARD ISLAND AND MCDONALD ISLANDS",
+   "alias": "Heard Island and McDonald Islands",
+   "country_code": "HM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HELLENIC REPUBLIC",
+   "alias": "Hellenic Republic",
+   "country_code": "GR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HK",
+   "alias": "HK",
+   "country_code": "HK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HKG",
+   "alias": "HKG",
+   "country_code": "HK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HM",
+   "alias": "HM",
+   "country_code": "HM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HMD",
+   "alias": "HMD",
+   "country_code": "HM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HN",
+   "alias": "HN",
+   "country_code": "HN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HND",
+   "alias": "HND",
+   "country_code": "HN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HOLLAND",
+   "alias": "Holland",
+   "country_code": "NL",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "HOLY SEE (VATICAN CITY STATE)",
+   "alias": "Holy See (Vatican City State)",
+   "country_code": "VA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HONDURAS",
+   "alias": "Honduras",
+   "country_code": "HN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HONG KONG",
+   "alias": "Hong Kong",
+   "country_code": "HK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HONG KONG SAR CHINA",
+   "alias": "Hong Kong SAR China",
+   "country_code": "HK",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "HONG KONG SPECIAL ADMINISTRATIVE REGION OF CHINA",
+   "alias": "Hong Kong Special Administrative Region of China",
+   "country_code": "HK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HR",
+   "alias": "HR",
+   "country_code": "HR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HRV",
+   "alias": "HRV",
+   "country_code": "HR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HT",
+   "alias": "HT",
+   "country_code": "HT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HTI",
+   "alias": "HTI",
+   "country_code": "HT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HU",
+   "alias": "HU",
+   "country_code": "HU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HUN",
+   "alias": "HUN",
+   "country_code": "HU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "HUNGARY",
+   "alias": "Hungary",
+   "country_code": "HU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ICELAND",
+   "alias": "Iceland",
+   "country_code": "IS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ID",
+   "alias": "ID",
+   "country_code": "ID",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IDN",
+   "alias": "IDN",
+   "country_code": "ID",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IE",
+   "alias": "IE",
+   "country_code": "IE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IL",
+   "alias": "IL",
+   "country_code": "IL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IM",
+   "alias": "IM",
+   "country_code": "IM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IMN",
+   "alias": "IMN",
+   "country_code": "IM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IN",
+   "alias": "IN",
+   "country_code": "IN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IND",
+   "alias": "IND",
+   "country_code": "IN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "INDEPENDENT STATE OF PAPUA NEW GUINEA",
+   "alias": "Independent State of Papua New Guinea",
+   "country_code": "PG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "INDEPENDENT STATE OF SAMOA",
+   "alias": "Independent State of Samoa",
+   "country_code": "WS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "INDIA",
+   "alias": "India",
+   "country_code": "IN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "INDONESIA",
+   "alias": "Indonesia",
+   "country_code": "ID",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IO",
+   "alias": "IO",
+   "country_code": "IO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IOT",
+   "alias": "IOT",
+   "country_code": "IO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IQ",
+   "alias": "IQ",
+   "country_code": "IQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IR",
+   "alias": "IR",
+   "country_code": "IR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IRAN",
+   "alias": "Iran",
+   "country_code": "IR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IRAN, ISLAMIC REPUBLIC OF",
+   "alias": "Iran, Islamic Republic of",
+   "country_code": "IR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IRAQ",
+   "alias": "Iraq",
+   "country_code": "IQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IRELAND",
+   "alias": "Ireland",
+   "country_code": "IE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IRELAND, REP. OF",
+   "alias": "Ireland, Rep. Of",
+   "country_code": "IE",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "IRELAND, REPUBLIC OF",
+   "alias": "Ireland, Republic Of",
+   "country_code": "IE",
+   "source": "TARIFF_TABLE"
+  },
+  {
+   "alias_norm": "IRL",
+   "alias": "IRL",
+   "country_code": "IE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IRN",
+   "alias": "IRN",
+   "country_code": "IR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IRQ",
+   "alias": "IRQ",
+   "country_code": "IQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IS",
+   "alias": "IS",
+   "country_code": "IS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ISL",
+   "alias": "ISL",
+   "country_code": "IS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ISLAMIC REPUBLIC OF AFGHANISTAN",
+   "alias": "Islamic Republic of Afghanistan",
+   "country_code": "AF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ISLAMIC REPUBLIC OF IRAN",
+   "alias": "Islamic Republic of Iran",
+   "country_code": "IR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ISLAMIC REPUBLIC OF MAURITANIA",
+   "alias": "Islamic Republic of Mauritania",
+   "country_code": "MR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ISLAMIC REPUBLIC OF PAKISTAN",
+   "alias": "Islamic Republic of Pakistan",
+   "country_code": "PK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ISLE OF MAN",
+   "alias": "Isle of Man",
+   "country_code": "IM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ISR",
+   "alias": "ISR",
+   "country_code": "IL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ISRAEL",
+   "alias": "Israel",
+   "country_code": "IL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IT",
+   "alias": "IT",
+   "country_code": "IT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ITA",
+   "alias": "ITA",
+   "country_code": "IT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ITALIAN REPUBLIC",
+   "alias": "Italian Republic",
+   "country_code": "IT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ITALY",
+   "alias": "Italy",
+   "country_code": "IT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "IVORY COAST",
+   "alias": "Ivory Coast",
+   "country_code": "CI",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "JAM",
+   "alias": "JAM",
+   "country_code": "JM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "JAMAICA",
+   "alias": "Jamaica",
+   "country_code": "JM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "JAPAN",
+   "alias": "Japan",
+   "country_code": "JP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "JE",
+   "alias": "JE",
+   "country_code": "JE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "JERSEY",
+   "alias": "Jersey",
+   "country_code": "JE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "JEY",
+   "alias": "JEY",
+   "country_code": "JE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "JM",
+   "alias": "JM",
+   "country_code": "JM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "JO",
+   "alias": "JO",
+   "country_code": "JO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "JOR",
+   "alias": "JOR",
+   "country_code": "JO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "JORDAN",
+   "alias": "Jordan",
+   "country_code": "JO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "JP",
+   "alias": "JP",
+   "country_code": "JP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "JPN",
+   "alias": "JPN",
+   "country_code": "JP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KAZ",
+   "alias": "KAZ",
+   "country_code": "KZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KAZAKHSTAN",
+   "alias": "Kazakhstan",
+   "country_code": "KZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KE",
+   "alias": "KE",
+   "country_code": "KE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KEN",
+   "alias": "KEN",
+   "country_code": "KE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KENYA",
+   "alias": "Kenya",
+   "country_code": "KE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KG",
+   "alias": "KG",
+   "country_code": "KG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KGZ",
+   "alias": "KGZ",
+   "country_code": "KG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KH",
+   "alias": "KH",
+   "country_code": "KH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KHM",
+   "alias": "KHM",
+   "country_code": "KH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KI",
+   "alias": "KI",
+   "country_code": "KI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF BAHRAIN",
+   "alias": "Kingdom of Bahrain",
+   "country_code": "BH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF BELGIUM",
+   "alias": "Kingdom of Belgium",
+   "country_code": "BE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF BHUTAN",
+   "alias": "Kingdom of Bhutan",
+   "country_code": "BT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF CAMBODIA",
+   "alias": "Kingdom of Cambodia",
+   "country_code": "KH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF DENMARK",
+   "alias": "Kingdom of Denmark",
+   "country_code": "DK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF ESWATINI",
+   "alias": "Kingdom of Eswatini",
+   "country_code": "SZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF LESOTHO",
+   "alias": "Kingdom of Lesotho",
+   "country_code": "LS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF MOROCCO",
+   "alias": "Kingdom of Morocco",
+   "country_code": "MA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF NORWAY",
+   "alias": "Kingdom of Norway",
+   "country_code": "NO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF SAUDI ARABIA",
+   "alias": "Kingdom of Saudi Arabia",
+   "country_code": "SA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF SPAIN",
+   "alias": "Kingdom of Spain",
+   "country_code": "ES",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF SWEDEN",
+   "alias": "Kingdom of Sweden",
+   "country_code": "SE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF THAILAND",
+   "alias": "Kingdom of Thailand",
+   "country_code": "TH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF THE NETHERLANDS",
+   "alias": "Kingdom of the Netherlands",
+   "country_code": "NL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KINGDOM OF TONGA",
+   "alias": "Kingdom of Tonga",
+   "country_code": "TO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KIR",
+   "alias": "KIR",
+   "country_code": "KI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KIRIBATI",
+   "alias": "Kiribati",
+   "country_code": "KI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KM",
+   "alias": "KM",
+   "country_code": "KM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KN",
+   "alias": "KN",
+   "country_code": "KN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KNA",
+   "alias": "KNA",
+   "country_code": "KN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KOR",
+   "alias": "KOR",
+   "country_code": "KR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KOREA",
+   "alias": "Korea",
+   "country_code": "KR",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "KOREA, D.P.R OF",
+   "alias": "Korea, D.P.R Of",
+   "country_code": "KP",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "KOREA, DEMOCRATIC PEOPLE'S REPUBLIC OF",
+   "alias": "Korea, Democratic People's Republic of",
+   "country_code": "KP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KOREA, REP. OF",
+   "alias": "Korea, Rep. Of",
+   "country_code": "KR",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "KOREA, REPUBLIC OF",
+   "alias": "Korea, Republic of",
+   "country_code": "KR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KOREA, Â D.P.R OF",
+   "alias": "Korea, Â D.P.R Of",
+   "country_code": "KP",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "KOSOVO",
+   "alias": "Kosovo",
+   "country_code": "XK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KP",
+   "alias": "KP",
+   "country_code": "KP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KR",
+   "alias": "KR",
+   "country_code": "KR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KUWAIT",
+   "alias": "Kuwait",
+   "country_code": "KW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KW",
+   "alias": "KW",
+   "country_code": "KW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KWT",
+   "alias": "KWT",
+   "country_code": "KW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KY",
+   "alias": "KY",
+   "country_code": "KY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KYRGYZ REPUBLIC",
+   "alias": "Kyrgyz Republic",
+   "country_code": "KG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KYRGYZSTAN",
+   "alias": "Kyrgyzstan",
+   "country_code": "KG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "KZ",
+   "alias": "KZ",
+   "country_code": "KZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LA",
+   "alias": "LA",
+   "country_code": "LA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LAO",
+   "alias": "LAO",
+   "country_code": "LA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LAO PEOPLE'S DEMOCRATIC REPUBLIC",
+   "alias": "Lao People's Democratic Republic",
+   "country_code": "LA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LAOS",
+   "alias": "Laos",
+   "country_code": "LA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LATVIA",
+   "alias": "Latvia",
+   "country_code": "LV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LB",
+   "alias": "LB",
+   "country_code": "LB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LBN",
+   "alias": "LBN",
+   "country_code": "LB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LBR",
+   "alias": "LBR",
+   "country_code": "LR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LBY",
+   "alias": "LBY",
+   "country_code": "LY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LC",
+   "alias": "LC",
+   "country_code": "LC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LCA",
+   "alias": "LCA",
+   "country_code": "LC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LEBANESE REPUBLIC",
+   "alias": "Lebanese Republic",
+   "country_code": "LB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LEBANON",
+   "alias": "Lebanon",
+   "country_code": "LB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LESOTHO",
+   "alias": "Lesotho",
+   "country_code": "LS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LI",
+   "alias": "LI",
+   "country_code": "LI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LIBERIA",
+   "alias": "Liberia",
+   "country_code": "LR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LIBYA",
+   "alias": "Libya",
+   "country_code": "LY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LIE",
+   "alias": "LIE",
+   "country_code": "LI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LIECHTENSTEIN",
+   "alias": "Liechtenstein",
+   "country_code": "LI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LITHUANIA",
+   "alias": "Lithuania",
+   "country_code": "LT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LK",
+   "alias": "LK",
+   "country_code": "LK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LKA",
+   "alias": "LKA",
+   "country_code": "LK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LR",
+   "alias": "LR",
+   "country_code": "LR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LS",
+   "alias": "LS",
+   "country_code": "LS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LSO",
+   "alias": "LSO",
+   "country_code": "LS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LT",
+   "alias": "LT",
+   "country_code": "LT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LTU",
+   "alias": "LTU",
+   "country_code": "LT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LU",
+   "alias": "LU",
+   "country_code": "LU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LUX",
+   "alias": "LUX",
+   "country_code": "LU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LUXEMBOURG",
+   "alias": "Luxembourg",
+   "country_code": "LU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LV",
+   "alias": "LV",
+   "country_code": "LV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LVA",
+   "alias": "LVA",
+   "country_code": "LV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "LY",
+   "alias": "LY",
+   "country_code": "LY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MA",
+   "alias": "MA",
+   "country_code": "MA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MAC",
+   "alias": "MAC",
+   "country_code": "MO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MACAO",
+   "alias": "Macao",
+   "country_code": "MO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MACAO SPECIAL ADMINISTRATIVE REGION OF CHINA",
+   "alias": "Macao Special Administrative Region of China",
+   "country_code": "MO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MACAU",
+   "alias": "MACAU",
+   "country_code": "MO",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "MACAU SAR CHINA",
+   "alias": "Macau SAR China",
+   "country_code": "MO",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "MADAGASCAR",
+   "alias": "Madagascar",
+   "country_code": "MG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MAF",
+   "alias": "MAF",
+   "country_code": "MF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MAINLAND CHINA",
+   "alias": "Mainland China",
+   "country_code": "CN",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "MALAWI",
+   "alias": "Malawi",
+   "country_code": "MW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MALAYSIA",
+   "alias": "Malaysia",
+   "country_code": "MY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MALDIVES",
+   "alias": "Maldives",
+   "country_code": "MV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MALI",
+   "alias": "Mali",
+   "country_code": "ML",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MALTA",
+   "alias": "Malta",
+   "country_code": "MT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MAR",
+   "alias": "MAR",
+   "country_code": "MA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MARSHALL ISL.",
+   "alias": "MARSHALL ISL.",
+   "country_code": "MH",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "MARSHALL ISLANDS",
+   "alias": "Marshall Islands",
+   "country_code": "MH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MARTINIQUE",
+   "alias": "Martinique",
+   "country_code": "MQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MAURITANIA",
+   "alias": "Mauritania",
+   "country_code": "MR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MAURITIUS",
+   "alias": "Mauritius",
+   "country_code": "MU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MAYOTTE",
+   "alias": "Mayotte",
+   "country_code": "YT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MC",
+   "alias": "MC",
+   "country_code": "MC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MCO",
+   "alias": "MCO",
+   "country_code": "MC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MD",
+   "alias": "MD",
+   "country_code": "MD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MDA",
+   "alias": "MDA",
+   "country_code": "MD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MDG",
+   "alias": "MDG",
+   "country_code": "MG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MDV",
+   "alias": "MDV",
+   "country_code": "MV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ME",
+   "alias": "ME",
+   "country_code": "ME",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MEX",
+   "alias": "MEX",
+   "country_code": "MX",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MEXICO",
+   "alias": "Mexico",
+   "country_code": "MX",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MF",
+   "alias": "MF",
+   "country_code": "MF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MG",
+   "alias": "MG",
+   "country_code": "MG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MH",
+   "alias": "MH",
+   "country_code": "MH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MHL",
+   "alias": "MHL",
+   "country_code": "MH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MICRONESIA",
+   "alias": "Micronesia",
+   "country_code": "FM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MICRONESIA, FEDERATED STATES OF",
+   "alias": "Micronesia, Federated States of",
+   "country_code": "FM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MK",
+   "alias": "MK",
+   "country_code": "MK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MKD",
+   "alias": "MKD",
+   "country_code": "MK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ML",
+   "alias": "ML",
+   "country_code": "ML",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MLI",
+   "alias": "MLI",
+   "country_code": "ML",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MLT",
+   "alias": "MLT",
+   "country_code": "MT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MM",
+   "alias": "MM",
+   "country_code": "MM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MMR",
+   "alias": "MMR",
+   "country_code": "MM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MN",
+   "alias": "MN",
+   "country_code": "MN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MNE",
+   "alias": "MNE",
+   "country_code": "ME",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MNG",
+   "alias": "MNG",
+   "country_code": "MN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MNP",
+   "alias": "MNP",
+   "country_code": "MP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MO",
+   "alias": "MO",
+   "country_code": "MO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MOLDOVA",
+   "alias": "Moldova",
+   "country_code": "MD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MOLDOVA, REP. OF",
+   "alias": "Moldova, Rep. Of",
+   "country_code": "MD",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "MOLDOVA, REPUBLIC OF",
+   "alias": "Moldova, Republic of",
+   "country_code": "MD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MONACO",
+   "alias": "Monaco",
+   "country_code": "MC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MONGOLIA",
+   "alias": "Mongolia",
+   "country_code": "MN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MONTENEGRO",
+   "alias": "Montenegro",
+   "country_code": "ME",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MONTENEGRO, REP OF",
+   "alias": "Montenegro, Rep Of",
+   "country_code": "ME",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "MONTSERRAT",
+   "alias": "Montserrat",
+   "country_code": "MS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MOROCCO",
+   "alias": "Morocco",
+   "country_code": "MA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MOZ",
+   "alias": "MOZ",
+   "country_code": "MZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MOZAMBIQUE",
+   "alias": "Mozambique",
+   "country_code": "MZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MP",
+   "alias": "MP",
+   "country_code": "MP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MQ",
+   "alias": "MQ",
+   "country_code": "MQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MR",
+   "alias": "MR",
+   "country_code": "MR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MRT",
+   "alias": "MRT",
+   "country_code": "MR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MS",
+   "alias": "MS",
+   "country_code": "MS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MSR",
+   "alias": "MSR",
+   "country_code": "MS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MT",
+   "alias": "MT",
+   "country_code": "MT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MTQ",
+   "alias": "MTQ",
+   "country_code": "MQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MU",
+   "alias": "MU",
+   "country_code": "MU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MUS",
+   "alias": "MUS",
+   "country_code": "MU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MV",
+   "alias": "MV",
+   "country_code": "MV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MW",
+   "alias": "MW",
+   "country_code": "MW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MWI",
+   "alias": "MWI",
+   "country_code": "MW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MX",
+   "alias": "MX",
+   "country_code": "MX",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MY",
+   "alias": "MY",
+   "country_code": "MY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MYANMAR",
+   "alias": "Myanmar",
+   "country_code": "MM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MYS",
+   "alias": "MYS",
+   "country_code": "MY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MYT",
+   "alias": "MYT",
+   "country_code": "YT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "MZ",
+   "alias": "MZ",
+   "country_code": "MZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NA",
+   "alias": "NA",
+   "country_code": "NA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NAM",
+   "alias": "NAM",
+   "country_code": "NA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NAMIBIA",
+   "alias": "Namibia",
+   "country_code": "NA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NAURU",
+   "alias": "Nauru",
+   "country_code": "NR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NAURU, REP. OF",
+   "alias": "Nauru, Rep. Of",
+   "country_code": "NR",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "NC",
+   "alias": "NC",
+   "country_code": "NC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NCL",
+   "alias": "NCL",
+   "country_code": "NC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NE",
+   "alias": "NE",
+   "country_code": "NE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NEPAL",
+   "alias": "Nepal",
+   "country_code": "NP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NER",
+   "alias": "NER",
+   "country_code": "NE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NETHERLANDS",
+   "alias": "Netherlands",
+   "country_code": "NL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NETHERLANDS, THE",
+   "alias": "Netherlands, The",
+   "country_code": "NL",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "NEVIS",
+   "alias": "NEVIS",
+   "country_code": "KN",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "NEW CALEDONIA",
+   "alias": "New Caledonia",
+   "country_code": "NC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NEW ZEALAND",
+   "alias": "New Zealand",
+   "country_code": "NZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NF",
+   "alias": "NF",
+   "country_code": "NF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NFK",
+   "alias": "NFK",
+   "country_code": "NF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NG",
+   "alias": "NG",
+   "country_code": "NG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NGA",
+   "alias": "NGA",
+   "country_code": "NG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NI",
+   "alias": "NI",
+   "country_code": "NI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NIC",
+   "alias": "NIC",
+   "country_code": "NI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NICARAGUA",
+   "alias": "Nicaragua",
+   "country_code": "NI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NIGER",
+   "alias": "Niger",
+   "country_code": "NE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NIGERIA",
+   "alias": "Nigeria",
+   "country_code": "NG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NIU",
+   "alias": "NIU",
+   "country_code": "NU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NIUE",
+   "alias": "Niue",
+   "country_code": "NU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NL",
+   "alias": "NL",
+   "country_code": "NL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NLD",
+   "alias": "NLD",
+   "country_code": "NL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NO",
+   "alias": "NO",
+   "country_code": "NO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NO. MARIANA ISLANDS",
+   "alias": "NO. MARIANA ISLANDS",
+   "country_code": "MP",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "NOR",
+   "alias": "NOR",
+   "country_code": "NO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NORFOLK ISLAND",
+   "alias": "Norfolk Island",
+   "country_code": "NF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NORTH KOREA",
+   "alias": "North Korea",
+   "country_code": "KP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NORTH MACEDONIA",
+   "alias": "North Macedonia",
+   "country_code": "MK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NORTHERN MARIANA ISLANDS",
+   "alias": "Northern Mariana Islands",
+   "country_code": "MP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NORWAY",
+   "alias": "Norway",
+   "country_code": "NO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NP",
+   "alias": "NP",
+   "country_code": "NP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NPL",
+   "alias": "NPL",
+   "country_code": "NP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NR",
+   "alias": "NR",
+   "country_code": "NR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NRU",
+   "alias": "NRU",
+   "country_code": "NR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NU",
+   "alias": "NU",
+   "country_code": "NU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NZ",
+   "alias": "NZ",
+   "country_code": "NZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "NZL",
+   "alias": "NZL",
+   "country_code": "NZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "OM",
+   "alias": "OM",
+   "country_code": "OM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "OMAN",
+   "alias": "Oman",
+   "country_code": "OM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "OMN",
+   "alias": "OMN",
+   "country_code": "OM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PA",
+   "alias": "PA",
+   "country_code": "PA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PAK",
+   "alias": "PAK",
+   "country_code": "PK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PAKISTAN",
+   "alias": "Pakistan",
+   "country_code": "PK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PALAU",
+   "alias": "Palau",
+   "country_code": "PW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PALESTINE",
+   "alias": "Palestine",
+   "country_code": "PS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PALESTINE, STATE OF",
+   "alias": "Palestine, State of",
+   "country_code": "PS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PAN",
+   "alias": "PAN",
+   "country_code": "PA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PANAMA",
+   "alias": "Panama",
+   "country_code": "PA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PAPUA NEW GUIN.",
+   "alias": "PAPUA NEW GUIN.",
+   "country_code": "PG",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "PAPUA NEW GUINEA",
+   "alias": "Papua New Guinea",
+   "country_code": "PG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PARAGUAY",
+   "alias": "Paraguay",
+   "country_code": "PY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PCN",
+   "alias": "PCN",
+   "country_code": "PN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PE",
+   "alias": "PE",
+   "country_code": "PE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PEOPLE'S DEMOCRATIC REPUBLIC OF ALGERIA",
+   "alias": "People's Democratic Republic of Algeria",
+   "country_code": "DZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PEOPLE'S REPUBLIC OF BANGLADESH",
+   "alias": "People's Republic of Bangladesh",
+   "country_code": "BD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PEOPLE'S REPUBLIC OF CHINA",
+   "alias": "People's Republic of China",
+   "country_code": "CN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PER",
+   "alias": "PER",
+   "country_code": "PE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PERU",
+   "alias": "Peru",
+   "country_code": "PE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PF",
+   "alias": "PF",
+   "country_code": "PF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PG",
+   "alias": "PG",
+   "country_code": "PG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PH",
+   "alias": "PH",
+   "country_code": "PH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PHILIPPINES",
+   "alias": "Philippines",
+   "country_code": "PH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PHILIPPINES, THE",
+   "alias": "PHILIPPINES, THE",
+   "country_code": "PH",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "PHL",
+   "alias": "PHL",
+   "country_code": "PH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PITCAIRN",
+   "alias": "Pitcairn",
+   "country_code": "PN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PK",
+   "alias": "PK",
+   "country_code": "PK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PL",
+   "alias": "PL",
+   "country_code": "PL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PLURINATIONAL STATE OF BOLIVIA",
+   "alias": "Plurinational State of Bolivia",
+   "country_code": "BO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PLW",
+   "alias": "PLW",
+   "country_code": "PW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PM",
+   "alias": "PM",
+   "country_code": "PM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PN",
+   "alias": "PN",
+   "country_code": "PN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PNG",
+   "alias": "PNG",
+   "country_code": "PG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "POL",
+   "alias": "POL",
+   "country_code": "PL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "POLAND",
+   "alias": "Poland",
+   "country_code": "PL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PORTUGAL",
+   "alias": "Portugal",
+   "country_code": "PT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PORTUGUESE REPUBLIC",
+   "alias": "Portuguese Republic",
+   "country_code": "PT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PR",
+   "alias": "PR",
+   "country_code": "PR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PRC",
+   "alias": "PRC",
+   "country_code": "CN",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "PRI",
+   "alias": "PRI",
+   "country_code": "PR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PRINCIPALITY OF ANDORRA",
+   "alias": "Principality of Andorra",
+   "country_code": "AD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PRINCIPALITY OF LIECHTENSTEIN",
+   "alias": "Principality of Liechtenstein",
+   "country_code": "LI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PRINCIPALITY OF MONACO",
+   "alias": "Principality of Monaco",
+   "country_code": "MC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PRK",
+   "alias": "PRK",
+   "country_code": "KP",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PRT",
+   "alias": "PRT",
+   "country_code": "PT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PRY",
+   "alias": "PRY",
+   "country_code": "PY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PS",
+   "alias": "PS",
+   "country_code": "PS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PSE",
+   "alias": "PSE",
+   "country_code": "PS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PT",
+   "alias": "PT",
+   "country_code": "PT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PUERTO RICO",
+   "alias": "Puerto Rico",
+   "country_code": "PR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PW",
+   "alias": "PW",
+   "country_code": "PW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PY",
+   "alias": "PY",
+   "country_code": "PY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "PYF",
+   "alias": "PYF",
+   "country_code": "PF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "QA",
+   "alias": "QA",
+   "country_code": "QA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "QAT",
+   "alias": "QAT",
+   "country_code": "QA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "QATAR",
+   "alias": "Qatar",
+   "country_code": "QA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "RE",
+   "alias": "RE",
+   "country_code": "RE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF ALBANIA",
+   "alias": "Republic of Albania",
+   "country_code": "AL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF ANGOLA",
+   "alias": "Republic of Angola",
+   "country_code": "AO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF ARMENIA",
+   "alias": "Republic of Armenia",
+   "country_code": "AM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF AUSTRIA",
+   "alias": "Republic of Austria",
+   "country_code": "AT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF AZERBAIJAN",
+   "alias": "Republic of Azerbaijan",
+   "country_code": "AZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF BELARUS",
+   "alias": "Republic of Belarus",
+   "country_code": "BY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF BENIN",
+   "alias": "Republic of Benin",
+   "country_code": "BJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF BOSNIA AND HERZEGOVINA",
+   "alias": "Republic of Bosnia and Herzegovina",
+   "country_code": "BA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF BOTSWANA",
+   "alias": "Republic of Botswana",
+   "country_code": "BW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF BULGARIA",
+   "alias": "Republic of Bulgaria",
+   "country_code": "BG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF BURUNDI",
+   "alias": "Republic of Burundi",
+   "country_code": "BI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF CABO VERDE",
+   "alias": "Republic of Cabo Verde",
+   "country_code": "CV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF CAMEROON",
+   "alias": "Republic of Cameroon",
+   "country_code": "CM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF CHAD",
+   "alias": "Republic of Chad",
+   "country_code": "TD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF CHILE",
+   "alias": "Republic of Chile",
+   "country_code": "CL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF COLOMBIA",
+   "alias": "Republic of Colombia",
+   "country_code": "CO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF COSTA RICA",
+   "alias": "Republic of Costa Rica",
+   "country_code": "CR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF CROATIA",
+   "alias": "Republic of Croatia",
+   "country_code": "HR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF CUBA",
+   "alias": "Republic of Cuba",
+   "country_code": "CU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF CYPRUS",
+   "alias": "Republic of Cyprus",
+   "country_code": "CY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF CÔTE D'IVOIRE",
+   "alias": "Republic of Côte d'Ivoire",
+   "country_code": "CI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF DJIBOUTI",
+   "alias": "Republic of Djibouti",
+   "country_code": "DJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF ECUADOR",
+   "alias": "Republic of Ecuador",
+   "country_code": "EC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF EL SALVADOR",
+   "alias": "Republic of El Salvador",
+   "country_code": "SV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF EQUATORIAL GUINEA",
+   "alias": "Republic of Equatorial Guinea",
+   "country_code": "GQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF ESTONIA",
+   "alias": "Republic of Estonia",
+   "country_code": "EE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF FIJI",
+   "alias": "Republic of Fiji",
+   "country_code": "FJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF FINLAND",
+   "alias": "Republic of Finland",
+   "country_code": "FI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF GHANA",
+   "alias": "Republic of Ghana",
+   "country_code": "GH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF GUATEMALA",
+   "alias": "Republic of Guatemala",
+   "country_code": "GT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF GUINEA",
+   "alias": "Republic of Guinea",
+   "country_code": "GN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF GUINEA-BISSAU",
+   "alias": "Republic of Guinea-Bissau",
+   "country_code": "GW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF GUYANA",
+   "alias": "Republic of Guyana",
+   "country_code": "GY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF HAITI",
+   "alias": "Republic of Haiti",
+   "country_code": "HT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF HONDURAS",
+   "alias": "Republic of Honduras",
+   "country_code": "HN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF ICELAND",
+   "alias": "Republic of Iceland",
+   "country_code": "IS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF INDIA",
+   "alias": "Republic of India",
+   "country_code": "IN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF INDONESIA",
+   "alias": "Republic of Indonesia",
+   "country_code": "ID",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF IRAQ",
+   "alias": "Republic of Iraq",
+   "country_code": "IQ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF KAZAKHSTAN",
+   "alias": "Republic of Kazakhstan",
+   "country_code": "KZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF KENYA",
+   "alias": "Republic of Kenya",
+   "country_code": "KE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF KIRIBATI",
+   "alias": "Republic of Kiribati",
+   "country_code": "KI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF KOREA",
+   "alias": "Republic of Korea",
+   "country_code": "KR",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "REPUBLIC OF KOSOVO",
+   "alias": "Republic of Kosovo",
+   "country_code": "XK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF LATVIA",
+   "alias": "Republic of Latvia",
+   "country_code": "LV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF LIBERIA",
+   "alias": "Republic of Liberia",
+   "country_code": "LR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF LITHUANIA",
+   "alias": "Republic of Lithuania",
+   "country_code": "LT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF MADAGASCAR",
+   "alias": "Republic of Madagascar",
+   "country_code": "MG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF MALAWI",
+   "alias": "Republic of Malawi",
+   "country_code": "MW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF MALDIVES",
+   "alias": "Republic of Maldives",
+   "country_code": "MV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF MALI",
+   "alias": "Republic of Mali",
+   "country_code": "ML",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF MALTA",
+   "alias": "Republic of Malta",
+   "country_code": "MT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF MAURITIUS",
+   "alias": "Republic of Mauritius",
+   "country_code": "MU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF MOLDOVA",
+   "alias": "Republic of Moldova",
+   "country_code": "MD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF MOZAMBIQUE",
+   "alias": "Republic of Mozambique",
+   "country_code": "MZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF MYANMAR",
+   "alias": "Republic of Myanmar",
+   "country_code": "MM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF NAMIBIA",
+   "alias": "Republic of Namibia",
+   "country_code": "NA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF NAURU",
+   "alias": "Republic of Nauru",
+   "country_code": "NR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF NICARAGUA",
+   "alias": "Republic of Nicaragua",
+   "country_code": "NI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF NORTH MACEDONIA",
+   "alias": "Republic of North Macedonia",
+   "country_code": "MK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF PALAU",
+   "alias": "Republic of Palau",
+   "country_code": "PW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF PANAMA",
+   "alias": "Republic of Panama",
+   "country_code": "PA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF PARAGUAY",
+   "alias": "Republic of Paraguay",
+   "country_code": "PY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF PERU",
+   "alias": "Republic of Peru",
+   "country_code": "PE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF POLAND",
+   "alias": "Republic of Poland",
+   "country_code": "PL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF SAN MARINO",
+   "alias": "Republic of San Marino",
+   "country_code": "SM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF SENEGAL",
+   "alias": "Republic of Senegal",
+   "country_code": "SN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF SERBIA",
+   "alias": "Republic of Serbia",
+   "country_code": "RS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF SEYCHELLES",
+   "alias": "Republic of Seychelles",
+   "country_code": "SC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF SIERRA LEONE",
+   "alias": "Republic of Sierra Leone",
+   "country_code": "SL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF SINGAPORE",
+   "alias": "Republic of Singapore",
+   "country_code": "SG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF SLOVENIA",
+   "alias": "Republic of Slovenia",
+   "country_code": "SI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF SOUTH AFRICA",
+   "alias": "Republic of South Africa",
+   "country_code": "ZA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF SOUTH SUDAN",
+   "alias": "Republic of South Sudan",
+   "country_code": "SS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF SURINAME",
+   "alias": "Republic of Suriname",
+   "country_code": "SR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF TAJIKISTAN",
+   "alias": "Republic of Tajikistan",
+   "country_code": "TJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF THE CONGO",
+   "alias": "Republic of the Congo",
+   "country_code": "CG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF THE GAMBIA",
+   "alias": "Republic of the Gambia",
+   "country_code": "GM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF THE MARSHALL ISLANDS",
+   "alias": "Republic of the Marshall Islands",
+   "country_code": "MH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF THE NIGER",
+   "alias": "Republic of the Niger",
+   "country_code": "NE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF THE PHILIPPINES",
+   "alias": "Republic of the Philippines",
+   "country_code": "PH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF THE SUDAN",
+   "alias": "Republic of the Sudan",
+   "country_code": "SD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF TRINIDAD AND TOBAGO",
+   "alias": "Republic of Trinidad and Tobago",
+   "country_code": "TT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF TUNISIA",
+   "alias": "Republic of Tunisia",
+   "country_code": "TN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF TÜRKIYE",
+   "alias": "Republic of Türkiye",
+   "country_code": "TR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF UGANDA",
+   "alias": "Republic of Uganda",
+   "country_code": "UG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF UZBEKISTAN",
+   "alias": "Republic of Uzbekistan",
+   "country_code": "UZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF VANUATU",
+   "alias": "Republic of Vanuatu",
+   "country_code": "VU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF YEMEN",
+   "alias": "Republic of Yemen",
+   "country_code": "YE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF ZAMBIA",
+   "alias": "Republic of Zambia",
+   "country_code": "ZM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REPUBLIC OF ZIMBABWE",
+   "alias": "Republic of Zimbabwe",
+   "country_code": "ZW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REU",
+   "alias": "REU",
+   "country_code": "RE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "REUNION",
+   "alias": "REUNION",
+   "country_code": "RE",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "REUNION, ISLAND OF",
+   "alias": "Reunion, Island Of",
+   "country_code": "RE",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "RO",
+   "alias": "RO",
+   "country_code": "RO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ROMANIA",
+   "alias": "Romania",
+   "country_code": "RO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ROU",
+   "alias": "ROU",
+   "country_code": "RO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "RS",
+   "alias": "RS",
+   "country_code": "RS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "RU",
+   "alias": "RU",
+   "country_code": "RU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "RUS",
+   "alias": "RUS",
+   "country_code": "RU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "RUSSIA",
+   "alias": "Russia",
+   "country_code": "RU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "RUSSIAN FEDERATION",
+   "alias": "Russian Federation",
+   "country_code": "RU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "RW",
+   "alias": "RW",
+   "country_code": "RW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "RWA",
+   "alias": "RWA",
+   "country_code": "RW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "RWANDA",
+   "alias": "Rwanda",
+   "country_code": "RW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "RWANDESE REPUBLIC",
+   "alias": "Rwandese Republic",
+   "country_code": "RW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "RÉUNION",
+   "alias": "Réunion",
+   "country_code": "RE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SA",
+   "alias": "SA",
+   "country_code": "SA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SAINT BARTHÉLEMY",
+   "alias": "Saint Barthélemy",
+   "country_code": "BL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SAINT HELENA",
+   "alias": "Saint Helena",
+   "country_code": "SH",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "SAINT HELENA, ASCENSION AND TRISTAN DA CUNHA",
+   "alias": "Saint Helena, Ascension and Tristan da Cunha",
+   "country_code": "SH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SAINT KITTS AND NEVIS",
+   "alias": "Saint Kitts and Nevis",
+   "country_code": "KN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SAINT LUCIA",
+   "alias": "Saint Lucia",
+   "country_code": "LC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SAINT MARTIN (FRENCH PART)",
+   "alias": "Saint Martin (French part)",
+   "country_code": "MF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SAINT PIERRE AND MIQUELON",
+   "alias": "Saint Pierre and Miquelon",
+   "country_code": "PM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SAINT VINCENT AND THE GRENADINES",
+   "alias": "Saint Vincent and the Grenadines",
+   "country_code": "VC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SAMOA",
+   "alias": "Samoa",
+   "country_code": "WS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SAN MARINO",
+   "alias": "San Marino",
+   "country_code": "SM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SAO TOME & PRINC.",
+   "alias": "SAO TOME & PRINC.",
+   "country_code": "ST",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "SAO TOME AND PRINCIPE",
+   "alias": "Sao Tome and Principe",
+   "country_code": "ST",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SAU",
+   "alias": "SAU",
+   "country_code": "SA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SAUDI ARABIA",
+   "alias": "Saudi Arabia",
+   "country_code": "SA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SB",
+   "alias": "SB",
+   "country_code": "SB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SC",
+   "alias": "SC",
+   "country_code": "SC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SD",
+   "alias": "SD",
+   "country_code": "SD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SDN",
+   "alias": "SDN",
+   "country_code": "SD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SE",
+   "alias": "SE",
+   "country_code": "SE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SEN",
+   "alias": "SEN",
+   "country_code": "SN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SENEGAL",
+   "alias": "Senegal",
+   "country_code": "SN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SERBIA",
+   "alias": "Serbia",
+   "country_code": "RS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SERBIA, REP. OF",
+   "alias": "Serbia, Rep. Of",
+   "country_code": "RS",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "SERBIA, REPUBLIC OF",
+   "alias": "Serbia, Republic Of",
+   "country_code": "RS",
+   "source": "TARIFF_TABLE"
+  },
+  {
+   "alias_norm": "SEYCHELLES",
+   "alias": "Seychelles",
+   "country_code": "SC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SG",
+   "alias": "SG",
+   "country_code": "SG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SGP",
+   "alias": "SGP",
+   "country_code": "SG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SGS",
+   "alias": "SGS",
+   "country_code": "GS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SH",
+   "alias": "SH",
+   "country_code": "SH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SHN",
+   "alias": "SHN",
+   "country_code": "SH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SI",
+   "alias": "SI",
+   "country_code": "SI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SIERRA LEONE",
+   "alias": "Sierra Leone",
+   "country_code": "SL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SINGAPORE",
+   "alias": "Singapore",
+   "country_code": "SG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SINT MAARTEN (DUTCH PART)",
+   "alias": "Sint Maarten (Dutch part)",
+   "country_code": "SX",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SJ",
+   "alias": "SJ",
+   "country_code": "SJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SJM",
+   "alias": "SJM",
+   "country_code": "SJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SK",
+   "alias": "SK",
+   "country_code": "SK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SL",
+   "alias": "SL",
+   "country_code": "SL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SLB",
+   "alias": "SLB",
+   "country_code": "SB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SLE",
+   "alias": "SLE",
+   "country_code": "SL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SLOVAK REPUBLIC",
+   "alias": "Slovak Republic",
+   "country_code": "SK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SLOVAKIA",
+   "alias": "Slovakia",
+   "country_code": "SK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SLOVENIA",
+   "alias": "Slovenia",
+   "country_code": "SI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SLV",
+   "alias": "SLV",
+   "country_code": "SV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SM",
+   "alias": "SM",
+   "country_code": "SM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SMR",
+   "alias": "SMR",
+   "country_code": "SM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SN",
+   "alias": "SN",
+   "country_code": "SN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SO",
+   "alias": "SO",
+   "country_code": "SO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SOCIALIST REPUBLIC OF VIET NAM",
+   "alias": "Socialist Republic of Viet Nam",
+   "country_code": "VN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SOLOMON ISL.",
+   "alias": "SOLOMON ISL.",
+   "country_code": "SB",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "SOLOMON ISLANDS",
+   "alias": "Solomon Islands",
+   "country_code": "SB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SOM",
+   "alias": "SOM",
+   "country_code": "SO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SOMALIA",
+   "alias": "Somalia",
+   "country_code": "SO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SOMALIA HARGEISA",
+   "alias": "SOMALIA HARGEISA",
+   "country_code": "SO",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "SOMALIA MOGADISHU",
+   "alias": "SOMALIA MOGADISHU",
+   "country_code": "SO",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "SOUTH AFRICA",
+   "alias": "South Africa",
+   "country_code": "ZA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SOUTH GEORGIA AND THE SOUTH SANDWICH ISLANDS",
+   "alias": "South Georgia and the South Sandwich Islands",
+   "country_code": "GS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SOUTH KOREA",
+   "alias": "South Korea",
+   "country_code": "KR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SOUTH SUDAN",
+   "alias": "South Sudan",
+   "country_code": "SS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SPAIN",
+   "alias": "Spain",
+   "country_code": "ES",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SPM",
+   "alias": "SPM",
+   "country_code": "PM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SR",
+   "alias": "SR",
+   "country_code": "SR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SRB",
+   "alias": "SRB",
+   "country_code": "RS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SRI LANKA",
+   "alias": "Sri Lanka",
+   "country_code": "LK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SS",
+   "alias": "SS",
+   "country_code": "SS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SSD",
+   "alias": "SSD",
+   "country_code": "SS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ST",
+   "alias": "ST",
+   "country_code": "ST",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ST. BARTHELEMY",
+   "alias": "ST. BARTHELEMY",
+   "country_code": "BL",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "ST. EUSTATIUS",
+   "alias": "ST. EUSTATIUS",
+   "country_code": "BQ",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "ST. HELENA",
+   "alias": "ST. HELENA",
+   "country_code": "SH",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "ST. KITTS",
+   "alias": "ST. KITTS",
+   "country_code": "KN",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "ST. LUCIA",
+   "alias": "ST. LUCIA",
+   "country_code": "LC",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "ST. MAARTEN",
+   "alias": "ST. MAARTEN",
+   "country_code": "SX",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "ST. VINCENT",
+   "alias": "ST. VINCENT",
+   "country_code": "VC",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "STATE OF ISRAEL",
+   "alias": "State of Israel",
+   "country_code": "IL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "STATE OF KUWAIT",
+   "alias": "State of Kuwait",
+   "country_code": "KW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "STATE OF QATAR",
+   "alias": "State of Qatar",
+   "country_code": "QA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "STP",
+   "alias": "STP",
+   "country_code": "ST",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SUDAN",
+   "alias": "Sudan",
+   "country_code": "SD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SULTANATE OF OMAN",
+   "alias": "Sultanate of Oman",
+   "country_code": "OM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SUR",
+   "alias": "SUR",
+   "country_code": "SR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SURINAME",
+   "alias": "Suriname",
+   "country_code": "SR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SV",
+   "alias": "SV",
+   "country_code": "SV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SVALBARD AND JAN MAYEN",
+   "alias": "Svalbard and Jan Mayen",
+   "country_code": "SJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SVK",
+   "alias": "SVK",
+   "country_code": "SK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SVN",
+   "alias": "SVN",
+   "country_code": "SI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SWAZILAND",
+   "alias": "Swaziland",
+   "country_code": "SZ",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "SWE",
+   "alias": "SWE",
+   "country_code": "SE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SWEDEN",
+   "alias": "Sweden",
+   "country_code": "SE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SWISS CONFEDERATION",
+   "alias": "Swiss Confederation",
+   "country_code": "CH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SWITZERLAND",
+   "alias": "Switzerland",
+   "country_code": "CH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SWZ",
+   "alias": "SWZ",
+   "country_code": "SZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SX",
+   "alias": "SX",
+   "country_code": "SX",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SXM",
+   "alias": "SXM",
+   "country_code": "SX",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SY",
+   "alias": "SY",
+   "country_code": "SY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SYC",
+   "alias": "SYC",
+   "country_code": "SC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SYR",
+   "alias": "SYR",
+   "country_code": "SY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SYRIA",
+   "alias": "Syria",
+   "country_code": "SY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SYRIAN ARAB REPUBLIC",
+   "alias": "Syrian Arab Republic",
+   "country_code": "SY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "SZ",
+   "alias": "SZ",
+   "country_code": "SZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TAHITI",
+   "alias": "TAHITI",
+   "country_code": "PF",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "TAIWAN",
+   "alias": "Taiwan",
+   "country_code": "TW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TAIWAN, PROVINCE OF CHINA",
+   "alias": "Taiwan, Province of China",
+   "country_code": "TW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TAJIKISTAN",
+   "alias": "Tajikistan",
+   "country_code": "TJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TANZANIA",
+   "alias": "Tanzania",
+   "country_code": "TZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TANZANIA, UNITED REPUBLIC OF",
+   "alias": "Tanzania, United Republic of",
+   "country_code": "TZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TC",
+   "alias": "TC",
+   "country_code": "TC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TCA",
+   "alias": "TCA",
+   "country_code": "TC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TCD",
+   "alias": "TCD",
+   "country_code": "TD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TD",
+   "alias": "TD",
+   "country_code": "TD",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TF",
+   "alias": "TF",
+   "country_code": "TF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TG",
+   "alias": "TG",
+   "country_code": "TG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TGO",
+   "alias": "TGO",
+   "country_code": "TG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TH",
+   "alias": "TH",
+   "country_code": "TH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "THA",
+   "alias": "THA",
+   "country_code": "TH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "THAILAND",
+   "alias": "Thailand",
+   "country_code": "TH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "THE STATE OF ERITREA",
+   "alias": "the State of Eritrea",
+   "country_code": "ER",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "THE STATE OF PALESTINE",
+   "alias": "the State of Palestine",
+   "country_code": "PS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TIMOR-LESTE",
+   "alias": "Timor-Leste",
+   "country_code": "TL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TJ",
+   "alias": "TJ",
+   "country_code": "TJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TJK",
+   "alias": "TJK",
+   "country_code": "TJ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TK",
+   "alias": "TK",
+   "country_code": "TK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TKL",
+   "alias": "TKL",
+   "country_code": "TK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TKM",
+   "alias": "TKM",
+   "country_code": "TM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TL",
+   "alias": "TL",
+   "country_code": "TL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TLS",
+   "alias": "TLS",
+   "country_code": "TL",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TM",
+   "alias": "TM",
+   "country_code": "TM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TN",
+   "alias": "TN",
+   "country_code": "TN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TO",
+   "alias": "TO",
+   "country_code": "TO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TOGO",
+   "alias": "Togo",
+   "country_code": "TG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TOGOLESE REPUBLIC",
+   "alias": "Togolese Republic",
+   "country_code": "TG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TOKELAU",
+   "alias": "Tokelau",
+   "country_code": "TK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TON",
+   "alias": "TON",
+   "country_code": "TO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TONGA",
+   "alias": "Tonga",
+   "country_code": "TO",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TR",
+   "alias": "TR",
+   "country_code": "TR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TRINIDAD & TOB.",
+   "alias": "TRINIDAD & TOB.",
+   "country_code": "TT",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "TRINIDAD AND TOBAGO",
+   "alias": "Trinidad and Tobago",
+   "country_code": "TT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TT",
+   "alias": "TT",
+   "country_code": "TT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TTO",
+   "alias": "TTO",
+   "country_code": "TT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TUN",
+   "alias": "TUN",
+   "country_code": "TN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TUNISIA",
+   "alias": "Tunisia",
+   "country_code": "TN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TUR",
+   "alias": "TUR",
+   "country_code": "TR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TURKEY",
+   "alias": "TURKEY",
+   "country_code": "TR",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "TURKMENISTAN",
+   "alias": "Turkmenistan",
+   "country_code": "TM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TURKS & CAICOS",
+   "alias": "Turks & Caicos",
+   "country_code": "TC",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "TURKS & CAICOS ISL.",
+   "alias": "TURKS & CAICOS ISL.",
+   "country_code": "TC",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "TURKS AND CAICOS ISLANDS",
+   "alias": "Turks and Caicos Islands",
+   "country_code": "TC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TUV",
+   "alias": "TUV",
+   "country_code": "TV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TUVALU",
+   "alias": "Tuvalu",
+   "country_code": "TV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TV",
+   "alias": "TV",
+   "country_code": "TV",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TW",
+   "alias": "TW",
+   "country_code": "TW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TWN",
+   "alias": "TWN",
+   "country_code": "TW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TZ",
+   "alias": "TZ",
+   "country_code": "TZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TZA",
+   "alias": "TZA",
+   "country_code": "TZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "TÜRKIYE",
+   "alias": "Türkiye",
+   "country_code": "TR",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "U.S. VIRGIN ISLANDS",
+   "alias": "U.S. Virgin Islands",
+   "country_code": "VI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "U.S.A.",
+   "alias": "U.S.A.",
+   "country_code": "US",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "UA",
+   "alias": "UA",
+   "country_code": "UA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UAE",
+   "alias": "UAE",
+   "country_code": "AE",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "UG",
+   "alias": "UG",
+   "country_code": "UG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UGA",
+   "alias": "UGA",
+   "country_code": "UG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UGANDA",
+   "alias": "Uganda",
+   "country_code": "UG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UK",
+   "alias": "UK",
+   "country_code": "GB",
+   "source": "MANUAL"
+  },
+  {
+   "alias_norm": "UKR",
+   "alias": "UKR",
+   "country_code": "UA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UKRAINE",
+   "alias": "Ukraine",
+   "country_code": "UA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UM",
+   "alias": "UM",
+   "country_code": "UM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UMI",
+   "alias": "UMI",
+   "country_code": "UM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UNION OF THE COMOROS",
+   "alias": "Union of the Comoros",
+   "country_code": "KM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UNITED ARAB EMIR.",
+   "alias": "UNITED ARAB EMIR.",
+   "country_code": "AE",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "UNITED ARAB EMIRATES",
+   "alias": "United Arab Emirates",
+   "country_code": "AE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UNITED KINGDOM",
+   "alias": "United Kingdom",
+   "country_code": "GB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UNITED KINGDOM OF GREAT BRITAIN AND NORTHERN IRELAND",
+   "alias": "United Kingdom of Great Britain and Northern Ireland",
+   "country_code": "GB",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UNITED MEXICAN STATES",
+   "alias": "United Mexican States",
+   "country_code": "MX",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UNITED REPUBLIC OF TANZANIA",
+   "alias": "United Republic of Tanzania",
+   "country_code": "TZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UNITED STATES",
+   "alias": "United States",
+   "country_code": "US",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UNITED STATES MINOR OUTLYING ISLANDS",
+   "alias": "United States Minor Outlying Islands",
+   "country_code": "UM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UNITED STATES OF AMERICA",
+   "alias": "United States of America",
+   "country_code": "US",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "URUGUAY",
+   "alias": "Uruguay",
+   "country_code": "UY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "URY",
+   "alias": "URY",
+   "country_code": "UY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "US",
+   "alias": "US",
+   "country_code": "US",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "USA",
+   "alias": "USA",
+   "country_code": "US",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UY",
+   "alias": "UY",
+   "country_code": "UY",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UZ",
+   "alias": "UZ",
+   "country_code": "UZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UZB",
+   "alias": "UZB",
+   "country_code": "UZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "UZBEKISTAN",
+   "alias": "Uzbekistan",
+   "country_code": "UZ",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VA",
+   "alias": "VA",
+   "country_code": "VA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VANUATU",
+   "alias": "Vanuatu",
+   "country_code": "VU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VAT",
+   "alias": "VAT",
+   "country_code": "VA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VATICAN CITY",
+   "alias": "Vatican City",
+   "country_code": "VA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VATICAN CITY STATE",
+   "alias": "Vatican City State",
+   "country_code": "VA",
+   "source": "TARIFF_TABLE"
+  },
+  {
+   "alias_norm": "VC",
+   "alias": "VC",
+   "country_code": "VC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VCT",
+   "alias": "VCT",
+   "country_code": "VC",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VE",
+   "alias": "VE",
+   "country_code": "VE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VEN",
+   "alias": "VEN",
+   "country_code": "VE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VENEZUELA",
+   "alias": "Venezuela",
+   "country_code": "VE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VENEZUELA, BOLIVARIAN REPUBLIC OF",
+   "alias": "Venezuela, Bolivarian Republic of",
+   "country_code": "VE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VG",
+   "alias": "VG",
+   "country_code": "VG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VGB",
+   "alias": "VGB",
+   "country_code": "VG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VI",
+   "alias": "VI",
+   "country_code": "VI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VIET NAM",
+   "alias": "Viet Nam",
+   "country_code": "VN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VIETNAM",
+   "alias": "Vietnam",
+   "country_code": "VN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VIR",
+   "alias": "VIR",
+   "country_code": "VI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VIRGIN ISLANDS (GB)",
+   "alias": "VIRGIN ISLANDS (GB)",
+   "country_code": "VG",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "VIRGIN ISLANDS (US)",
+   "alias": "VIRGIN ISLANDS (US)",
+   "country_code": "VI",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "VIRGIN ISLANDS OF THE UNITED STATES",
+   "alias": "Virgin Islands of the United States",
+   "country_code": "VI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VIRGIN ISLANDS, BRITISH",
+   "alias": "Virgin Islands, British",
+   "country_code": "VG",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VIRGIN ISLANDS, U.S.",
+   "alias": "Virgin Islands, U.S.",
+   "country_code": "VI",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VIRGIN ISLANDS-BRITISH",
+   "alias": "Virgin Islands-British",
+   "country_code": "VG",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "VIRGIN ISLANDS-US",
+   "alias": "Virgin Islands-US",
+   "country_code": "VI",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "VN",
+   "alias": "VN",
+   "country_code": "VN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VNM",
+   "alias": "VNM",
+   "country_code": "VN",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VU",
+   "alias": "VU",
+   "country_code": "VU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "VUT",
+   "alias": "VUT",
+   "country_code": "VU",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "WALLIS AND FUTUNA",
+   "alias": "Wallis and Futuna",
+   "country_code": "WF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "WESTERN SAHARA",
+   "alias": "Western Sahara",
+   "country_code": "EH",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "WF",
+   "alias": "WF",
+   "country_code": "WF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "WLF",
+   "alias": "WLF",
+   "country_code": "WF",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "WS",
+   "alias": "WS",
+   "country_code": "WS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "WSM",
+   "alias": "WSM",
+   "country_code": "WS",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "XK",
+   "alias": "XK",
+   "country_code": "XK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "XKX",
+   "alias": "XKX",
+   "country_code": "XK",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "YE",
+   "alias": "YE",
+   "country_code": "YE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "YEM",
+   "alias": "YEM",
+   "country_code": "YE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "YEMEN",
+   "alias": "Yemen",
+   "country_code": "YE",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "YEMEN, REP. OF",
+   "alias": "Yemen, Rep. Of",
+   "country_code": "YE",
+   "source": "RATE_CARD"
+  },
+  {
+   "alias_norm": "YT",
+   "alias": "YT",
+   "country_code": "YT",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ZA",
+   "alias": "ZA",
+   "country_code": "ZA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ZAF",
+   "alias": "ZAF",
+   "country_code": "ZA",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ZAMBIA",
+   "alias": "Zambia",
+   "country_code": "ZM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ZIMBABWE",
+   "alias": "Zimbabwe",
+   "country_code": "ZW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ZM",
+   "alias": "ZM",
+   "country_code": "ZM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ZMB",
+   "alias": "ZMB",
+   "country_code": "ZM",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ZW",
+   "alias": "ZW",
+   "country_code": "ZW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ZWE",
+   "alias": "ZWE",
+   "country_code": "ZW",
+   "source": "ISO"
+  },
+  {
+   "alias_norm": "ÅLAND ISLANDS",
+   "alias": "Åland Islands",
+   "country_code": "AX",
+   "source": "ISO"
+  }
+ ]
+}

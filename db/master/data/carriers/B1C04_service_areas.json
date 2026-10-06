@@ -1,0 +1,2661 @@
+{
+ "_comment": "B1C04 prices some countries by service area (carrier station). On each rate card a country can be split into groups *1, *2, ...; a group is either a list of stations or \"rest of country\". The meaning of *1 differs between rate cards. Postcode -> station is NOT in the files and must come from the carrier.",
+ "carrier_code": "B1C04",
+ "stations": {
+  "CN": {
+   "CAN": "Guangzhou",
+   "CGO": "Henan Province",
+   "DGM": "Dongguan",
+   "FOC": "Fuzhou",
+   "HAK": "South China Area",
+   "SWA": "Chaoshan & Huizhou",
+   "SZX": "Shenzhen",
+   "XMN": "Fujian Province",
+   "ZUH": "Zhujiang Delta Area"
+  },
+  "DE": {
+   "BFE": "Bielefeld",
+   "BRE": "Bremen",
+   "CGN": "Cologne",
+   "DTM": "Dortmund",
+   "DUS": "Duesseldorf",
+   "ERF": "Erfurt",
+   "FRA": "Frankfurt",
+   "HAJ": "Hannover",
+   "HAM": "Hamburg",
+   "HHN": "Hahn",
+   "KEL": "Neumuenster",
+   "KSF": "Kassel",
+   "MHN": "Mannheim",
+   "QWU": "Wuerzburg",
+   "RMS": "Air Base Ramstein",
+   "SCN": "Saarbruecken",
+   "SGE": "Dillenburg",
+   "SPM": "Air Base Spangdahlem",
+   "ZNV": "Koblenz",
+   "ZPE": "Greven"
+  },
+  "FR": {
+   "CDG": "Paris",
+   "LEH": "Le Havre",
+   "LIL": "Lille",
+   "LYS": "Lyon",
+   "MLH": "Mulhouse",
+   "MZM": "Metz",
+   "ORE": "Orleans",
+   "ORY": "Orly",
+   "SXB": "Strasbourg"
+  },
+  "GB": {
+   "ABZ": "Aberdeen",
+   "BFS": "Belfast",
+   "BHX": "Birmingham",
+   "BRS": "Bristol",
+   "CBG": "Cambridge",
+   "EDI": "Edinburgh",
+   "EMA": "East Midlands",
+   "EXT": "Exeter",
+   "GLA": "Glasgow",
+   "INV": "Inverness",
+   "IOM": "Isle Of Man",
+   "IPW": "Ipswich",
+   "LBA": "Leeds",
+   "LCY": "Docklands",
+   "LDY": "Londonderry",
+   "LGW": "Gatwick",
+   "LHR": "London-Heathrow",
+   "LON": "Lambeth",
+   "LPL": "Liverpool",
+   "LTN": "Luton",
+   "MAN": "Manchester",
+   "MME": "Teesside",
+   "MSE": "Maidstone",
+   "NCL": "Newcastle",
+   "OXF": "Oxford",
+   "RED": "Reading",
+   "SOU": "Southampton",
+   "STN": "Stansted",
+   "SWN": "Swindon",
+   "ZLS": "City Of London"
+  },
+  "IT": {
+   "AOI": "Ancona",
+   "BGY": "Bergamo",
+   "BLQ": "Bologna",
+   "FLR": "Florence",
+   "GOA": "Genoa",
+   "LEG": "Leghorn/Livorno",
+   "MIL": "Milan",
+   "MXP": "Milan - Malpensa",
+   "QAL": "Alessandria - OutArea",
+   "QBS": "Brescia",
+   "QPG": "Perugia",
+   "ROM": "Rome",
+   "TRN": "Turin",
+   "TRS": "Trieste",
+   "TSF": "Venice - Treviso",
+   "VCE": "Venice",
+   "VRN": "Verona"
+  },
+  "MY": {
+   "BKI": "Kota Kinabalu",
+   "JHB": "Johore Bahru",
+   "KCH": "Kuching",
+   "KUL": "Kuala Lumpur",
+   "PEN": "Penang"
+  },
+  "RU": {
+   "AER": "Sochi",
+   "ARH": "North Of Russia",
+   "CEK": "Chelyabinsk",
+   "DME": "South Of Moscow",
+   "GDX": "Russian Far East",
+   "GOJ": "Nizhniy Novgorod",
+   "IJK": "Izhevsk",
+   "IKT": "Irkutsk",
+   "KGD": "Kaliningrad",
+   "KJA": "Krasnoyarsk",
+   "KLF": "Kaluga",
+   "KRO": "Ural",
+   "KRR": "Krasnodar",
+   "KSZ": "North West Of Russia",
+   "KUF": "Samara",
+   "KYZ": "Eastern Siberia",
+   "KZN": "Kazan",
+   "LED": "St Petersburg",
+   "MCX": "South Of Russia",
+   "MMK": "Murmansk",
+   "MOW": "North Of Moscow",
+   "NEF": "Naberezhnye Chelny",
+   "NOI": "Novorossiysk",
+   "NOZ": "Novokuznetsk",
+   "OKT": "Togliatti",
+   "OMS": "Omsk",
+   "PEE": "Perm",
+   "REN": "Orenburg",
+   "ROV": "Rostov-On-Don",
+   "RTW": "Saratov",
+   "SKX": "Western Volga",
+   "SVO": "Moscow Region",
+   "SWT": "Barnaul",
+   "TJM": "Tyumen",
+   "TOF": "Tomsk",
+   "TYA": "Central Russia",
+   "UFA": "Ufa",
+   "ULY": "Ulyanovsk",
+   "UUS": "Yuzhno-Sakhalinsk",
+   "VOG": "Volgograd",
+   "VOZ": "Voronezh",
+   "YKS": "Western Far East"
+  },
+  "US": {
+   "BCT": "Boca Raton",
+   "BFI": "Seattle",
+   "DEN": "Denver",
+   "ELA": "Los Angeles",
+   "FCH": "Fresno",
+   "HNL": "Honolulu",
+   "JCC": "San Francisco",
+   "LAS": "Las Vegas",
+   "LAX": "Los Angeles Gateway",
+   "LGB": "Long Beach",
+   "MIA": "Miami Gateway",
+   "NUQ": "Fremont",
+   "ONT": "Ontario",
+   "PAO": "San Jose Log Ctr",
+   "PDX": "Portland",
+   "PHX": "Phoenix",
+   "RNO": "Reno",
+   "SCK": "Stockton",
+   "SDM": "South San Diego",
+   "SEE": "Irvine",
+   "SFO": "San Francisco Gteway",
+   "SLC": "Salt Lake City",
+   "SMF": "Sacramento - Mather",
+   "TMB": "Miami",
+   "TUS": "Tucson",
+   "VNY": "Van Nuys"
+  }
+ },
+ "groups": [
+  {
+   "rate_card": "AM_USMain_V01_US",
+   "sheet": "US Export Zones",
+   "country": "US",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AM_USMain_V01_US",
+   "sheet": "US Export Zones",
+   "country": "US",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "MIA",
+    "BCT",
+    "TMB"
+   ]
+  },
+  {
+   "rate_card": "AM_USMain_V01_US",
+   "sheet": "US Import Zones",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AM_USMain_V01_US",
+   "sheet": "US Import Zones",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "BKI",
+    "KCH"
+   ]
+  },
+  {
+   "rate_card": "AM_USMain_V01_US",
+   "sheet": "US Import Zones",
+   "country": "US",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AM_USMain_V01_US",
+   "sheet": "US Import Zones",
+   "country": "US",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "ONT",
+    "VNY",
+    "FCH",
+    "BFI",
+    "LGB",
+    "SDM",
+    "NUQ",
+    "PHX",
+    "SLC",
+    "SMF",
+    "RNO",
+    "LAX",
+    "SFO",
+    "PAO",
+    "LAS",
+    "JCC",
+    "SEE",
+    "SCK",
+    "PDX",
+    "ELA",
+    "TUS"
+   ]
+  },
+  {
+   "rate_card": "AM_USMain_V01_US",
+   "sheet": "US Territories Zones",
+   "country": "US",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AM_USMain_V01_US",
+   "sheet": "US Territories Zones",
+   "country": "US",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "MIA",
+    "BCT",
+    "TMB"
+   ]
+  },
+  {
+   "rate_card": "AM_USMain_V01_US",
+   "sheet": "US Territories Zones",
+   "country": "US",
+   "group": "*3",
+   "rest_of_country": false,
+   "stations": [
+    "HNL"
+   ]
+  },
+  {
+   "rate_card": "AM_V01_US",
+   "sheet": "US Export Zones",
+   "country": "US",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AM_V01_US",
+   "sheet": "US Export Zones",
+   "country": "US",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "MIA",
+    "BCT",
+    "TMB"
+   ]
+  },
+  {
+   "rate_card": "AM_V01_US",
+   "sheet": "US Import Zones",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AM_V01_US",
+   "sheet": "US Import Zones",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "BKI",
+    "KCH"
+   ]
+  },
+  {
+   "rate_card": "AM_V01_US",
+   "sheet": "US Import Zones",
+   "country": "US",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AM_V01_US",
+   "sheet": "US Import Zones",
+   "country": "US",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "ONT",
+    "VNY",
+    "FCH",
+    "BFI",
+    "LGB",
+    "SDM",
+    "NUQ",
+    "PHX",
+    "SLC",
+    "SMF",
+    "RNO",
+    "LAX",
+    "SFO",
+    "PAO",
+    "LAS",
+    "JCC",
+    "SEE",
+    "SCK",
+    "PDX",
+    "ELA",
+    "TUS"
+   ]
+  },
+  {
+   "rate_card": "AM_V01_US",
+   "sheet": "US Territories Zones",
+   "country": "US",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AM_V01_US",
+   "sheet": "US Territories Zones",
+   "country": "US",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "MIA",
+    "BCT",
+    "TMB"
+   ]
+  },
+  {
+   "rate_card": "AM_V01_US",
+   "sheet": "US Territories Zones",
+   "country": "US",
+   "group": "*3",
+   "rest_of_country": false,
+   "stations": [
+    "HNL"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_CN",
+   "sheet": "CN Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "BKI",
+    "KCH"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_CN",
+   "sheet": "CN Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_LCY_V02_CN",
+   "sheet": "CN Zones TDI Import",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_CN",
+   "sheet": "CN Zones TDI Import",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_LCY_V02_CN",
+   "sheet": "CN Zones TDI Import",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "BKI",
+    "KCH"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_CN",
+   "sheet": "CN Zones TDI Import",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_LCY_V02_JP",
+   "sheet": "JP Zones TDI Import",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "JHB",
+    "KUL",
+    "PEN"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_JP",
+   "sheet": "JP Zones TDI Import",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_LCY_V02_KR",
+   "sheet": "KR Zones TD 3rdCtry",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_KR",
+   "sheet": "KR Zones TD 3rdCtry",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_LCY_V02_KR",
+   "sheet": "KR Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "JHB",
+    "KUL",
+    "PEN"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_KR",
+   "sheet": "KR Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_LCY_V02_KR",
+   "sheet": "KR Zones TDI Import",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "JHB",
+    "KUL",
+    "PEN"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_KR",
+   "sheet": "KR Zones TDI Import",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_LCY_V02_TH",
+   "sheet": "TH Zones TDI Export",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN",
+    "CGO"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_TH",
+   "sheet": "TH Zones TDI Export",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_LCY_V02_TH",
+   "sheet": "TH Zones TDI Import",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN",
+    "CGO"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_TH",
+   "sheet": "TH Zones TDI Import",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_LCY_V02_TW",
+   "sheet": "TW Zones TD 3rdCtry",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_TW",
+   "sheet": "TW Zones TD 3rdCtry",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_LCY_V02_TW",
+   "sheet": "TW Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "BKI",
+    "KCH"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_TW",
+   "sheet": "TW Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_LCY_V02_TW",
+   "sheet": "TW Zones TDI Export",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_TW",
+   "sheet": "TW Zones TDI Export",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_LCY_V02_TW",
+   "sheet": "TW Zones TDI Export",
+   "country": "US",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "ONT",
+    "VNY",
+    "BFI",
+    "LGB",
+    "SDM",
+    "NUQ",
+    "PHX",
+    "SLC",
+    "SMF",
+    "RNO",
+    "LAX",
+    "SFO",
+    "LAS",
+    "DEN",
+    "JCC",
+    "SEE",
+    "SCK",
+    "PDX",
+    "ELA",
+    "TUS"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_TW",
+   "sheet": "TW Zones TDI Export",
+   "country": "US",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_LCY_V02_TW",
+   "sheet": "TW Zones TDI Import",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "JHB",
+    "KUL",
+    "PEN"
+   ]
+  },
+  {
+   "rate_card": "AP_LCY_V02_TW",
+   "sheet": "TW Zones TDI Import",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_CN",
+   "sheet": "CN Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "BKI",
+    "KCH"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_CN",
+   "sheet": "CN Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_CN",
+   "sheet": "CN Zones TDI Import",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_CN",
+   "sheet": "CN Zones TDI Import",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_CN",
+   "sheet": "CN Zones TDI Import",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "BKI",
+    "KCH"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_CN",
+   "sheet": "CN Zones TDI Import",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_HK",
+   "sheet": "HK Zones TDI Export",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_HK",
+   "sheet": "HK Zones TDI Export",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_HK",
+   "sheet": "HK Zones TDI Export",
+   "country": "US",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "ONT",
+    "VNY",
+    "FCH",
+    "BFI",
+    "LGB",
+    "SDM",
+    "NUQ",
+    "PHX",
+    "SLC",
+    "SMF",
+    "RNO",
+    "LAX",
+    "SFO",
+    "PAO",
+    "LAS",
+    "DEN",
+    "JCC",
+    "SEE",
+    "SCK",
+    "PDX",
+    "ELA",
+    "TUS"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_HK",
+   "sheet": "HK Zones TDI Export",
+   "country": "US",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_HK",
+   "sheet": "HK Zones TDI Import",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "JHB",
+    "KUL",
+    "PEN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_HK",
+   "sheet": "HK Zones TDI Import",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_IN",
+   "sheet": "IN Zones TDI Import",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "JHB",
+    "KUL",
+    "PEN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_IN",
+   "sheet": "IN Zones TDI Import",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_JP",
+   "sheet": "JP Zones TDI Import",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "JHB",
+    "KUL",
+    "PEN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_JP",
+   "sheet": "JP Zones TDI Import",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_KR",
+   "sheet": "KR Zones TD 3rdCtry",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_KR",
+   "sheet": "KR Zones TD 3rdCtry",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_KR",
+   "sheet": "KR Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "JHB",
+    "KUL",
+    "PEN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_KR",
+   "sheet": "KR Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_KR",
+   "sheet": "KR Zones TDI Import",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "JHB",
+    "KUL",
+    "PEN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_KR",
+   "sheet": "KR Zones TDI Import",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_MY",
+   "sheet": "MY Zones TD 3rdCty",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_MY",
+   "sheet": "MY Zones TD 3rdCty",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_MY",
+   "sheet": "MY Zones TD Dom",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_MY",
+   "sheet": "MY Zones TD Dom",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "BKI",
+    "KCH"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_MY",
+   "sheet": "MY Zones TDI Export",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_MY",
+   "sheet": "MY Zones TDI Export",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "BKI",
+    "KCH"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_MY",
+   "sheet": "MY Zones TDI Export",
+   "country": "US",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "ONT",
+    "VNY",
+    "FCH",
+    "BFI",
+    "LGB",
+    "SDM",
+    "NUQ",
+    "PHX",
+    "SLC",
+    "SMF",
+    "RNO",
+    "LAX",
+    "SFO",
+    "PAO",
+    "LAS",
+    "JCC",
+    "SEE",
+    "SCK",
+    "PDX",
+    "ELA",
+    "TUS"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_MY",
+   "sheet": "MY Zones TDI Export",
+   "country": "US",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_MY",
+   "sheet": "MY Zones TDI Import",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_MY",
+   "sheet": "MY Zones TDI Import",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "BKI",
+    "KCH"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_PH",
+   "sheet": "PH Zones TDI Export",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_PH",
+   "sheet": "PH Zones TDI Export",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_PH",
+   "sheet": "PH Zones TDI Export",
+   "country": "US",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "ONT",
+    "VNY",
+    "FCH",
+    "BFI",
+    "LGB",
+    "SDM",
+    "NUQ",
+    "PHX",
+    "SLC",
+    "SMF",
+    "RNO",
+    "LAX",
+    "SFO",
+    "PAO",
+    "LAS",
+    "DEN",
+    "JCC",
+    "SEE",
+    "SCK",
+    "PDX",
+    "ELA",
+    "TUS"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_PH",
+   "sheet": "PH Zones TDI Export",
+   "country": "US",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_PH",
+   "sheet": "PH Zones TDI Import",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "JHB",
+    "KUL",
+    "PEN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_PH",
+   "sheet": "PH Zones TDI Import",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_SG",
+   "sheet": "SG Zones TD 3rdCtry",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_SG",
+   "sheet": "SG Zones TD 3rdCtry",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_SG",
+   "sheet": "SG Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "JHB",
+    "KUL",
+    "PEN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_SG",
+   "sheet": "SG Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_SG",
+   "sheet": "SG Zones TDI Export",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_SG",
+   "sheet": "SG Zones TDI Export",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_SG",
+   "sheet": "SG Zones TDI Import",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "JHB",
+    "KUL"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_SG",
+   "sheet": "SG Zones TDI Import",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_TH",
+   "sheet": "TH Zones TDI Export",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN",
+    "CGO"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_TH",
+   "sheet": "TH Zones TDI Export",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_TH",
+   "sheet": "TH Zones TDI Import",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN",
+    "CGO"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_TH",
+   "sheet": "TH Zones TDI Import",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_TW",
+   "sheet": "TW Zones TD 3rdCtry",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "XMN",
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_TW",
+   "sheet": "TW Zones TD 3rdCtry",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_TW",
+   "sheet": "TW Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "BKI",
+    "KCH"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_TW",
+   "sheet": "TW Zones TD 3rdCtry",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_TW",
+   "sheet": "TW Zones TDI Export",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_TW",
+   "sheet": "TW Zones TDI Export",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_TW",
+   "sheet": "TW Zones TDI Export",
+   "country": "US",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "ONT",
+    "VNY",
+    "BFI",
+    "LGB",
+    "SDM",
+    "NUQ",
+    "PHX",
+    "SLC",
+    "SMF",
+    "RNO",
+    "LAX",
+    "SFO",
+    "LAS",
+    "DEN",
+    "JCC",
+    "SEE",
+    "SCK",
+    "PDX",
+    "ELA",
+    "TUS"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_TW",
+   "sheet": "TW Zones TDI Export",
+   "country": "US",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_TW",
+   "sheet": "TW Zones TDI Import",
+   "country": "MY",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "JHB",
+    "KUL",
+    "PEN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_TW",
+   "sheet": "TW Zones TDI Import",
+   "country": "MY",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_VN",
+   "sheet": "VN Zones TDI Export",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_VN",
+   "sheet": "VN Zones TDI Export",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "AP_V02_VN",
+   "sheet": "VN Zones TDI Import",
+   "country": "CN",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SZX",
+    "FOC",
+    "HAK",
+    "SWA",
+    "ZUH",
+    "CAN",
+    "DGM",
+    "XMN",
+    "CGO"
+   ]
+  },
+  {
+   "rate_card": "AP_V02_VN",
+   "sheet": "VN Zones TDI Import",
+   "country": "CN",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_BE",
+   "sheet": "BE Zones DDI 3rdCtry",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_BE",
+   "sheet": "BE Zones DDI 3rdCtry",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "ABZ",
+    "BHX",
+    "RED",
+    "NCL",
+    "LHR",
+    "MSE",
+    "LGW",
+    "OXF",
+    "LON",
+    "LBA",
+    "INV",
+    "MAN",
+    "CBG",
+    "EXT",
+    "LPL",
+    "MME",
+    "SOU",
+    "GLA",
+    "IPW",
+    "IOM",
+    "LCY",
+    "BRS",
+    "EMA",
+    "EDI",
+    "SWN",
+    "LTN",
+    "ZLS",
+    "STN"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_BE",
+   "sheet": "BE Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_BE",
+   "sheet": "BE Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "ABZ",
+    "BHX",
+    "RED",
+    "NCL",
+    "LHR",
+    "MSE",
+    "LGW",
+    "OXF",
+    "LON",
+    "LBA",
+    "INV",
+    "MAN",
+    "CBG",
+    "EXT",
+    "LPL",
+    "MME",
+    "SOU",
+    "GLA",
+    "IPW",
+    "IOM",
+    "LCY",
+    "BRS",
+    "EMA",
+    "EDI",
+    "SWN",
+    "LTN",
+    "ZLS",
+    "STN"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_BE",
+   "sheet": "BE Zones TDI Exp+Imp",
+   "country": "DE",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "HHN",
+    "SCN",
+    "KSF",
+    "DTM",
+    "ZPE",
+    "HAJ",
+    "BRE",
+    "SPM",
+    "FRA",
+    "RMS",
+    "BFE",
+    "CGN",
+    "MHN",
+    "SGE",
+    "DUS",
+    "ZNV"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_BE",
+   "sheet": "BE Zones TDI Exp+Imp",
+   "country": "DE",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_BE",
+   "sheet": "BE Zones TDI Exp+Imp",
+   "country": "FR",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LIL",
+    "MZM",
+    "ORE",
+    "ORY",
+    "CDG",
+    "LEH"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_BE",
+   "sheet": "BE Zones TDI Exp+Imp",
+   "country": "FR",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_BE",
+   "sheet": "BE Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LDY",
+    "BFS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_BE",
+   "sheet": "BE Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "RED",
+    "LHR",
+    "MSE",
+    "LGW",
+    "OXF",
+    "LON",
+    "SOU",
+    "LCY",
+    "SWN",
+    "ZLS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_BE",
+   "sheet": "BE Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*3",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones DDI Exp+Imp",
+   "country": "FR",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SXB",
+    "LIL",
+    "MZM",
+    "ORE",
+    "ORY",
+    "LYS",
+    "CDG",
+    "MLH"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones DDI Exp+Imp",
+   "country": "FR",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LDY"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "BHX",
+    "RED",
+    "NCL",
+    "LHR",
+    "MSE",
+    "LGW",
+    "OXF",
+    "LON",
+    "LBA",
+    "MAN",
+    "CBG",
+    "EXT",
+    "LPL",
+    "MME",
+    "SOU",
+    "IPW",
+    "LCY",
+    "BRS",
+    "EMA",
+    "SWN"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*3",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*4",
+   "rest_of_country": false,
+   "stations": [
+    "BFS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones DDI Exp+Imp",
+   "country": "IT",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "ROM",
+    "VRN",
+    "VCE",
+    "LEG",
+    "BLQ",
+    "FLR",
+    "TRN",
+    "QAL",
+    "GOA",
+    "BGY",
+    "AOI",
+    "MIL",
+    "QBS",
+    "TRS",
+    "QPG",
+    "MXP",
+    "TSF"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones DDI Exp+Imp",
+   "country": "IT",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones TDI Exp+Imp",
+   "country": "FR",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "SXB",
+    "LIL",
+    "MZM",
+    "ORE",
+    "ORY",
+    "LYS",
+    "CDG",
+    "MLH"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones TDI Exp+Imp",
+   "country": "FR",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LDY"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "BHX",
+    "RED",
+    "NCL",
+    "LHR",
+    "MSE",
+    "LGW",
+    "OXF",
+    "LON",
+    "LBA",
+    "MAN",
+    "CBG",
+    "EXT",
+    "LPL",
+    "MME",
+    "SOU",
+    "IPW",
+    "LCY",
+    "BRS",
+    "EMA",
+    "SWN"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*3",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*4",
+   "rest_of_country": false,
+   "stations": [
+    "BFS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones TDI Exp+Imp",
+   "country": "IT",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "ROM",
+    "VRN",
+    "VCE",
+    "LEG",
+    "BLQ",
+    "FLR",
+    "TRN",
+    "QAL",
+    "GOA",
+    "BGY",
+    "AOI",
+    "MIL",
+    "QBS",
+    "TRS",
+    "QPG",
+    "MXP",
+    "TSF"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones TDI Exp+Imp",
+   "country": "IT",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones TDI Exp+Imp",
+   "country": "RU",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "KLF",
+    "LED",
+    "MOW",
+    "VOG",
+    "SVO",
+    "REN",
+    "OMS",
+    "NOI",
+    "TJM",
+    "DME",
+    "ULY",
+    "VOZ",
+    "KRO",
+    "AER",
+    "KZN",
+    "KGD",
+    "YKS",
+    "UFA",
+    "KUF",
+    "NOZ",
+    "PEE",
+    "KSZ",
+    "GOJ",
+    "GDX",
+    "IJK",
+    "RTW",
+    "NEF",
+    "TYA",
+    "KRR",
+    "MCX",
+    "ARH",
+    "OKT",
+    "KJA",
+    "SKX",
+    "KYZ",
+    "CEK",
+    "UUS",
+    "SWT",
+    "MMK",
+    "TOF",
+    "ROV"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_DE",
+   "sheet": "DE Zones TDI Exp+Imp",
+   "country": "RU",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_FI",
+   "sheet": "FI Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_FI",
+   "sheet": "FI Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "ABZ",
+    "BHX",
+    "RED",
+    "NCL",
+    "LHR",
+    "MSE",
+    "LGW",
+    "OXF",
+    "LON",
+    "LBA",
+    "INV",
+    "MAN",
+    "CBG",
+    "EXT",
+    "LPL",
+    "MME",
+    "SOU",
+    "GLA",
+    "IPW",
+    "IOM",
+    "LCY",
+    "BRS",
+    "EMA",
+    "EDI",
+    "SWN",
+    "LTN",
+    "ZLS",
+    "STN"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_FI",
+   "sheet": "FI Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_FI",
+   "sheet": "FI Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "ABZ",
+    "BHX",
+    "RED",
+    "NCL",
+    "LHR",
+    "MSE",
+    "LGW",
+    "OXF",
+    "LON",
+    "LBA",
+    "INV",
+    "MAN",
+    "CBG",
+    "EXT",
+    "LPL",
+    "MME",
+    "SOU",
+    "GLA",
+    "IPW",
+    "IOM",
+    "LCY",
+    "BRS",
+    "EMA",
+    "EDI",
+    "SWN",
+    "LTN",
+    "ZLS",
+    "STN"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_FR",
+   "sheet": "FR Zones DD 3rdCtry",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_FR",
+   "sheet": "FR Zones DD 3rdCtry",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "ABZ",
+    "BHX",
+    "RED",
+    "NCL",
+    "LHR",
+    "MSE",
+    "LGW",
+    "OXF",
+    "LON",
+    "LBA",
+    "INV",
+    "MAN",
+    "CBG",
+    "EXT",
+    "LPL",
+    "MME",
+    "SOU",
+    "GLA",
+    "IPW",
+    "IOM",
+    "LCY",
+    "BRS",
+    "EMA",
+    "EDI",
+    "SWN",
+    "LTN",
+    "ZLS",
+    "STN"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_FR",
+   "sheet": "FR Zones DDI Export",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LDY",
+    "BFS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_FR",
+   "sheet": "FR Zones DDI Export",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_FR",
+   "sheet": "FR Zones DDI Import",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LDY",
+    "BFS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_FR",
+   "sheet": "FR Zones DDI Import",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_FR",
+   "sheet": "FR Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LDY",
+    "BFS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_FR",
+   "sheet": "FR Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_GB",
+   "sheet": "GB Zones TDI Exp+Imp",
+   "country": "DE",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "FRA",
+    "CGN"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_GB",
+   "sheet": "GB Zones TDI Exp+Imp",
+   "country": "DE",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_GB",
+   "sheet": "GB Zones TDI Exp+Imp",
+   "country": "FR",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "ORY",
+    "CDG"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_GB",
+   "sheet": "GB Zones TDI Exp+Imp",
+   "country": "FR",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_IE",
+   "sheet": "IE Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LDY",
+    "BFS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_IE",
+   "sheet": "IE Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_IE",
+   "sheet": "IE Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "BFS",
+    "LDY"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_IE",
+   "sheet": "IE Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_IT",
+   "sheet": "IT Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LDY",
+    "BFS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_IT",
+   "sheet": "IT Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_IT",
+   "sheet": "IT Zones TDI Export",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LDY",
+    "BFS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_IT",
+   "sheet": "IT Zones TDI Export",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_IT",
+   "sheet": "IT Zones TDI Import",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LDY",
+    "BFS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_IT",
+   "sheet": "IT Zones TDI Import",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones DDI Exp+Imp",
+   "country": "DE",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "KEL",
+    "HHN",
+    "SCN",
+    "KSF",
+    "DTM",
+    "ZPE",
+    "HAJ",
+    "BRE",
+    "SPM",
+    "FRA",
+    "RMS",
+    "BFE",
+    "QWU",
+    "ERF",
+    "CGN",
+    "HAM",
+    "SGE",
+    "DUS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones DDI Exp+Imp",
+   "country": "DE",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones DDI Exp+Imp",
+   "country": "FR",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LIL",
+    "MZM",
+    "ORE",
+    "ORY",
+    "CDG",
+    "LEH"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones DDI Exp+Imp",
+   "country": "FR",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LDY",
+    "BFS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "BHX",
+    "RED",
+    "NCL",
+    "LHR",
+    "MSE",
+    "LGW",
+    "OXF",
+    "LON",
+    "LBA",
+    "MAN",
+    "CBG",
+    "EXT",
+    "LPL",
+    "MME",
+    "SOU",
+    "IPW",
+    "LCY",
+    "BRS",
+    "EMA",
+    "SWN",
+    "ZLS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*3",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones TDI Exp+Imp",
+   "country": "DE",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "HHN",
+    "SCN",
+    "KSF",
+    "DTM",
+    "ZPE",
+    "HAJ",
+    "BRE",
+    "SPM",
+    "FRA",
+    "RMS",
+    "BFE",
+    "QWU",
+    "ERF",
+    "CGN",
+    "HAM",
+    "SGE",
+    "DUS",
+    "KEL"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones TDI Exp+Imp",
+   "country": "DE",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones TDI Exp+Imp",
+   "country": "FR",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LIL",
+    "MZM",
+    "ORE",
+    "ORY",
+    "CDG",
+    "LEH"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones TDI Exp+Imp",
+   "country": "FR",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "LDY",
+    "BFS"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "BHX",
+    "RED",
+    "NCL",
+    "LHR",
+    "MSE",
+    "LGW",
+    "OXF",
+    "LON",
+    "LBA",
+    "MAN",
+    "CBG",
+    "EXT",
+    "LPL",
+    "MME",
+    "SOU",
+    "IPW",
+    "LCY",
+    "BRS",
+    "EMA",
+    "SWN"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*3",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones TDI Exp+Imp",
+   "country": "RU",
+   "group": "*1",
+   "rest_of_country": false,
+   "stations": [
+    "KLF",
+    "LED",
+    "MOW",
+    "SVO",
+    "DME",
+    "VOZ",
+    "KGD",
+    "IKT",
+    "TYA"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_NL",
+   "sheet": "NL Zones TDI Exp+Imp",
+   "country": "RU",
+   "group": "*2",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_PL",
+   "sheet": "PL Zones DD 3rdCtry",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_PL",
+   "sheet": "PL Zones DD 3rdCtry",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "ABZ",
+    "BHX",
+    "RED",
+    "NCL",
+    "LHR",
+    "MSE",
+    "LGW",
+    "OXF",
+    "LON",
+    "LBA",
+    "INV",
+    "MAN",
+    "CBG",
+    "EXT",
+    "LPL",
+    "MME",
+    "SOU",
+    "GLA",
+    "IPW",
+    "IOM",
+    "LCY",
+    "BRS",
+    "EMA",
+    "EDI",
+    "SWN",
+    "LTN",
+    "ZLS",
+    "STN"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_PL",
+   "sheet": "PL Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_PL",
+   "sheet": "PL Zones DDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "IOM",
+    "LCY",
+    "BRS",
+    "EMA",
+    "EDI",
+    "SWN",
+    "LTN",
+    "ZLS",
+    "STN",
+    "ABZ",
+    "BHX",
+    "RED",
+    "NCL",
+    "LHR",
+    "MSE",
+    "LGW",
+    "OXF",
+    "LON",
+    "LBA",
+    "INV",
+    "MAN",
+    "CBG",
+    "EXT",
+    "LPL",
+    "MME",
+    "SOU",
+    "GLA",
+    "IPW"
+   ]
+  },
+  {
+   "rate_card": "EMEA_V01_PL",
+   "sheet": "PL Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*1",
+   "rest_of_country": true,
+   "stations": []
+  },
+  {
+   "rate_card": "EMEA_V01_PL",
+   "sheet": "PL Zones TDI Exp+Imp",
+   "country": "GB",
+   "group": "*2",
+   "rest_of_country": false,
+   "stations": [
+    "ABZ",
+    "BHX",
+    "RED",
+    "NCL",
+    "LHR",
+    "MSE",
+    "LGW",
+    "OXF",
+    "LON",
+    "LBA",
+    "INV",
+    "MAN",
+    "CBG",
+    "EXT",
+    "LPL",
+    "MME",
+    "SOU",
+    "GLA",
+    "IPW",
+    "IOM",
+    "LCY",
+    "BRS",
+    "EMA",
+    "EDI",
+    "SWN",
+    "LTN",
+    "ZLS",
+    "STN"
+   ]
+  }
+ ]
+}

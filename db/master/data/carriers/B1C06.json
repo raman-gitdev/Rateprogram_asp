@@ -1,0 +1,317 @@
+{
+  "_comment": "B1C06 (Japan domestic road). The rate card prices to 13 carrier districts but only lists the prefectures of 4 of them (Tohoku A/B, Kyushu A/B). basis = FILE when the rate card states it, ASSUMED when taken from the usual Japanese regional grouping; every ASSUMED row must be confirmed with the carrier before rates are relied on.",
+  "carrier_code": "B1C06",
+  "zone_scheme": {
+    "scheme_code": "B1C06/JP/GROUPAGE/DISTRICT",
+    "service_type": "GROUPAGE",
+    "direction": "DOMESTIC",
+    "country_code": "JP",
+    "zone_basis": "SUBDIVISION",
+    "source": "B1C06_2026 Rates.xlsx, sheets 'Consolidated *', rows 40-44",
+    "mode": "GROUND"
+  },
+  "districts": [
+    {
+      "zone_code": "Hokkaido",
+      "members": [
+        {
+          "subdivision": "JP-01",
+          "basis": "ASSUMED"
+        }
+      ]
+    },
+    {
+      "zone_code": "Tohoku A",
+      "members": [
+        {
+          "subdivision": "JP-02",
+          "basis": "FILE"
+        },
+        {
+          "subdivision": "JP-05",
+          "basis": "FILE"
+        },
+        {
+          "subdivision": "JP-03",
+          "basis": "FILE"
+        }
+      ]
+    },
+    {
+      "zone_code": "Tohoku B",
+      "members": [
+        {
+          "subdivision": "JP-04",
+          "basis": "FILE"
+        },
+        {
+          "subdivision": "JP-06",
+          "basis": "FILE"
+        },
+        {
+          "subdivision": "JP-07",
+          "basis": "FILE"
+        }
+      ]
+    },
+    {
+      "zone_code": "Kanto",
+      "members": [
+        {
+          "subdivision": "JP-08",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-09",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-10",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-11",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-12",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-13",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-14",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-19",
+          "basis": "ASSUMED",
+          "note": "Yamanashi: carriers put it in Kanto or in Shinetsu. Confirm."
+        }
+      ]
+    },
+    {
+      "zone_code": "Shinetsu",
+      "members": [
+        {
+          "subdivision": "JP-15",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-20",
+          "basis": "ASSUMED"
+        }
+      ]
+    },
+    {
+      "zone_code": "Hokuriku",
+      "members": [
+        {
+          "subdivision": "JP-16",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-17",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-18",
+          "basis": "ASSUMED"
+        }
+      ]
+    },
+    {
+      "zone_code": "Tokai",
+      "members": [
+        {
+          "subdivision": "JP-21",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-22",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-23",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-24",
+          "basis": "ASSUMED"
+        }
+      ]
+    },
+    {
+      "zone_code": "Kansai",
+      "members": [
+        {
+          "subdivision": "JP-25",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-26",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-27",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-28",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-29",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-30",
+          "basis": "ASSUMED"
+        }
+      ]
+    },
+    {
+      "zone_code": "Chugoku",
+      "members": [
+        {
+          "subdivision": "JP-31",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-32",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-33",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-34",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-35",
+          "basis": "ASSUMED"
+        }
+      ]
+    },
+    {
+      "zone_code": "Shikoku",
+      "members": [
+        {
+          "subdivision": "JP-36",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-37",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-38",
+          "basis": "ASSUMED"
+        },
+        {
+          "subdivision": "JP-39",
+          "basis": "ASSUMED"
+        }
+      ]
+    },
+    {
+      "zone_code": "Kyushu A",
+      "members": [
+        {
+          "subdivision": "JP-40",
+          "basis": "FILE"
+        },
+        {
+          "subdivision": "JP-41",
+          "basis": "FILE"
+        },
+        {
+          "subdivision": "JP-42",
+          "basis": "FILE"
+        },
+        {
+          "subdivision": "JP-44",
+          "basis": "FILE"
+        }
+      ]
+    },
+    {
+      "zone_code": "Kyushu B",
+      "members": [
+        {
+          "subdivision": "JP-43",
+          "basis": "FILE"
+        },
+        {
+          "subdivision": "JP-45",
+          "basis": "FILE"
+        },
+        {
+          "subdivision": "JP-46",
+          "basis": "FILE"
+        }
+      ]
+    },
+    {
+      "zone_code": "Okinawa",
+      "members": [
+        {
+          "subdivision": "JP-47",
+          "basis": "ASSUMED"
+        }
+      ]
+    }
+  ],
+  "locations": [
+    {
+      "location_code": "JP-WH-HEIWAJIMA",
+      "name": "Shipper warehouse, Heiwajima (Tokyo)",
+      "country_code": "JP",
+      "subdivision": "JP-13",
+      "city": "Ota, Tokyo",
+      "kind": "WAREHOUSE",
+      "note": "Origin of sheet 'Consolidated Heiwajima' and of 'Charter'",
+      "tariff_place_pattern": "(Heiwajima|JPD W/H$)"
+    },
+    {
+      "location_code": "JP-WH-NARASHINO",
+      "name": "Shipper warehouse, Narashino (Chiba)",
+      "country_code": "JP",
+      "subdivision": "JP-12",
+      "city": "Narashino",
+      "kind": "WAREHOUSE",
+      "note": "Shares one rate table with Tsukuba (sheet 'Consolidated Narashino.Tsukuba')",
+      "tariff_place_pattern": "Narashino"
+    },
+    {
+      "location_code": "JP-WH-TSUKUBA",
+      "name": "Shipper warehouse, Tsukuba (Ibaraki)",
+      "country_code": "JP",
+      "subdivision": "JP-08",
+      "city": "Tsukuba",
+      "kind": "WAREHOUSE",
+      "note": "Shares one rate table with Narashino",
+      "tariff_place_pattern": "Tsukuba"
+    },
+    {
+      "location_code": "JP-WH-DG",
+      "name": "Dangerous goods warehouse (location not stated)",
+      "country_code": "JP",
+      "subdivision": null,
+      "city": null,
+      "kind": "WAREHOUSE",
+      "note": "Origin of table 2 (dangerous goods) on both 'Consolidated' sheets; address needed",
+      "tariff_place_pattern": null
+    }
+  ],
+  "volumetric": {
+    "kg_per_cbm": 166.67,
+    "basis": "DB",
+    "note": "Value present on the loaded freight rows (equals 6000 cm3 per kg)"
+  },
+  "locations_comment": "tariff_place_pattern: case-insensitive regex matched against tariff origin_city / dest_city, so the shipper name is never needed here."
+}

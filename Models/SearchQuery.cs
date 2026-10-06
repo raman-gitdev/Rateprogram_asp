@@ -1,3 +1,4 @@
+using System;
 namespace TariffHub.Models;
 
 public enum TariffMode { Ground, Air }
@@ -20,11 +21,14 @@ public class SearchQuery
     public string? OversizeClass { get; set; }
 
     public string? OriginCountry { get; set; }
+    /// <summary>CITY, POSTCODE, REGION, PROVINCE (value = ISO 3166-2 code, or the tariff spelling) or LOCATION (value = location code).</summary>
     public string? OriginPlaceType { get; set; }
     public string? OriginPlace { get; set; }
+    public string? OriginPostcode { get; set; }
     public string? DestCountry { get; set; }
     public string? DestPlaceType { get; set; }
     public string? DestPlace { get; set; }
+    public string? DestPostcode { get; set; }
 
     public decimal? WeightKg { get; set; }
     public decimal? VolumeCbm { get; set; }

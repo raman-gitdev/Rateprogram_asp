@@ -1,0 +1,153 @@
+{
+  "_comment": "Display labels for every coded value the search filters show. code = value stored in tariff.*; label = what the user sees. Hand-maintained; build_master.py turns it into master.code_list rows.",
+  "service_type": [
+    {"code": "LTL", "label": "Less than truckload (LTL)", "description": "Shared truck, priced by weight band"},
+    {"code": "FTL", "label": "Full truckload (FTL)", "description": "Whole truck, priced per truck"},
+    {"code": "DEDICATED_FTL", "label": "Dedicated truck by distance", "description": "Whole truck priced by km band from a pick-up point"},
+    {"code": "FCL", "label": "Full container (FCL)", "description": "Container haulage, priced per container"},
+    {"code": "OOG", "label": "Out of gauge (oversize / overweight)", "description": "Priced by oversize or overweight class"},
+    {"code": "SURFACE", "label": "Surface (road)", "description": ""},
+    {"code": "GROUPAGE", "label": "Groupage / consolidated road", "description": "Shared road service priced by weight band to a carrier district"},
+    {"code": "ECONOMY_SELECT", "label": "Day-definite road economy", "description": "International road express, priced by weight band to a carrier zone"},
+    {"code": "STANDARD", "label": "Standard (road, cross-border)", "description": "Road parcel service across a land border, priced by zone"},
+    {"code": "GROUND", "label": "Ground parcel", "description": "Domestic road parcel service, priced by zone"},
+    {"code": "3_DAY_SELECT", "label": "3-day parcel", "description": "Domestic 3-business-day parcel service"},
+    {"code": "NEXT_DAY_AIR", "label": "Next day air", "description": "Domestic next-business-day by air"},
+    {"code": "NDA_SAVER", "label": "Next day air (saver)", "description": "Domestic next-business-day, end of day"},
+    {"code": "SECOND_DAY_AIR", "label": "2nd day air", "description": "Domestic 2-business-day by air"},
+    {"code": "SECOND_DAY_AIR_AM", "label": "2nd day air (morning)", "description": "Domestic 2-business-day, morning delivery"},
+    {"code": "WW_EXPRESS", "label": "Worldwide express", "description": "International time-definite express"},
+    {"code": "WW_SAVER", "label": "Worldwide saver", "description": "International express, end of day"},
+    {"code": "WW_EXPEDITED", "label": "Worldwide expedited", "description": "International deferred express"},
+    {"code": "WW_EXPRESS_FREIGHT", "label": "Worldwide express freight", "description": "International express for palletised freight"},
+    {"code": "TD_EXPRESS_WW", "label": "Time-definite express worldwide", "description": "Not loaded yet (see TARIFF_DATA_REVIEW.md)"},
+    {"code": "TD_EXPRESS_DOMESTIC", "label": "Time-definite express domestic", "description": "Not loaded yet (see TARIFF_DATA_REVIEW.md)"}
+  ],
+  "piece_type": [
+    {"code": "ANY", "label": "Any piece type"},
+    {"code": "LETTER", "label": "Letter / envelope"},
+    {"code": "DOCUMENT", "label": "Documents"},
+    {"code": "PAK", "label": "Pak (flyer bag)"},
+    {"code": "PACKAGE", "label": "Package / parcel"},
+    {"code": "HUNDREDWEIGHT", "label": "Multi-piece consignment (hundredweight)"},
+    {"code": "ENVELOPE", "label": "Envelope"},
+    {"code": "NON_DOCUMENT", "label": "Non-documents"},
+    {"code": "PALLET", "label": "Pallet"}
+  ],
+  "delivery_point": [
+    {"code": "COMMERCIAL", "label": "Business address"},
+    {"code": "RESIDENTIAL", "label": "Residential address"}
+  ],
+  "cargo_category": [
+    {"code": "ANY", "label": "Any cargo"},
+    {"code": "GENERAL", "label": "General cargo"},
+    {"code": "DG", "label": "Dangerous goods"},
+    {"code": "COLD_CHAIN", "label": "Temperature controlled"},
+    {"code": "DG_COLD_CHAIN", "label": "Dangerous goods, temperature controlled"},
+    {"code": "OOG", "label": "Out of gauge"},
+    {"code": "MEDICAL", "label": "Medical"}
+  ],
+  "lane_type": [
+    {"code": "DOMESTIC", "label": "Domestic"},
+    {"code": "OUTBOUND", "label": "Export"},
+    {"code": "INBOUND", "label": "Import"},
+    {"code": "THIRD_COUNTRY", "label": "Third country (both ends abroad)"},
+    {"code": "CROSS_BORDER", "label": "Cross-border road"},
+    {"code": "INLAND", "label": "Inland"},
+    {"code": "PROVINCE", "label": "Within a province"}
+  ],
+  "rate_tag": [
+    {"code": "CONTRACT", "label": "Contract rate"},
+    {"code": "SPOT", "label": "Spot rate"}
+  ],
+  "charge_basis": [
+    {"code": "PER_KG", "label": "per kg"},
+    {"code": "PER_100KG", "label": "per 100 kg"},
+    {"code": "PER_SHIPMENT", "label": "per shipment"},
+    {"code": "PER_PIECE", "label": "per piece"},
+    {"code": "PER_AWB", "label": "per air waybill"},
+    {"code": "PER_TRUCK", "label": "per truck"},
+    {"code": "PER_KM", "label": "per km"},
+    {"code": "PER_HOUR", "label": "per hour"},
+    {"code": "PER_DAY", "label": "per day"},
+    {"code": "PER_UNIT", "label": "per unit"},
+    {"code": "PER_CBM", "label": "per cbm"},
+    {"code": "PER_SQM", "label": "per square metre"},
+    {"code": "PER_CONTAINER", "label": "per container"},
+    {"code": "PER_TRIP", "label": "per trip"},
+    {"code": "PCT_OF_FREIGHT", "label": "% of freight"},
+    {"code": "PCT_OF_VALUE", "label": "% of goods value"}
+  ],
+  "point_type": [
+    {"code": "COUNTRY", "label": "Whole country"},
+    {"code": "ZONE", "label": "Carrier zone (resolved from the address)"},
+    {"code": "REGION", "label": "Region / carrier district"},
+    {"code": "PROVINCE", "label": "State / province / prefecture"},
+    {"code": "CITY", "label": "City"},
+    {"code": "POSTCODE", "label": "Postcode"},
+    {"code": "AIRPORT", "label": "Airport"},
+    {"code": "SERVICE_AREA", "label": "Carrier service area (station)"},
+    {"code": "LOCATION", "label": "Named warehouse / site"}
+  ],
+  "equipment_category": [
+    {"code": "TRUCK", "label": "Truck"},
+    {"code": "CONTAINER", "label": "Container"},
+    {"code": "TRAILER", "label": "Trailer"}
+  ],
+  "equipment_type": [
+    {"code": "LIGHT", "label": "Light truck"},
+    {"code": "2T", "label": "2 t truck"},
+    {"code": "2T_TAILGATE", "label": "2 t truck with tail lift"},
+    {"code": "3T", "label": "3 t truck"},
+    {"code": "4T", "label": "4 t truck"},
+    {"code": "5T", "label": "5 t truck"},
+    {"code": "8T", "label": "8 t truck"},
+    {"code": "10T", "label": "10 t truck"},
+    {"code": "11T", "label": "11 t truck"},
+    {"code": "15T", "label": "15 t truck"},
+    {"code": "20T", "label": "20 t truck"},
+    {"code": "25T", "label": "25 t truck"},
+    {"code": "20GP", "label": "20 ft standard container"},
+    {"code": "40GP", "label": "40 ft standard container"},
+    {"code": "40HQ", "label": "40 ft high cube container"},
+    {"code": "20OT", "label": "20 ft open top container"},
+    {"code": "40OT", "label": "40 ft open top container"},
+    {"code": "20FR", "label": "20 ft flat rack"},
+    {"code": "40FR", "label": "40 ft flat rack"},
+    {"code": "FLATBED_13_75M", "label": "Flatbed trailer 13.75 m"},
+    {"code": "FLATBED_17_5M", "label": "Flatbed trailer 17.5 m"},
+    {"code": "LOWBED_40CM", "label": "Low-bed trailer, 40 cm deck"},
+    {"code": "LOWBED_60CM", "label": "Low-bed trailer, 60 cm deck"},
+    {"code": "LOWBED_90CM", "label": "Low-bed trailer, 90 cm deck"}
+  ],
+  "oog_class": [
+    {"code": "IN_GAUGE", "label": "In gauge"},
+    {"code": "OVERSIZE_OOG1", "label": "Oversize class 1"},
+    {"code": "OVERSIZE_OOG2", "label": "Oversize class 2"},
+    {"code": "OVERSIZE_OOG3", "label": "Oversize class 3"},
+    {"code": "OVERSIZE_OOG4", "label": "Oversize class 4"},
+    {"code": "OVERSIZE_OOG5", "label": "Oversize class 5"},
+    {"code": "OVERWEIGHT_OOG1", "label": "Overweight class 1"},
+    {"code": "OVERWEIGHT_OOG2", "label": "Overweight class 2"},
+    {"code": "OVERWEIGHT_OOG3", "label": "Overweight class 3"},
+    {"code": "OVERWEIGHT_OOG4", "label": "Overweight class 4"},
+    {"code": "OVERWEIGHT_OOG5", "label": "Overweight class 5"}
+  ],
+  "temperature_range": [
+    {"code": "-20℃", "label": "Frozen, -20 °C"},
+    {"code": "2-8℃", "label": "Chilled, 2 to 8 °C"},
+    {"code": "2-30℃", "label": "Controlled ambient, 2 to 30 °C"},
+    {"code": "15-21℃", "label": "15 to 21 °C"},
+    {"code": "15℃-25℃", "label": "15 to 25 °C"},
+    {"code": "21℃", "label": "21 °C"}
+  ],
+  "record_type": [
+    {"code": "FREIGHT", "label": "Freight rate"},
+    {"code": "SURCHARGE", "label": "Surcharge"},
+    {"code": "ACCESSORIAL", "label": "Optional service charge"},
+    {"code": "FUEL_RULE", "label": "Fuel surcharge rule"},
+    {"code": "RULE", "label": "Pricing rule"},
+    {"code": "ZONE_MAP", "label": "Zone lookup"},
+    {"code": "ZONE_MATRIX", "label": "Zone pair to rate group"}
+  ]
+}

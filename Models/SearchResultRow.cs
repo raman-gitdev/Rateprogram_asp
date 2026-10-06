@@ -1,3 +1,4 @@
+using System;
 namespace TariffHub.Models;
 
 /// <summary>One priced (or unpriceable) FREIGHT band. Column names map from snake_case SQL aliases.</summary>
@@ -7,8 +8,17 @@ public class SearchResultRow
     public string? ServiceType { get; set; }
     public string? LaneCode { get; set; }
     public string? LaneType { get; set; }
+    public string? OriginPointType { get; set; }
+    public string? OriginCountryCode { get; set; }
+    public string? OriginPlace { get; set; }
+    public string? DestPointType { get; set; }
+    public string? DestCountryCode { get; set; }
+    public string? DestPlace { get; set; }
+    /// <summary>Readable lane ends, built by SearchService from the three fields above and the master data.</summary>
     public string? OriginDesc { get; set; }
     public string? DestDesc { get; set; }
+    /// <summary>Same offer appears in more than one zone because the carrier splits the country by station.</summary>
+    public bool ZoneDependsOnAddress { get; set; }
     public decimal? WeightFromKg { get; set; }
     public decimal? WeightToKg { get; set; }
     public decimal? DistanceFromKm { get; set; }

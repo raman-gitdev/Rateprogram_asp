@@ -1,0 +1,26 @@
+<%@ Master Language="C#" AutoEventWireup="true" CodeBehind="Site.Master.cs" Inherits="TariffHub.SiteMaster" %>
+<!DOCTYPE html>
+<html lang="en">
+<head runat="server">
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title></title>
+    <link rel="icon" href="<%: ResolveUrl("~/favicon.ico") %>" />
+    <%-- ?v= changes whenever the file changes, so browsers never keep a stale copy. --%>
+    <link rel="stylesheet" href="<%: ResolveUrl("~/Content/site.css") %>?v=<%= System.IO.File.GetLastWriteTimeUtc(Server.MapPath("~/Content/site.css")).Ticks %>" />
+</head>
+<body>
+    <header class="top">
+        <strong>Ground Tariff Hub</strong> <span class="muted">· one table, every carrier</span>
+        <nav>
+            <a class="button on" href="<%: ResolveUrl("~/") %>">Search rates</a>
+            <span class="button off" title="Not built yet">Loaded tariffs</span>
+        </nav>
+    </header>
+    <form id="form1" runat="server">
+        <section>
+            <asp:ContentPlaceHolder ID="MainContent" runat="server" />
+        </section>
+    </form>
+</body>
+</html>
