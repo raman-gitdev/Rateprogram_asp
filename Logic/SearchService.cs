@@ -246,12 +246,17 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
             var dest = Resolve(q.DestCountry, q.DestPlaceType, q.DestPlace, q.DestPostcode);
             var (rows, truncated) = repo.Search(q, origin, dest);
             vm.WithheldCarrierCodes += rows.RemoveAll(r => !TariffRepository.IsAnonymisedCode(r.CarrierCode));
+            // Before masking: the lane key must use the stored values.
+            AttachAccessorials(q, rows);
             var withheld = 0;
             foreach (var r in rows)
             {
-                r.OriginDesc = Describe(r.CarrierCode, r.OriginPointType, r.OriginCountryCode ?? q.OriginCountry, r.OriginPlace);
-                r.DestDesc = Describe(r.CarrierCode, r.DestPointType, r.DestCountryCode ?? q.DestCountry, r.DestPlace);
+                r.OriginDesc = Describe(r.CarrierCode, r.OriginPointType, r.OriginCountryCode ?? q.OriginCountry, r.OriginPlace, r.OriginRegion);
+                r.DestDesc = Describe(r.CarrierCode, r.DestPointType, r.DestCountryCode ?? q.DestCountry, r.DestPlace, r.DestRegion);
                 r.ServiceType = redactor.Mask(r.ServiceType, ref withheld);
+                r.ServiceName = redactor.Mask(r.ServiceName, ref withheld);
+                foreach (var a in r.Accessorials)
+                    a.ChargeName = redactor.Mask(a.ChargeName, ref withheld) ?? "";
                 r.LaneCode = redactor.Mask(r.LaneCode, ref withheld);
                 r.LaneType = redactor.Mask(r.LaneType, ref withheld);
                 r.OriginDesc = redactor.Mask(r.OriginDesc, ref withheld);
@@ -280,6 +285,77 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
     }
 
     /// <summary>
+    /// Gives every row the accessorial charges of its carrier, service and lane (all lane columns equal, empty = empty),
+    /// priced for this shipment. They are listed, not added: the user picks which apply.
+    /// </summary>
+    private void AttachAccessorials(SearchQuery q, List<SearchResultRow> rows)
+    {
+        if (rows.Count == 0) return;
+        var all = repo.Accessorials(q.Mode, rows.Select(r => r.CarrierCode),
+                                    rows.Where(r => r.ServiceType is not null).Select(r => r.ServiceType!),
+                                    q.ShipDate ?? DateTime.Today);
+        if (all.Count == 0) return;
+
+        var byLane = all.ToLookup(a => LaneKey(a.CarrierCode, a.ServiceType,
+            a.OriginPointType, a.OriginCountryCode, a.OriginRegion, a.OriginCity, a.OriginAirport,
+            a.DestPointType, a.DestCountryCode, a.DestRegion, a.DestCity, a.DestAirport));
+        foreach (var r in rows)
+        {
+            var key = LaneKey(r.CarrierCode, r.ServiceType,
+                r.OriginPointType, r.OriginCountryCode, r.OriginRegion, r.OriginCity, r.OriginAirport,
+                r.DestPointType, r.DestCountryCode, r.DestRegion, r.DestCity, r.DestAirport);
+            r.Accessorials = byLane[key].Select(a => PriceAccessorial(a, r, q)).ToList();
+        }
+    }
+
+    private static string LaneKey(params string?[] parts) =>
+        string.Join("|", parts.Select(x => x?.Trim().ToUpperInvariant() ?? ""));
+
+    /// <summary>
+    /// One charge for one row: rate by its basis, then held between min and max. Null amount (with a reason)
+    /// when an input is missing or the currency differs from the freight - never zero.
+    /// </summary>
+    private static AccessorialCharge PriceAccessorial(AccessorialRow a, SearchResultRow r, SearchQuery q)
+    {
+        var c = new AccessorialCharge
+        {
+            ChargeCode = a.ChargeCode, ChargeName = a.ChargeName, ChargeSide = a.ChargeSide, ChargeBasis = a.ChargeBasis,
+            Rate = a.RateValue, MinCharge = a.MinCharge, MaxCharge = a.MaxCharge, Currency = a.CurrencyCode,
+        };
+        if (a.ChargeBasis != "PCT_OF_FREIGHT" && !string.Equals(a.CurrencyCode, r.Currency, StringComparison.OrdinalIgnoreCase))
+        {
+            c.NotPricedReason = $"quoted in {a.CurrencyCode}, freight in {r.Currency}";
+            return c;
+        }
+
+        decimal? raw = a.ChargeBasis switch
+        {
+            "PER_KG" => r.ChargeableKg is { } kg ? a.RateValue * kg : (decimal?)null,
+            "PER_SHIPMENT" or "PER_DECLARATION" or "PER_ENTRY" or "PER_AWB" => (decimal?)a.RateValue,
+            "PCT_OF_FREIGHT" => r.BaseFreight is { } f ? a.RateValue / 100m * f : (decimal?)null,
+            "PER_PIECE" => q.Pieces is { } n ? a.RateValue * n : (decimal?)null,
+            _ => null,
+        };
+        if (raw is null)
+        {
+            c.NotPricedReason = a.ChargeBasis switch
+            {
+                "PER_KG" => "enter weight or volume",
+                "PCT_OF_FREIGHT" => "freight not priced",
+                "PER_PIECE" => "enter pieces",
+                _ => "not priced on this page",
+            };
+            return c;
+        }
+
+        var amount = raw.Value;
+        if (a.MinCharge is { } min && amount < min) { amount = min; c.LimitApplied = "min"; }
+        if (a.MaxCharge is { } max && amount > max) { amount = max; c.LimitApplied = "max"; }
+        c.Amount = Math.Round(amount, 2, MidpointRounding.AwayFromZero);
+        return c;
+    }
+
+    /// <summary>
     /// A carrier that splits a country by station prices one shipment in several zones (ZONE_MAP has a row per
     /// station group). Rows of the same carrier, service, lane type and band that differ only in the zone are
     /// the same offer with an address-dependent price: flag them instead of letting them look like rivals.
@@ -297,13 +373,15 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
     }
 
     /// <summary>Readable lane end: "Shanghai, China", "Kanto district, Japan", "Zone 3 · United Kingdom", "BE 2880*".</summary>
-    private string Describe(string carrier, string? pointType, string? country, string? place)
+    private string Describe(string carrier, string? pointType, string? country, string? place, string? region = null)
     {
         var countryName = country is null ? null : master.CountryName(country);
         string Join(string? a, string? b) => string.Join(", ", new[] { a, b }.Where(x => !string.IsNullOrEmpty(x)));
         return pointType switch
         {
-            "COUNTRY" => countryName ?? "",
+            // A country lane that still carries a zone (e.g. a local delivery zone) shows it: it is what tells the rows apart.
+            "COUNTRY" => string.IsNullOrWhiteSpace(region) ? countryName ?? "" : $"{countryName} · {region}",
+            "AIRPORT" => countryName is null ? place ?? "" : $"{place} · {countryName}",
             "ZONE" => countryName is null ? place ?? "" : $"{place} · {countryName}",
             "CITY" => master.LocationsForTariffValue(carrier, place) is { Count: > 0 } locs
                           ? string.Join(" / ", locs.Select(l => l.Name)) : Join(place, countryName),

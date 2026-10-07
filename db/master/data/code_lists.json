@@ -1,6 +1,10 @@
 {
   "_comment": "Display labels for every coded value the search filters show. code = value stored in tariff.*; label = what the user sees. Hand-maintained; build_master.py turns it into master.code_list rows.",
   "service_type": [
+    {"code": "DTD", "label": "Door to door (DTD)", "description": "Pickup at origin to delivery at destination"},
+    {"code": "DTA", "label": "Door to airport (DTA)", "description": "Pickup at origin to the destination airport"},
+    {"code": "ATA", "label": "Airport to airport (ATA)", "description": "Origin airport to destination airport"},
+    {"code": "ATD", "label": "Airport to door (ATD)", "description": "Origin airport to delivery at destination"},
     {"code": "LTL", "label": "Less than truckload (LTL)", "description": "Shared truck, priced by weight band"},
     {"code": "FTL", "label": "Full truckload (FTL)", "description": "Whole truck, priced per truck"},
     {"code": "DEDICATED_FTL", "label": "Dedicated truck by distance", "description": "Whole truck priced by km band from a pick-up point"},
@@ -61,6 +65,8 @@
     {"code": "SPOT", "label": "Spot rate"}
   ],
   "charge_basis": [
+    {"code": "PER_DECLARATION", "label": "per declaration"},
+    {"code": "PER_ENTRY", "label": "per customs entry"},
     {"code": "PER_KG", "label": "per kg"},
     {"code": "PER_100KG", "label": "per 100 kg"},
     {"code": "PER_SHIPMENT", "label": "per shipment"},

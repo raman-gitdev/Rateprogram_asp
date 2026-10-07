@@ -118,6 +118,7 @@ namespace TariffHub
             litResultHeading.Text = vm.Searched ? ResultHeading(vm) : "";
             if (phResults.Visible)
             {
+                _lastServiceKey = null;
                 rptResults.DataSource = vm.Results;
                 rptResults.DataBind();
             }
@@ -262,10 +263,138 @@ namespace TariffHub
         protected static string Validity(SearchResultRow r) =>
             $"{r.ValidFrom?.ToString("yyyy-MM-dd", Inv)} – {r.ValidTo?.ToString("yyyy-MM-dd", Inv) ?? "open"}";
 
+        /// <summary>The total, in a span the page script re-adds ticked accessorials to (data-base = total without them).</summary>
         protected static string TotalCell(SearchResultRow r) =>
             r.EstimatedTotal is null
                 ? "<span class=\"small muted\" style=\"font-weight:normal\">— " + HttpUtility.HtmlEncode(r.NoTotalReason) + "</span>"
-                : HttpUtility.HtmlEncode(Money(r.EstimatedTotal) + " " + r.Currency);
+                : "<span class=\"tot\" data-base=\"" + r.EstimatedTotal.Value.ToString("0.00", Inv) + "\" data-ccy=\""
+                  + HttpUtility.HtmlAttributeEncode(r.Currency) + "\">" + HttpUtility.HtmlEncode(Money(r.EstimatedTotal) + " " + r.Currency) + "</span>";
+
+        // ------------------------------------------------- row detail and accessorials
+
+        /// <summary>Columns in the results table; the accessorial row spans all of them.</summary>
+        private const int ResultColumns = 14;
+
+        private string? _lastServiceKey;
+
+        /// <summary>
+        /// Row classes: "svc-start" where the currency or service changes from the row above (drawn as a heavier
+        /// line; rows arrive ordered that way), "min" where the minimum charge decided the freight.
+        /// </summary>
+        protected string RowClass(SearchResultRow r)
+        {
+            var key = r.Currency + "|" + r.ServiceType;
+            var start = _lastServiceKey is not null && key != _lastServiceKey;
+            _lastServiceKey = key;
+            var classes = (start ? "svc-start " : "") + (MinApplied(r) ? "min" : "");
+            return classes.Length == 0 ? "" : " class=\"" + classes.Trim() + "\"";
+        }
+
+        /// <summary>Base freight, with a tag when the minimum charge lifted it (the minimum shown on hover).</summary>
+        protected static string FreightCell(SearchResultRow r) =>
+            HttpUtility.HtmlEncode(Money(r.BaseFreight))
+            + (MinApplied(r)
+                ? " <span class=\"tag\" title=\"Minimum charge " + HttpUtility.HtmlAttributeEncode(Money(r.MinCharge)) + "\">min applied</span>"
+                : "");
+
+        /// <summary>Auto surcharges and fuel in one cell; a dash when the tariff has neither.</summary>
+        protected static string ChargesCell(SearchResultRow r)
+        {
+            var hasSurcharge = r.SurchargeAmount is not null || !string.IsNullOrEmpty(r.SurchargeCodes);
+            if (!hasSurcharge && !r.HasFuelRule)
+                return "<span class=\"muted\" title=\"No surcharge or fuel rule in this tariff\">—</span>";
+            var sb = new StringBuilder();
+            if (hasSurcharge)
+                sb.Append(HttpUtility.HtmlEncode(Money(r.SurchargeAmount)))
+                  .Append("<div class=\"small muted\">").Append(HttpUtility.HtmlEncode(r.SurchargeCodes ?? "")).Append("</div>");
+            if (r.HasFuelRule)
+                sb.Append("<div class=\"small\">fuel ").Append(HttpUtility.HtmlEncode(Money(r.FuelAmount))).Append("</div>");
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Service plus everything that makes otherwise identical rows different: the service level (service_name,
+        /// when it is not just the service again), the piece type and the rate group.
+        /// </summary>
+        protected static string ServiceCell(SearchResultRow r)
+        {
+            var sb = new StringBuilder(HttpUtility.HtmlEncode(r.ServiceType ?? ""));
+            // A short service name is a level (SL1) and shown as a tag; a long one is only in the cell's tooltip.
+            if (!string.IsNullOrWhiteSpace(r.ServiceName) && r.ServiceName != r.ServiceType && r.ServiceName!.Length <= 12)
+                sb.Append(" <span class=\"tag lvl\">").Append(HttpUtility.HtmlEncode(r.ServiceName)).Append("</span>");
+            if (!string.IsNullOrWhiteSpace(r.PieceType) && r.PieceType != "ANY")
+                sb.Append(" <span class=\"tag\" title=\"Piece type\">").Append(HttpUtility.HtmlEncode(CodeLabel("piece_type", r.PieceType))).Append("</span>");
+            if (!string.IsNullOrWhiteSpace(r.RateGroup))
+                sb.Append(" <span class=\"tag\" title=\"Rate group\">group ").Append(HttpUtility.HtmlEncode(r.RateGroup)).Append("</span>");
+            return sb.ToString();
+        }
+
+        /// <summary>Tooltip of the service cell: the full service name when there is one.</summary>
+        protected static string ServiceTitle(SearchResultRow r) =>
+            string.IsNullOrWhiteSpace(r.ServiceName) || r.ServiceName == r.ServiceType
+                ? r.ServiceType ?? ""
+                : $"{r.ServiceType} · {r.ServiceName}";
+
+        /// <summary>Tooltip of the lane code: validity and source, which no longer take two columns.</summary>
+        protected static string LaneTitle(SearchResultRow r) =>
+            $"Valid {Validity(r)}\nSource: {r.SourceRef} · {r.SourceSheet}{(r.SourceRow == null ? "" : " row " + r.SourceRow)}";
+
+        /// <summary>Count of the row's accessorials, with the arrow that opens them; a dash when the service has none.</summary>
+        protected static string AccessorialCell(SearchResultRow r)
+        {
+            if (r.Accessorials.Count == 0) return "<span class=\"small muted\">—</span>";
+            var n = r.Accessorials.Count;
+            return "<button type=\"button\" class=\"acc-btn\" onclick=\"accToggle(this)\" aria-expanded=\"false\">"
+                   + n + (n == 1 ? " charge" : " charges") + " <span class=\"arr\">\u25BE</span></button>"
+                   + "<div class=\"small acc-sel\"></div>";
+        }
+
+        /// <summary>
+        /// The hidden row under a result: each accessorial priced for this shipment, with a tick box to add it to the
+        /// total. Nothing is ticked at first - the user decides which apply (e.g. air-ride or standard truck).
+        /// </summary>
+        protected static string AccessorialDetailRow(SearchResultRow r)
+        {
+            if (r.Accessorials.Count == 0) return "";
+            string E(string? v) => HttpUtility.HtmlEncode(v ?? "");
+            var kg = r.ChargeableKg is { } k ? Num(k) + " kg" : "this shipment";
+
+            var sb = new StringBuilder();
+            sb.Append("<tr class=\"acc-row\" hidden><td colspan=\"").Append(ResultColumns).Append("\"><div class=\"acc-box\">");
+            sb.Append("<table class=\"acc\"><thead><tr><th>Add</th><th>Stage</th><th>Charge</th><th>Rate</th><th>Min</th><th>Max</th>")
+              .Append("<th class=\"num\">Amount for ").Append(E(kg)).Append("</th></tr></thead><tbody>");
+            foreach (var a in r.Accessorials)
+            {
+                sb.Append("<tr><td>");
+                if (a.Amount is { } amt)
+                    sb.Append("<input type=\"checkbox\" class=\"acc-pick\" onchange=\"accRecalc(this)\" data-amt=\"")
+                      .Append(amt.ToString("0.00", Inv)).Append("\" aria-label=\"Add ").Append(E(a.ChargeName)).Append("\" />");
+                else
+                    sb.Append("<input type=\"checkbox\" disabled title=\"Cannot be priced\" />");
+                sb.Append("</td><td class=\"small\">").Append(a.ChargeSide == "ORIGIN" ? "Origin" : a.ChargeSide == "DESTINATION" ? "Destination" : E(a.ChargeSide))
+                  .Append("</td><td>").Append(E(a.ChargeName))
+                  .Append("</td><td class=\"num\">").Append(E(Rate(a.Rate))).Append(" <span class=\"small muted\">").Append(E(BasisLabel(a.ChargeBasis))).Append("</span>")
+                  .Append("</td><td class=\"num\">").Append(a.MinCharge is null ? "" : E(Money(a.MinCharge)))
+                  .Append("</td><td class=\"num\">").Append(a.MaxCharge is null ? "" : E(Money(a.MaxCharge)))
+                  .Append("</td><td class=\"num\">");
+                if (a.Amount is { } v)
+                {
+                    sb.Append(E(Money(v) + " " + a.Currency));
+                    if (a.LimitApplied is not null) sb.Append(" <span class=\"tag\">").Append(E(a.LimitApplied)).Append(" applied</span>");
+                }
+                else sb.Append("<span class=\"small muted\">— ").Append(E(a.NotPricedReason)).Append("</span>");
+                sb.Append("</td></tr>");
+            }
+            sb.Append("</tbody></table><p class=\"small\">");
+            if (r.EstimatedTotal is { } t)
+                sb.Append("Estimated total ").Append(E(Money(t))).Append(" + ticked accessorials <b class=\"acc-sum\">0.00</b> = <b class=\"acc-grand\">")
+                  .Append(E(Money(t))).Append("</b> ").Append(E(r.Currency));
+            else
+                sb.Append("Ticked accessorials <b class=\"acc-sum\">0.00</b> ").Append(E(r.Currency))
+                  .Append(" <span class=\"muted\">(no freight total to add them to: ").Append(E(r.NoTotalReason)).Append(")</span><b class=\"acc-grand\" hidden></b>");
+            sb.Append("</p></div></td></tr>");
+            return sb.ToString();
+        }
 
         protected static string FuelCell(SearchResultRow r) =>
             r.HasFuelRule
@@ -284,6 +413,7 @@ namespace TariffHub
             ["PER_KM"] = "per km", ["PER_HOUR"] = "per hour", ["PER_DAY"] = "per day", ["PER_UNIT"] = "per unit", ["PER_CBM"] = "per cbm",
             ["PER_SQM"] = "per sqm", ["PER_CONTAINER"] = "per container", ["PER_TRIP"] = "per trip",
             ["PCT_OF_FREIGHT"] = "% of freight", ["PCT_OF_VALUE"] = "% of value",
+            ["PER_DECLARATION"] = "per declaration", ["PER_ENTRY"] = "per customs entry", ["PER_AWB"] = "per air waybill", ["PER_PIECE"] = "per piece",
         };
 
         protected static string BasisLabel(string? b) =>

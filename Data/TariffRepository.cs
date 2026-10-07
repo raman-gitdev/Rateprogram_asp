@@ -152,28 +152,63 @@ public sealed class TariffRepository
 
     public sealed record OptionRow(string K, string V, string C);
 
+    // ------------------------------------------------------- dropdown cache
+    //
+    // The dropdown lists only change when rates are loaded, but building them scans the whole table.
+    // They are built once per mode and kept, together with the table's change counter from
+    // pg_stat_user_tables (rows inserted + updated + deleted). Every request reads that counter - an instant
+    // lookup - and rebuilds only when it has moved, so a load script is picked up without restarting the app.
+    // A cached list is also rebuilt after CacheMaxAge, in case the statistics are unavailable or reset.
+
+    private sealed record Cached(long? Version, DateTime BuiltUtc, object Value);
+    private readonly ConcurrentDictionary<string, Cached> _cache = new();
+    private static readonly TimeSpan CacheMaxAge = TimeSpan.FromMinutes(30);
+
+    private const string VersionSql = """
+        SELECT n_tup_ins + n_tup_upd + n_tup_del FROM pg_stat_user_tables WHERE relid = to_regclass(@Table)
+        """;
+
+    private T GetCached<T>(string key, TariffMode mode, Func<NpgsqlConnection, T> build) where T : class
+    {
+        using var conn = Open();
+        var version = conn.ExecuteScalar<long?>(VersionSql, new { Table = TableName(mode) });
+        if (_cache.TryGetValue(key, out var c) && c.Version == version && DateTime.UtcNow - c.BuiltUtc < CacheMaxAge
+            && c.Value is T hit)
+            return hit;
+
+        var value = build(conn);
+        _cache[key] = new Cached(version, DateTime.UtcNow, value);
+        return value;
+    }
+
     /// <summary>
-    /// Distinct values per filter with the carriers that use them, in one round trip.
-    /// Keys: 'carrier', 'ocountry', 'dcountry', 'pt', plus each filter key.
-    /// Everything except 'carrier' is scoped to the chosen carrier when one is given.
+    /// Distinct values per filter with the carriers that use them. Keys: 'carrier', 'ocountry', 'dcountry',
+    /// 'unzoned', plus each filter key. Everything except 'carrier' is scoped to the chosen carrier when one is
+    /// given. Built once per mode (see the dropdown cache); the carrier scope is applied in memory.
     /// </summary>
     public List<OptionRow> FilterOptions(TariffMode mode, string? carrier)
     {
+        var all = GetCached($"options|{mode}", mode, conn => conn.Query<OptionRow>(FilterOptionsSql(mode)).ToList());
+        if (carrier is null) return new List<OptionRow>(all);
+        // 'unzoned' rows carry the carrier in V (C is the country); every other key carries it in C.
+        return all.Where(o => o.K == "carrier" || (o.K == "unzoned" ? o.V == carrier : o.C == carrier)).ToList();
+    }
+
+    /// <summary>One statement, every carrier: ~one aggregate per dropdown, each a scan of the table.</summary>
+    private string FilterOptionsSql(TariffMode mode)
+    {
         var cols = Columns(mode);
         var t = TableName(mode);
-        var scope = carrier is null ? "" : " AND f.carrier_code = @Carrier";
 
         var parts = new List<string>
         {
             $"SELECT 'carrier' AS k, f.carrier_code AS v, f.carrier_code AS c FROM {t} f WHERE f.carrier_code IS NOT NULL GROUP BY 2, 3",
             // Countries reachable directly (FREIGHT) or through a zone chart (ZONE_MAP).
-            $"SELECT 'ocountry', f.origin_country_code, f.carrier_code FROM {t} f WHERE f.record_type IN ('FREIGHT','ZONE_MAP') AND f.origin_country_code IS NOT NULL{scope} GROUP BY 2, 3",
-            $"SELECT 'dcountry', f.dest_country_code, f.carrier_code FROM {t} f WHERE f.record_type IN ('FREIGHT','ZONE_MAP') AND f.dest_country_code IS NOT NULL{scope} GROUP BY 2, 3",
-            $"SELECT 'pt', f.origin_point_type, f.carrier_code FROM {t} f WHERE f.record_type = 'FREIGHT' AND f.origin_point_type IS NOT NULL{scope} GROUP BY 2, 3",
-            $"SELECT 'pt', f.dest_point_type, f.carrier_code FROM {t} f WHERE f.record_type = 'FREIGHT' AND f.dest_point_type IS NOT NULL{scope} GROUP BY 2, 3",
+            $"SELECT 'ocountry', f.origin_country_code, f.carrier_code FROM {t} f WHERE f.record_type IN ('FREIGHT','ZONE_MAP') AND f.origin_country_code IS NOT NULL GROUP BY 2, 3",
+            $"SELECT 'dcountry', f.dest_country_code, f.carrier_code FROM {t} f WHERE f.record_type IN ('FREIGHT','ZONE_MAP') AND f.dest_country_code IS NOT NULL GROUP BY 2, 3",
             // Zone-priced carriers with no zone chart at all: no country or place can ever reach their zones.
             // (c = the country the carrier's lanes are in, so the page only mentions it for that country)
-            $"SELECT 'unzoned', f.carrier_code, COALESCE(f.origin_country_code, f.dest_country_code)::text FROM {t} f WHERE f.record_type = 'FREIGHT' AND 'ZONE' IN (f.origin_point_type, f.dest_point_type){scope} " +
+            $"SELECT 'unzoned', f.carrier_code, COALESCE(f.origin_country_code, f.dest_country_code)::text FROM {t} f WHERE f.record_type = 'FREIGHT' AND 'ZONE' IN (f.origin_point_type, f.dest_point_type) " +
             $"AND NOT EXISTS (SELECT 1 FROM {t} z WHERE z.record_type = 'ZONE_MAP' AND z.carrier_code = f.carrier_code) GROUP BY 2, 3",
         };
         foreach (var def in Filters)
@@ -181,19 +216,19 @@ public sealed class TariffRepository
             if (FilterColumn(def, cols) is not { } col) continue;
             var notAny = def.AnyValue is null ? "" : $" AND f.{col}::text <> '{def.AnyValue}'";
             parts.Add($"SELECT '{def.Key}', f.{col}::text, f.carrier_code FROM {t} f " +
-                      $"WHERE f.record_type = 'FREIGHT' AND f.status = 'ACTIVE' AND f.{col} IS NOT NULL AND f.{col}::text <> ''{notAny}{scope} GROUP BY 2, 3");
+                      $"WHERE f.record_type = 'FREIGHT' AND f.status = 'ACTIVE' AND f.{col} IS NOT NULL AND f.{col}::text <> ''{notAny} GROUP BY 2, 3");
         }
 
-        using var conn = Open();
-        var sql = string.Join("\nUNION ALL\n", parts) + "\nORDER BY 1, 2";
-        return conn.Query<OptionRow>(sql, new { Carrier = carrier }).ToList();
+        return string.Join("\nUNION ALL\n", parts) + "\nORDER BY 1, 2";
     }
 
     public sealed record PlaceRow(string Pt, string V, string C);
+    public sealed record CountryPlaceRow(string Country, string Pt, string V, string C);
 
     /// <summary>
     /// Places named by FREIGHT lanes at one end ("origin" or "dest") inside a country: cities, postcodes,
     /// regions and provinces, with the carrier that uses each. Scoped to the carrier when one is chosen.
+    /// Built once per mode and side for every country (see the dropdown cache); filtered in memory.
     /// </summary>
     public List<PlaceRow> Places(TariffMode mode, string? carrier, string side, string country)
     {
@@ -204,18 +239,18 @@ public sealed class TariffRepository
         if (whens.Count == 0) return new();
 
         var sql = $"""
-            SELECT x.pt, x.v, x.c FROM (
-                SELECT f.{side}_point_type AS pt, CASE f.{side}_point_type {string.Join(" ", whens)} END AS v, f.carrier_code AS c
+            SELECT x.country, x.pt, x.v, x.c FROM (
+                SELECT f.{side}_country_code::text AS country, f.{side}_point_type AS pt,
+                       CASE f.{side}_point_type {string.Join(" ", whens)} END AS v, f.carrier_code AS c
                 FROM {TableName(mode)} f
-                WHERE f.record_type = 'FREIGHT' AND f.status = 'ACTIVE'
-                  AND f.{side}_country_code = @Country
-                  {(carrier is null ? "" : "AND f.carrier_code = @Carrier")}
+                WHERE f.record_type = 'FREIGHT' AND f.status = 'ACTIVE' AND f.{side}_country_code IS NOT NULL
             ) x
             WHERE x.v IS NOT NULL AND trim(x.v) <> ''
-            GROUP BY 1, 2, 3
+            GROUP BY 1, 2, 3, 4
             """;
-        using var conn = Open();
-        return conn.Query<PlaceRow>(sql, new { Country = country, Carrier = carrier }).ToList();
+        var all = GetCached($"places|{mode}|{side}", mode, conn => conn.Query<CountryPlaceRow>(sql).ToList());
+        return all.Where(r => r.Country == country && (carrier is null || r.C == carrier))
+                  .Select(r => new PlaceRow(r.Pt, r.V, r.C)).ToList();
     }
 
     // ----------------------------------------------------------------- search
@@ -255,6 +290,8 @@ public sealed class TariffRepository
             .Where(kv => cols.Contains($"{side}_{kv.Value}"))
             .Select(kv => $"WHEN '{kv.Key}' THEN p.{side}_{kv.Value}::text")
             .Append($"WHEN 'ZONE' THEN p.{side}_region::text");
+        if (cols.Contains($"{side}_airport"))
+            whens = whens.Append($"WHEN 'AIRPORT' THEN p.{side}_airport::text");
         return $"CASE p.{side}_point_type {string.Join(" ", whens)} END";
     }
 
@@ -419,6 +456,14 @@ public sealed class TariffRepository
             distanceKnown = "(@Km::numeric IS NOT NULL OR (c.distance_from_km IS NULL AND c.distance_to_km IS NULL))";
         }
 
+        // Lane detail that tells rows apart on screen; NULL where this mode's table has no such column.
+        string Opt(string c) => cols.Contains(c) ? $"p.{c}::text AS {c}" : $"NULL::text AS {c}";
+        var detailCols = string.Join(", ", new[]
+        {
+            "service_name", "piece_type", "rate_group", "transit_time",
+            "origin_region", "origin_city", "origin_airport", "dest_region", "dest_city", "dest_airport",
+        }.Select(Opt));
+
         var distanceCols = hasDistance
             ? "p.distance_from_km, p.distance_to_km"
             : "NULL::numeric AS distance_from_km, NULL::numeric AS distance_to_km";
@@ -497,6 +542,7 @@ public sealed class TariffRepository
             SELECT p.carrier_code, p.service_type, p.lane_code, p.lane_type,
                    p.origin_point_type, p.origin_country_code::text AS origin_country_code, {LanePlaceSql("origin", cols)} AS origin_place,
                    p.dest_point_type, p.dest_country_code::text AS dest_country_code, {LanePlaceSql("dest", cols)} AS dest_place,
+                   {detailCols},
                    p.weight_from_kg, p.weight_to_kg, {distanceCols},
                    p.rate_value AS rate, p.charge_basis, p.min_charge, p.chargeable_kg, p.raw_freight, p.base_freight,
                    p.surcharge_amount, p.surcharge_codes, p.surcharge_unpriced, p.surcharge_other_currency,
@@ -504,8 +550,9 @@ public sealed class TariffRepository
                    p.currency_code AS currency, p.valid_from, p.valid_to,
                    p.source_ref::text AS source_ref, p.source_sheet::text AS source_sheet, p.source_row::text AS source_row
             FROM totalled p
-            -- Currencies are never compared: group by currency, cheapest first within each, unpriced last.
-            ORDER BY p.currency_code, p.estimated_total NULLS LAST, p.base_freight NULLS LAST,
+            -- Currencies are never compared: group by currency, then by service so each service is listed together,
+            -- cheapest first within each service, unpriced last.
+            ORDER BY p.currency_code, p.service_type NULLS LAST, p.estimated_total NULLS LAST, p.base_freight NULLS LAST,
                      p.carrier_code, p.lane_code, p.weight_from_kg NULLS FIRST
             LIMIT {MaxResults + 1}
             """;
@@ -515,6 +562,48 @@ public sealed class TariffRepository
         var truncated = rows.Count > MaxResults;
         if (truncated) rows.RemoveAt(rows.Count - 1);
         return (rows, truncated);
+    }
+
+    private bool? _hasAirAccessorial;
+
+    /// <summary>
+    /// Active accessorial charges (tariff.air_accessorial, named by tariff.charge_type) of the given carriers and
+    /// services, in force on the ship date. Air only; empty when the table is not installed. Matching a charge to
+    /// a result row's lane is done by the caller.
+    /// </summary>
+    public List<AccessorialRow> Accessorials(TariffMode mode, IEnumerable<string> carriers, IEnumerable<string> services, DateTime shipDate)
+    {
+        var c = carriers.Distinct().ToArray();
+        var sv = services.Distinct().ToArray();
+        if (mode != TariffMode.Air || c.Length == 0 || sv.Length == 0) return new();
+
+        using var conn = Open();
+        // Re-checked until found, so installing the table later needs no app restart.
+        if (_hasAirAccessorial != true) _hasAirAccessorial = conn.ExecuteScalar<bool>(
+            "SELECT to_regclass('tariff.air_accessorial') IS NOT NULL AND to_regclass('tariff.charge_type') IS NOT NULL");
+        if (_hasAirAccessorial != true) return new();
+
+        const string sql = """
+            SELECT a.carrier_code, a.service_type,
+                   a.origin_point_type, a.origin_country_code::text AS origin_country_code, a.origin_region, a.origin_city,
+                   a.origin_airport::text AS origin_airport,
+                   a.dest_point_type, a.dest_country_code::text AS dest_country_code, a.dest_region, a.dest_city,
+                   a.dest_airport::text AS dest_airport,
+                   a.charge_code, t.charge_name, t.charge_side, a.charge_basis,
+                   a.rate_value, a.min_charge, a.max_charge, a.currency_code::text AS currency_code
+            FROM tariff.air_accessorial a
+            JOIN tariff.charge_type t ON t.charge_code = a.charge_code
+            WHERE a.carrier_code = ANY(@Carriers)
+              AND a.service_type = ANY(@Services)
+              AND a.status = 'ACTIVE'
+              AND a.valid_from <= @ShipDate::date AND (a.valid_to IS NULL OR a.valid_to >= @ShipDate::date)
+            ORDER BY CASE t.charge_side WHEN 'ORIGIN' THEN 0 WHEN 'MAIN' THEN 1 ELSE 2 END, a.accessorial_id
+            """;
+        var p = new DynamicParameters();
+        p.Add("Carriers", c);
+        p.Add("Services", sv);
+        p.Add("ShipDate", shipDate.Date, DbType.Date);
+        return conn.Query<AccessorialRow>(sql, p).ToList();
     }
 
     /// <summary>

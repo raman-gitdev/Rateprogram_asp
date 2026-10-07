@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 namespace TariffHub.Models;
 
 /// <summary>One priced (or unpriceable) FREIGHT band. Column names map from snake_case SQL aliases.</summary>
@@ -14,6 +15,17 @@ public class SearchResultRow
     public string? DestPointType { get; set; }
     public string? DestCountryCode { get; set; }
     public string? DestPlace { get; set; }
+    /// <summary>Lane detail that tells otherwise identical rows apart (null where the table has no such column).</summary>
+    public string? ServiceName { get; set; }
+    public string? PieceType { get; set; }
+    public string? RateGroup { get; set; }
+    public string? TransitTime { get; set; }
+    public string? OriginRegion { get; set; }
+    public string? OriginCity { get; set; }
+    public string? OriginAirport { get; set; }
+    public string? DestRegion { get; set; }
+    public string? DestCity { get; set; }
+    public string? DestAirport { get; set; }
     /// <summary>Readable lane ends, built by SearchService from the three fields above and the master data.</summary>
     public string? OriginDesc { get; set; }
     public string? DestDesc { get; set; }
@@ -43,6 +55,9 @@ public class SearchResultRow
     public string? SourceSheet { get; set; }
     public string? SourceRow { get; set; }
 
+    /// <summary>Optional charges that come with this service (air_accessorial), priced for this shipment. Never in EstimatedTotal: the user picks them.</summary>
+    public List<AccessorialCharge> Accessorials { get; set; } = new();
+
     /// <summary>Why estimated_total is null, for display. Null when a total exists.</summary>
     public string? NoTotalReason =>
         EstimatedTotal is not null ? null
@@ -68,4 +83,47 @@ public class AdderGapRow
     public string? LaneCode { get; set; }
     public decimal TopBandKg { get; set; }
     public decimal ChargeableKg { get; set; }
+}
+
+/// <summary>One air_accessorial row as read from the database (lane key + charge).</summary>
+public class AccessorialRow
+{
+    public string CarrierCode { get; set; } = "";
+    public string ServiceType { get; set; } = "";
+    public string? OriginPointType { get; set; }
+    public string? OriginCountryCode { get; set; }
+    public string? OriginRegion { get; set; }
+    public string? OriginCity { get; set; }
+    public string? OriginAirport { get; set; }
+    public string? DestPointType { get; set; }
+    public string? DestCountryCode { get; set; }
+    public string? DestRegion { get; set; }
+    public string? DestCity { get; set; }
+    public string? DestAirport { get; set; }
+    public string ChargeCode { get; set; } = "";
+    public string ChargeName { get; set; } = "";
+    public string ChargeSide { get; set; } = "";
+    public string ChargeBasis { get; set; } = "";
+    public decimal RateValue { get; set; }
+    public decimal? MinCharge { get; set; }
+    public decimal? MaxCharge { get; set; }
+    public string CurrencyCode { get; set; } = "";
+}
+
+/// <summary>An accessorial charge priced for one result row.</summary>
+public class AccessorialCharge
+{
+    public string ChargeCode { get; set; } = "";
+    public string ChargeName { get; set; } = "";
+    public string ChargeSide { get; set; } = "";
+    public string ChargeBasis { get; set; } = "";
+    public decimal Rate { get; set; }
+    public decimal? MinCharge { get; set; }
+    public decimal? MaxCharge { get; set; }
+    public string Currency { get; set; } = "";
+    /// <summary>Amount for this shipment after min / max; null when it cannot be priced (see <see cref="NotPricedReason"/>).</summary>
+    public decimal? Amount { get; set; }
+    public string? NotPricedReason { get; set; }
+    /// <summary>The minimum or maximum decided the amount.</summary>
+    public string? LimitApplied { get; set; }
 }

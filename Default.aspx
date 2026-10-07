@@ -1,6 +1,14 @@
-<%@ Page Title="Ground Tariff Hub" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="TariffHub._Default" %>
+<%@ Page Title="Rate search" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Default.aspx.cs" Inherits="TariffHub._Default" %>
 
 <asp:Content ID="Main" ContentPlaceHolderID="MainContent" runat="server">
+    <%-- Partial page updates: changing mode, carrier or a country, and Search, refresh only the panel below
+         in the background - no full reload, no white flash. Scripts come from the app itself (no CDN). --%>
+    <asp:ScriptManager ID="sm" runat="server" EnablePartialRendering="true" EnableCdn="false" />
+    <asp:UpdateProgress ID="upBusy" runat="server" AssociatedUpdatePanelID="upMain" DisplayAfter="200">
+        <ProgressTemplate><div class="busy">Loading…</div></ProgressTemplate>
+    </asp:UpdateProgress>
+    <asp:UpdatePanel ID="upMain" runat="server" UpdateMode="Always" RenderMode="Block">
+    <ContentTemplate>
     <asp:Literal ID="litMessages" runat="server" />
 
     <div class="grid">
@@ -87,8 +95,7 @@
         <ItemTemplate>
             <div class="info">
                 <b><%#: Item.CarrierCode %></b> <%#: Item.ServiceType %> lane <%#: Item.LaneCode %>:
-                no band covers this weight (<%#: Num(Item.ChargeableKg) %> kg chargeable); this carrier charges an adder above <%#: Num(Item.TopBandKg) %> kg —
-                see the <a class="link" href="<%#: LaneUrl(Item.CarrierCode, Item.LaneCode) %>">lane detail</a>.
+                no band covers this weight (<%#: Num(Item.ChargeableKg) %> kg chargeable); this carrier charges an adder above <%#: Num(Item.TopBandKg) %> kg.
             </div>
         </ItemTemplate>
     </asp:Repeater>
@@ -96,44 +103,75 @@
     <asp:Literal ID="litResultHeading" runat="server" />
 
     <asp:PlaceHolder ID="phResults" runat="server" Visible="false">
-        <div class="scroll">
+        <div class="scroll results">
             <table>
                 <thead>
                     <tr>
                         <th>Carrier</th><th>Service</th><th>Lane</th><th>Type</th><th>From</th><th>To</th>
-                        <th>Band</th><th>Rate</th><th>Chg. kg</th><th>Min</th><th>Base freight</th>
-                        <th>Auto surcharges</th><th>Fuel</th><th>Estimated total</th><th>Valid</th><th>Source</th>
+                        <th>Band</th><th>Transit</th><th>Rate</th><th>Chg. kg</th><th>Freight</th>
+                        <th>Surcharges / fuel</th><th title="Optional charges of this service. Open to see each one priced for this shipment and tick the ones that apply.">Accessorials</th>
+                        <th>Estimated total</th>
                     </tr>
                 </thead>
                 <tbody>
                     <asp:Repeater ID="rptResults" runat="server" ItemType="TariffHub.Models.SearchResultRow">
                         <ItemTemplate>
-                            <tr<%# MinApplied(Item) ? " class=\"min\"" : "" %>>
+                            <tr<%# RowClass(Item) %>>
                                 <td><%#: Item.CarrierCode %></td>
-                                <td title="<%#: Item.ServiceType %>"><%#: CodeLabel("service_type", Item.ServiceType) %></td>
-                                <td><a class="link" href="<%#: LaneUrl(Item.CarrierCode, Item.LaneCode) %>" title="Open the whole lane"><%#: Item.LaneCode %></a><%# Item.ZoneDependsOnAddress ? "<span class=\"tag warn\" title=\"This carrier splits the country by service area: the zone, and so the price, depends on the exact address. A postcode-to-service-area list from the carrier is needed to pick one.\">depends on address</span>" : "" %></td>
+                                <td class="nw" title="<%#: ServiceTitle(Item) %>"><%# ServiceCell(Item) %></td>
+                                <td class="nw"><span class="lane" title="<%#: LaneTitle(Item) %>"><%#: Item.LaneCode %></span><%# Item.ZoneDependsOnAddress ? "<span class=\"tag warn\" title=\"This carrier splits the country by service area: the zone, and so the price, depends on the exact address. A postcode-to-service-area list from the carrier is needed to pick one.\">depends on address</span>" : "" %></td>
                                 <td><%#: CodeLabel("lane_type", Item.LaneType) %></td>
-                                <td><%#: Item.OriginDesc %></td>
-                                <td><%#: Item.DestDesc ?? "—" %></td>
-                                <td><%#: Band(Item.WeightFromKg, Item.WeightToKg, "kg") %> <%#: Band(Item.DistanceFromKm, Item.DistanceToKm, "km") %></td>
+                                <td class="nw"><%#: Item.OriginDesc %></td>
+                                <td class="nw"><%#: Item.DestDesc ?? "—" %></td>
+                                <td class="nw"><%#: Band(Item.WeightFromKg, Item.WeightToKg, "kg") %> <%#: Band(Item.DistanceFromKm, Item.DistanceToKm, "km") %></td>
+                                <td class="nw"><%#: Item.TransitTime ?? "" %></td>
                                 <td class="num"><%#: Rate(Item.Rate) %>
                                     <span class="small muted"><%#: BasisLabel(Item.ChargeBasis) %></span></td>
                                 <td class="num"><%#: Num(Item.ChargeableKg) %></td>
-                                <td class="num"><%#: Item.MinCharge == null ? "" : Money(Item.MinCharge) %>
-                                    <%# MinApplied(Item) ? "<span class=\"tag\">applied</span>" : "" %></td>
-                                <td class="num"><%#: Money(Item.BaseFreight) %></td>
-                                <td class="num"><%#: Money(Item.SurchargeAmount) %>
-                                    <div class="small muted"><%#: Item.SurchargeCodes %></div></td>
-                                <td class="num"><%# FuelCell(Item) %></td>
+                                <td class="num"><%# FreightCell(Item) %></td>
+                                <td class="num"><%# ChargesCell(Item) %></td>
+                                <td class="num"><%# AccessorialCell(Item) %></td>
                                 <td class="num total"><%# TotalCell(Item) %></td>
-                                <td><%#: Validity(Item) %></td>
-                                <td class="small"><%#: Item.SourceRef %> · <%#: Item.SourceSheet %><%#: Item.SourceRow == null ? "" : " row " + Item.SourceRow %></td>
                             </tr>
+                            <%# AccessorialDetailRow(Item) %>
                         </ItemTemplate>
                     </asp:Repeater>
                 </tbody>
             </table>
         </div>
-        <p class="small muted">Rows are grouped by currency and ordered cheapest first within each currency; totals are never compared across currencies.</p>
+        <p class="small muted">Rows are ordered by currency, then service, cheapest first; a heavier line marks where the service changes.
+            Totals are never compared across currencies. Accessorials are not in the total until you tick them. Hover a lane code for its validity and source.</p>
     </asp:PlaceHolder>
+    </ContentTemplate>
+    </asp:UpdatePanel>
+
+    <script>
+        // Open / close a row's accessorial breakdown (the row right after it).
+        function accToggle(btn) {
+            var detail = btn.closest('tr').nextElementSibling;
+            if (!detail || !detail.classList.contains('acc-row')) return;
+            var open = detail.hidden;
+            detail.hidden = !open;
+            btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+            btn.querySelector('.arr').textContent = open ? '\u25B4' : '\u25BE';
+        }
+        function accMoney(v) {
+            return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+        }
+        // Re-add the ticked accessorials to the row's total. Amounts are in cents to avoid float drift.
+        function accRecalc(cb) {
+            var detail = cb.closest('tr.acc-row'), row = detail.previousElementSibling;
+            var cents = 0, n = 0;
+            detail.querySelectorAll('input.acc-pick:checked').forEach(function (x) { cents += Math.round(parseFloat(x.dataset.amt) * 100); n++; });
+            var sum = cents / 100, tot = row.querySelector('.tot'), sel = row.querySelector('.acc-sel');
+            detail.querySelector('.acc-sum').textContent = accMoney(sum);
+            if (sel) sel.textContent = n === 0 ? '' : '+' + accMoney(sum) + ' added';
+            if (tot && tot.dataset.base) {
+                var grand = (Math.round(parseFloat(tot.dataset.base) * 100) + cents) / 100;
+                tot.textContent = accMoney(grand) + ' ' + tot.dataset.ccy;
+                detail.querySelector('.acc-grand').textContent = accMoney(grand);
+                row.classList.toggle('with-acc', n > 0);
+            }
+        }
+    </script>
 </asp:Content>

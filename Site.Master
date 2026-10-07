@@ -11,7 +11,7 @@
 </head>
 <body>
     <header class="top">
-        <strong>Ground Tariff Hub</strong> <span class="muted">· one table, every carrier</span>
+        <strong>Tariff Hub</strong> <span class="muted">· ground and air, every carrier</span>
         <nav>
             <a class="button on" href="<%: ResolveUrl("~/") %>">Search rates</a>
             <span class="button off" title="Not built yet">Loaded tariffs</span>
