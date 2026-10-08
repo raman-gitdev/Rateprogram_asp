@@ -62,6 +62,8 @@ namespace TariffHub
                 q.SetFilter(def.Key, Request.Form["f_" + def.Key]);
             (q.OriginPlaceType, q.OriginPlace) = SplitPlace(Request.Form["origin_place"]);
             (q.DestPlaceType, q.DestPlace) = SplitPlace(Request.Form["dest_place"]);
+            q.OriginAirport = Code(Request.Form["origin_airport"]);
+            q.DestAirport = Code(Request.Form["dest_airport"]);
             return q;
         }
 
@@ -71,6 +73,10 @@ namespace TariffHub
             var i = v?.IndexOf('|') ?? -1;
             return i > 0 ? (v!.Substring(0, i), v.Substring(i + 1)) : (null, null);
         }
+
+        /// <summary>An airport code from the form, or null when empty.</summary>
+        private static string? Code(string? v) =>
+            string.IsNullOrWhiteSpace(v) ? null : v!.Trim().ToUpperInvariant();
 
         private static decimal? Dec(string? s) =>
             decimal.TryParse(s, NumberStyles.Number, Inv, out var v) && v >= 0 ? v : null;
@@ -212,6 +218,36 @@ namespace TariffHub
             return note is null ? "" : "<div class=\"small muted\">" + HttpUtility.HtmlEncode(note) + "</div>";
         }
 
+        /// <summary>True when this mode's table has airport lanes: the From / To boxes get an Airport dropdown.</summary>
+        protected bool ShowAirports => _vm.SupportsAirports;
+
+        /// <summary>
+        /// The "Airport" dropdown of one end ("origin" or "dest"), separate from Place. Shows the code and the full
+        /// airport name. Disabled until a country is chosen.
+        /// </summary>
+        protected string AirportSelect(string side)
+        {
+            var origin = side == "origin";
+            var country = origin ? _vm.Query.OriginCountry : _vm.Query.DestCountry;
+            var airports = origin ? _vm.OriginAirports : _vm.DestAirports;
+            var selected = origin ? _vm.Query.OriginAirport : _vm.Query.DestAirport;
+
+            var sb = new StringBuilder("<select name=\"").Append(side).Append("_airport\"");
+            if (country is null)
+                return sb.Append(" disabled><option value=\"\">Choose a country first</option></select>").ToString();
+            if (airports.Count == 0)
+                return sb.Append(" disabled><option value=\"\">No airport lanes in this country</option></select>").ToString();
+
+            sb.Append("><option value=\"\">Any airport</option>");
+            foreach (var a in airports)
+            {
+                sb.Append("<option value=\"").Append(HttpUtility.HtmlAttributeEncode(a.Value)).Append('"');
+                if (a.Value == selected) sb.Append(" selected");
+                sb.Append('>').Append(HttpUtility.HtmlEncode(a.Label)).Append("</option>");
+            }
+            return sb.Append("</select>").ToString();
+        }
+
         /// <summary>
         /// The "Place" dropdown of one end ("origin" or "dest"), grouped by kind. Disabled until a country is chosen,
         /// because the list is that country's places.
@@ -319,9 +355,12 @@ namespace TariffHub
         protected static string ServiceCell(SearchResultRow r)
         {
             var sb = new StringBuilder(HttpUtility.HtmlEncode(r.ServiceType ?? ""));
-            // A short service name is a level (SL1) and shown as a tag; a long one is only in the cell's tooltip.
-            if (!string.IsNullOrWhiteSpace(r.ServiceName) && r.ServiceName != r.ServiceType && r.ServiceName!.Length <= 12)
-                sb.Append(" <span class=\"tag lvl\">").Append(HttpUtility.HtmlEncode(r.ServiceName)).Append("</span>");
+            // The service level (SL1) is a tag; without one, a short service name is shown as the tag instead.
+            var level = !string.IsNullOrWhiteSpace(r.ServiceLevel) ? r.ServiceLevel
+                      : !string.IsNullOrWhiteSpace(r.ServiceName) && r.ServiceName != r.ServiceType && r.ServiceName!.Length <= 12 ? r.ServiceName
+                      : null;
+            if (level != null)
+                sb.Append(" <span class=\"tag lvl\" title=\"Service level\">").Append(HttpUtility.HtmlEncode(level)).Append("</span>");
             if (!string.IsNullOrWhiteSpace(r.PieceType) && r.PieceType != "ANY")
                 sb.Append(" <span class=\"tag\" title=\"Piece type\">").Append(HttpUtility.HtmlEncode(CodeLabel("piece_type", r.PieceType))).Append("</span>");
             if (!string.IsNullOrWhiteSpace(r.RateGroup))

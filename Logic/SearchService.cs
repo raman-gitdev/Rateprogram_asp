@@ -18,6 +18,7 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
     private const string GroupStates = "States / provinces / prefectures";
     private const string GroupRegions = "Regions";
     private const string GroupPostcodes = "Postcodes priced by a carrier";
+    private const string GroupAirports = "Airports";
 
     /// <summary>Form state for a query. Mode, carrier or country changes reload every dependent list and clear choices that no longer apply.</summary>
     public SearchViewModel BuildForm(SearchQuery q)
@@ -106,6 +107,19 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
 
             vm.SupportsPlaces = TariffRepository.PlaceTypesSupported(cols).Any();
             vm.SupportsPostcode = cols.Contains("origin_postcode") && cols.Contains("dest_postcode");
+            vm.SupportsAirports = cols.Contains("origin_airport") && cols.Contains("dest_airport");
+            vm.OriginAirports = AirportOptions(vm, q.Mode, q.Carrier, "origin", q.OriginCountry);
+            vm.DestAirports = AirportOptions(vm, q.Mode, q.Carrier, "dest", q.DestCountry);
+            if (q.OriginAirport is not null && vm.OriginAirports.All(o => o.Value != q.OriginAirport))
+            {
+                if (q.OriginCountry is not null) vm.Notices.Add("From airport cleared: no tariff of this selection uses it in the chosen country.");
+                q.OriginAirport = null;
+            }
+            if (q.DestAirport is not null && vm.DestAirports.All(o => o.Value != q.DestAirport))
+            {
+                if (q.DestCountry is not null) vm.Notices.Add("To airport cleared: no tariff of this selection uses it in the chosen country.");
+                q.DestAirport = null;
+            }
             vm.OriginPlaces = PlaceOptions(vm, q.Mode, q.Carrier, "origin", q.OriginCountry, cols);
             vm.DestPlaces = PlaceOptions(vm, q.Mode, q.Carrier, "dest", q.DestCountry, cols);
             CheckPlace(vm, "From", vm.OriginPlaces, q.OriginPlaceType, q.OriginPlace, () => { q.OriginPlaceType = null; q.OriginPlace = null; });
@@ -165,6 +179,7 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
                 case "POSTCODE":
                     if (!redactor.Hits(r.V)) list.Add(new PlaceOption("POSTCODE|" + r.V, r.V + "*", GroupPostcodes));
                     break;
+                // Airports have their own dropdown (AirportOptions).
             }
         }
         vm.WithheldValues += withheld;
@@ -178,9 +193,30 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
                    .OrderBy(o => GroupOrder(o.Group)).ThenBy(o => o.Label, StringComparer.OrdinalIgnoreCase).ToList();
     }
 
+    /// <summary>
+    /// The airports a user can pick at one end inside the chosen country, labelled with the full name from the
+    /// airport master ("DLC - Zhoushuizi Airport, Dalian"). Empty until a country is chosen or when the table has
+    /// no airport lanes.
+    /// </summary>
+    private List<Option> AirportOptions(SearchViewModel vm, TariffMode mode, string? carrier, string side, string? country)
+    {
+        if (country is null || !vm.SupportsAirports) return new();
+        var names = repo.Airports();
+        return repo.Places(mode, carrier, side, country)
+                   .Where(r => r.Pt == "AIRPORT" && !redactor.Hits(r.V))
+                   .Select(r => r.V.Trim().ToUpperInvariant()).Distinct()
+                   .Select(code => new Option(code, AirportLabel(code, names)))
+                   .OrderBy(o => o.Value, StringComparer.Ordinal).ToList();
+    }
+
+    private static string AirportLabel(string code, Dictionary<string, AirportInfo> names) =>
+        names.TryGetValue(code, out var a)
+            ? $"{code} - {a.Name}" + (string.IsNullOrWhiteSpace(a.City) || a.Name.IndexOf(a.City, StringComparison.OrdinalIgnoreCase) >= 0 ? "" : $", {a.City}")
+            : code;
+
     private static int GroupOrder(string g) => g switch
     {
-        GroupLocations => 0, GroupCities => 1, GroupStates => 2, GroupRegions => 3, _ => 4
+        GroupAirports => 0, GroupLocations => 1, GroupCities => 2, GroupStates => 3, GroupRegions => 4, _ => 5
     };
 
     private static void CheckPlace(SearchViewModel vm, string label, List<PlaceOption> places, string? type, string? value, Action clear)
@@ -198,11 +234,11 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
     }
 
     /// <summary>Turns one end of the form into the filter the repository applies (see <see cref="PlaceFilter"/>).</summary>
-    private PlaceFilter Resolve(string? country, string? type, string? value, string? postcode)
+    private PlaceFilter Resolve(string? country, string? type, string? value, string? postcode, string? airportCode)
     {
         if (country is null) return PlaceFilter.Any;
 
-        string? city = null, pattern = null, region = null;
+        string? city = null, pattern = null, region = null, airport = airportCode;
         string[] states = [], dCarriers = [], dZones = [];
         switch (type)
         {
@@ -218,6 +254,9 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
             case "POSTCODE":
                 postcode ??= value;
                 break;
+            case "AIRPORT":
+                airport = value;
+                break;
             case "PROVINCE" when value is not null:
                 var code = master.SubdivisionByCode(value) is not null ? value : master.SubdivisionCodeOf(country, value);
                 if (code is null)
@@ -231,7 +270,7 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
                 dZones = districts.Select(d => d.Zone).ToArray();
                 break;
         }
-        return new PlaceFilter(country, city, pattern, states, dCarriers, dZones, region, postcode);
+        return new PlaceFilter(country, city, pattern, states, dCarriers, dZones, region, postcode, airport);
     }
 
     /// <summary>Runs the search against an already-built form. Rows with non-anonymised carrier codes are withheld and counted.</summary>
@@ -242,8 +281,8 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
 
         try
         {
-            var origin = Resolve(q.OriginCountry, q.OriginPlaceType, q.OriginPlace, q.OriginPostcode);
-            var dest = Resolve(q.DestCountry, q.DestPlaceType, q.DestPlace, q.DestPostcode);
+            var origin = Resolve(q.OriginCountry, q.OriginPlaceType, q.OriginPlace, q.OriginPostcode, q.OriginAirport);
+            var dest = Resolve(q.DestCountry, q.DestPlaceType, q.DestPlace, q.DestPostcode, q.DestAirport);
             var (rows, truncated) = repo.Search(q, origin, dest);
             vm.WithheldCarrierCodes += rows.RemoveAll(r => !TariffRepository.IsAnonymisedCode(r.CarrierCode));
             // Before masking: the lane key must use the stored values.
@@ -253,6 +292,8 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
             {
                 r.OriginDesc = Describe(r.CarrierCode, r.OriginPointType, r.OriginCountryCode ?? q.OriginCountry, r.OriginPlace, r.OriginRegion);
                 r.DestDesc = Describe(r.CarrierCode, r.DestPointType, r.DestCountryCode ?? q.DestCountry, r.DestPlace, r.DestRegion);
+                r.OriginTitle = AirportTitle(r.OriginPointType, r.OriginPlace);
+                r.DestTitle = AirportTitle(r.DestPointType, r.DestPlace);
                 r.ServiceType = redactor.Mask(r.ServiceType, ref withheld);
                 r.ServiceName = redactor.Mask(r.ServiceName, ref withheld);
                 foreach (var a in r.Accessorials)
@@ -296,16 +337,35 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
                                     q.ShipDate ?? DateTime.Today);
         if (all.Count == 0) return;
 
-        var byLane = all.ToLookup(a => LaneKey(a.CarrierCode, a.ServiceType,
+        var rules = repo.ServiceRules();
+        var byLane = all.ToLookup(a => LaneKey(a.CarrierCode,
             a.OriginPointType, a.OriginCountryCode, a.OriginRegion, a.OriginCity, a.OriginAirport,
             a.DestPointType, a.DestCountryCode, a.DestRegion, a.DestCity, a.DestAirport));
         foreach (var r in rows)
         {
-            var key = LaneKey(r.CarrierCode, r.ServiceType,
+            var key = LaneKey(r.CarrierCode,
                 r.OriginPointType, r.OriginCountryCode, r.OriginRegion, r.OriginCity, r.OriginAirport,
                 r.DestPointType, r.DestCountryCode, r.DestRegion, r.DestCity, r.DestAirport);
-            r.Accessorials = byLane[key].Select(a => PriceAccessorial(a, r, q)).ToList();
+            r.Accessorials = byLane[key].Where(a => Applies(a, r.ServiceType, rules))
+                                        .Select(a => PriceAccessorial(a, r, q)).ToList();
         }
+    }
+
+    /// <summary>
+    /// A charge naming a service applies to that service only. A charge without one is a lane charge: it applies to
+    /// every service whose tariff.service_type row includes its side (DTD both, DTA origin, ATD destination, ATA none).
+    /// A service missing from the master gets every lane charge.
+    /// </summary>
+    private static bool Applies(AccessorialRow a, string? service, Dictionary<string, (bool Origin, bool Destination)> rules)
+    {
+        if (a.ServiceType is not null) return string.Equals(a.ServiceType, service, StringComparison.OrdinalIgnoreCase);
+        if (service is null || !rules.TryGetValue(service, out var rule)) return true;
+        return a.ChargeSide switch
+        {
+            "ORIGIN" => rule.Origin,
+            "DESTINATION" => rule.Destination,
+            _ => true,
+        };
     }
 
     private static string LaneKey(params string?[] parts) =>
@@ -367,10 +427,18 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
                                              O: r.OriginPointType == "ZONE" ? "ZONE" : r.OriginPlace,
                                              D: r.DestPointType == "ZONE" ? "ZONE" : r.DestPlace)))
         {
-            if (g.Select(r => (r.OriginPlace, r.DestPlace)).Distinct().Count() > 1)
+            // The region counts too: China local zone 1 and 2 are the same lane end priced in two zones.
+            if (g.Select(r => (r.OriginPlace, r.DestPlace, r.OriginRegion, r.DestRegion)).Distinct().Count() > 1)
                 foreach (var r in g) r.ZoneDependsOnAddress = true;
         }
     }
+
+    private string? AirportCity(string? code) =>
+        code is not null && repo.Airports().TryGetValue(code.Trim(), out var a) ? a.City : null;
+
+    /// <summary>Tooltip of an airport lane end: "DLC - Zhoushuizi Airport, Dalian".</summary>
+    private string? AirportTitle(string? pointType, string? code) =>
+        pointType == "AIRPORT" && code is not null ? AirportLabel(code.Trim().ToUpperInvariant(), repo.Airports()) : null;
 
     /// <summary>Readable lane end: "Shanghai, China", "Kanto district, Japan", "Zone 3 · United Kingdom", "BE 2880*".</summary>
     private string Describe(string carrier, string? pointType, string? country, string? place, string? region = null)
@@ -381,7 +449,8 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
         {
             // A country lane that still carries a zone (e.g. a local delivery zone) shows it: it is what tells the rows apart.
             "COUNTRY" => string.IsNullOrWhiteSpace(region) ? countryName ?? "" : $"{countryName} · {region}",
-            "AIRPORT" => countryName is null ? place ?? "" : $"{place} · {countryName}",
+            // "DLC · Dalian, China": the code, then where it is; the full airport name is the cell's tooltip.
+            "AIRPORT" => $"{place?.Trim()} · " + Join(AirportCity(place), countryName),
             "ZONE" => countryName is null ? place ?? "" : $"{place} · {countryName}",
             "CITY" => master.LocationsForTariffValue(carrier, place) is { Count: > 0 } locs
                           ? string.Join(" / ", locs.Select(l => l.Name)) : Join(place, countryName),

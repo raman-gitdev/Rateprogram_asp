@@ -23,6 +23,7 @@
             </label>
             <label>Carrier <asp:DropDownList ID="ddlCarrier" runat="server" AutoPostBack="true" /></label>
             <%= Filter("service", "All services", "The carrier's service: LTL, full truck, container, oversize, dedicated truck, surface.") %>
+            <%= Filter("level", "All levels", "Air service level (SL0 fastest to SL3 slowest), as priced by the carrier.") %>
             <%= Filter("piece", "Any piece type", "Parcel carriers price a letter, a document, a pak, a package and a hundredweight consignment differently off the same lane.") %>
             <%= Filter("delivery", "Any address type", "Some carriers charge more to a residential address than a commercial one on the identical lane.") %>
             <%= Filter("lanetype", "Any", "Route type as written in the tariff file.") %>
@@ -32,6 +33,9 @@
         <fieldset>
             <legend>From</legend>
             <label>Country <asp:DropDownList ID="ddlOriginCountry" runat="server" AutoPostBack="true" /></label>
+            <% if (ShowAirports) { %>
+                <label title="Airports of the chosen country that have air lanes. Country-wide lanes are included too.">Airport <%= AirportSelect("origin") %></label>
+            <% } %>
             <asp:PlaceHolder ID="phOriginPlace" runat="server">
                 <label title="Lists the places in the chosen country.">Place <%= PlaceSelect("origin") %></label>
                 <asp:PlaceHolder ID="phOriginPostcode" runat="server">
@@ -48,6 +52,9 @@
         <fieldset>
             <legend>To</legend>
             <label>Country <asp:DropDownList ID="ddlDestCountry" runat="server" AutoPostBack="true" /></label>
+            <% if (ShowAirports) { %>
+                <label title="Airports of the chosen country that have air lanes. Country-wide lanes are included too.">Airport <%= AirportSelect("dest") %></label>
+            <% } %>
             <asp:PlaceHolder ID="phDestPlace" runat="server">
                 <label title="Lists the places in the chosen country.">Place <%= PlaceSelect("dest") %></label>
                 <asp:PlaceHolder ID="phDestPostcode" runat="server">
@@ -121,8 +128,8 @@
                                 <td class="nw" title="<%#: ServiceTitle(Item) %>"><%# ServiceCell(Item) %></td>
                                 <td class="nw"><span class="lane" title="<%#: LaneTitle(Item) %>"><%#: Item.LaneCode %></span><%# Item.ZoneDependsOnAddress ? "<span class=\"tag warn\" title=\"This carrier splits the country by service area: the zone, and so the price, depends on the exact address. A postcode-to-service-area list from the carrier is needed to pick one.\">depends on address</span>" : "" %></td>
                                 <td><%#: CodeLabel("lane_type", Item.LaneType) %></td>
-                                <td class="nw"><%#: Item.OriginDesc %></td>
-                                <td class="nw"><%#: Item.DestDesc ?? "—" %></td>
+                                <td class="nw" title="<%#: Item.OriginTitle %>"><%#: Item.OriginDesc %></td>
+                                <td class="nw" title="<%#: Item.DestTitle %>"><%#: Item.DestDesc ?? "—" %></td>
                                 <td class="nw"><%#: Band(Item.WeightFromKg, Item.WeightToKg, "kg") %> <%#: Band(Item.DistanceFromKm, Item.DistanceToKm, "km") %></td>
                                 <td class="nw"><%#: Item.TransitTime ?? "" %></td>
                                 <td class="num"><%#: Rate(Item.Rate) %>

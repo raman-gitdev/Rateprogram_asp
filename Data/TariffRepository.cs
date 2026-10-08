@@ -17,6 +17,9 @@ public sealed class SchemaMismatchException(string table, IEnumerable<string> mi
 
 /// <param name="AnyValue">A stored value meaning "applies to every value" (e.g. piece_type ANY): matches any choice, never offered.</param>
 /// <param name="NullMatchesAll">NULL means the tariff makes no distinction, so the row matches any choice.</param>
+/// <summary>One airport of tariff.airport: the code, its full name, city and country.</summary>
+public sealed record AirportInfo(string Code, string Name, string? City, string Country);
+
 public sealed record FilterDef(string Key, string Label, string[] ColumnCandidates, string? AnyValue = null, bool NullMatchesAll = false);
 
 /// <summary>
@@ -30,14 +33,15 @@ public sealed record FilterDef(string Key, string Label, string[] ColumnCandidat
 /// <param name="DistrictCarriers">With <paramref name="DistrictZones"/>: carrier districts containing the chosen subdivision (REGION lanes).</param>
 /// <param name="RegionValue">Exact tariff region (REGION lanes of carriers without a district map).</param>
 /// <param name="Postcode">User postcode; POSTCODE lanes match by prefix.</param>
+/// <param name="AirportValue">IATA code (AIRPORT lanes).</param>
 public sealed record PlaceFilter(
     string? Country, string? CityValue, string? LocationPattern, string[] StateSpellings,
-    string[] DistrictCarriers, string[] DistrictZones, string? RegionValue, string? Postcode)
+    string[] DistrictCarriers, string[] DistrictZones, string? RegionValue, string? Postcode, string? AirportValue = null)
 {
     public static readonly PlaceFilter Any = new(null, null, null, [], [], [], null, null);
 
     /// <summary>Something narrower than the country was given.</summary>
-    public bool HasPlace => CityValue is not null || LocationPattern is not null || StateSpellings.Length > 0
+    public bool HasPlace => CityValue is not null || LocationPattern is not null || StateSpellings.Length > 0 || AirportValue is not null
                             || DistrictCarriers.Length > 0 || RegionValue is not null || Postcode is not null;
 }
 
@@ -80,6 +84,7 @@ public sealed class TariffRepository
     public static readonly IReadOnlyList<FilterDef> Filters = new FilterDef[]
     {
         new("service", "Service", ["service_type"]),
+        new("level", "Service level", ["service_level"]),
         new("lanetype", "Lane type", ["lane_type"]),
         new("ratetag", "Rate tag", ["rate_tag"]),
         new("piece", "Piece type", ["piece_type"], AnyValue: "ANY"),
@@ -97,6 +102,7 @@ public sealed class TariffRepository
         ["POSTCODE"] = "postcode",
         ["REGION"] = "region",
         ["PROVINCE"] = "state",
+        ["AIRPORT"] = "airport",
     };
 
     private const string ColumnsSql = """
@@ -209,8 +215,16 @@ public sealed class TariffRepository
             // Zone-priced carriers with no zone chart at all: no country or place can ever reach their zones.
             // (c = the country the carrier's lanes are in, so the page only mentions it for that country)
             $"SELECT 'unzoned', f.carrier_code, COALESCE(f.origin_country_code, f.dest_country_code)::text FROM {t} f WHERE f.record_type = 'FREIGHT' AND 'ZONE' IN (f.origin_point_type, f.dest_point_type) " +
-            $"AND NOT EXISTS (SELECT 1 FROM {t} z WHERE z.record_type = 'ZONE_MAP' AND z.carrier_code = f.carrier_code) GROUP BY 2, 3",
+            $"AND NOT EXISTS (SELECT 1 FROM {t} z WHERE z.record_type = 'ZONE_MAP' AND z.carrier_code = f.carrier_code)" +
+            (UsesZoneMaster(mode) ? " AND NOT EXISTS (SELECT 1 FROM tariff.air_zone_master zm WHERE zm.carrier_id = f.carrier_id)" : "") +
+            " GROUP BY 2, 3",
         };
+        // Countries reachable through an air zone chart (tariff.air_zone_master).
+        if (UsesZoneMaster(mode))
+        {
+            parts.Add("SELECT 'ocountry', zm.origin_country_code::text, zm.carrier_code FROM tariff.air_zone_master zm WHERE zm.status = 'ACTIVE' GROUP BY 2, 3");
+            parts.Add("SELECT 'dcountry', zm.dest_country_code::text, zm.carrier_code FROM tariff.air_zone_master zm WHERE zm.status = 'ACTIVE' GROUP BY 2, 3");
+        }
         foreach (var def in Filters)
         {
             if (FilterColumn(def, cols) is not { } col) continue;
@@ -218,6 +232,10 @@ public sealed class TariffRepository
             parts.Add($"SELECT '{def.Key}', f.{col}::text, f.carrier_code FROM {t} f " +
                       $"WHERE f.record_type = 'FREIGHT' AND f.status = 'ACTIVE' AND f.{col} IS NOT NULL AND f.{col}::text <> ''{notAny} GROUP BY 2, 3");
         }
+
+        // Lane rates stored once for every service: their services are the ones air_transit lists.
+        if (UsesTransit(mode))
+            parts.Add("SELECT 'service', x.service_code, x.carrier_code FROM tariff.air_transit x GROUP BY 2, 3");
 
         return string.Join("\nUNION ALL\n", parts) + "\nORDER BY 1, 2";
     }
@@ -290,8 +308,6 @@ public sealed class TariffRepository
             .Where(kv => cols.Contains($"{side}_{kv.Value}"))
             .Select(kv => $"WHEN '{kv.Key}' THEN p.{side}_{kv.Value}::text")
             .Append($"WHEN 'ZONE' THEN p.{side}_region::text");
-        if (cols.Contains($"{side}_airport"))
-            whens = whens.Append($"WHEN 'AIRPORT' THEN p.{side}_airport::text");
         return $"CASE p.{side}_point_type {string.Join(" ", whens)} END";
     }
 
@@ -305,7 +321,8 @@ public sealed class TariffRepository
     /// ZONE lanes of a carrier without a zone chart are excluded whenever any country is named: nothing
     /// proves which countries the zone covers.
     /// </summary>
-    private static string? SideSql(string side, string t, PlaceFilter pf, bool anyCountry, HashSet<string> cols, DynamicParameters p)
+    private static string? SideSql(string side, string t, PlaceFilter pf, bool anyCountry, HashSet<string> cols, DynamicParameters p,
+                                   bool zoneMaster)
     {
         var pt = $"f.{side}_point_type";
         var P = side == "origin" ? "Origin" : "Dest";
@@ -323,6 +340,19 @@ public sealed class TariffRepository
                       AND (@OriginCountry::text IS NULL OR z.origin_country_code = @OriginCountry::text)
                       AND (@DestCountry::text IS NULL OR z.dest_country_code = @DestCountry::text))
             """;
+        // Zone-priced air carriers keep their chart in tariff.air_zone_master: country pair -> rate_group of the rates.
+        if (zoneMaster)
+            zoneMapped = $"""
+                ({zoneMapped}
+                 OR EXISTS (SELECT 1 FROM tariff.air_zone_master zm
+                            WHERE zm.carrier_id = f.carrier_id
+                              AND zm.rate_group = f.rate_group
+                              AND (zm.service_type IS NULL OR zm.service_type = f.service_type)
+                              AND zm.status = 'ACTIVE'
+                              AND zm.valid_from <= @ShipDate::date AND (zm.valid_to IS NULL OR zm.valid_to >= @ShipDate::date)
+                              AND (@OriginCountry::text IS NULL OR zm.origin_country_code = @OriginCountry::text)
+                              AND (@DestCountry::text IS NULL OR zm.dest_country_code = @DestCountry::text)))
+                """;
 
         if (pf.Country is null)
             return $"({pt} IS DISTINCT FROM 'ZONE' OR {zoneMapped})";
@@ -366,6 +396,11 @@ public sealed class TariffRepository
             p.Add($"{P}Region", pf.RegionValue);
             alts.Add($"({pt} = 'REGION' AND {inCountry} AND upper(trim(f.{side}_region)) = upper(trim(@{P}Region)))");
         }
+        if (pf.AirportValue is not null && cols.Contains($"{side}_airport"))
+        {
+            p.Add($"{P}Airport", pf.AirportValue);
+            alts.Add($"({pt} = 'AIRPORT' AND {inCountry} AND upper(trim(f.{side}_airport)) = upper(trim(@{P}Airport)))");
+        }
         if (pf.Postcode is not null && cols.Contains($"{side}_postcode"))
         {
             p.Add($"{P}Postcode", pf.Postcode);
@@ -376,17 +411,24 @@ public sealed class TariffRepository
         return "(" + string.Join("\n      OR ", alts) + ")";
     }
 
-    /// <summary>Filtered FREIGHT candidates (before band matching) with chargeable weight. Shared by search and the adder check.</summary>
-    private static string CandidatesCte(SearchQuery q, PlaceFilter origin, PlaceFilter dest, string t, HashSet<string> cols, DynamicParameters p)
+    /// <summary>
+    /// Filtered FREIGHT candidates with chargeable weight, plus eff_service / eff_transit. A lane rate stored once for
+    /// every service (service_type empty) is joined to tariff.air_transit and comes out once per service with its hours;
+    /// rows that name their own service pass through unchanged. Shared by search and the adder check.
+    /// </summary>
+    private static string CandidatesCte(SearchQuery q, PlaceFilter origin, PlaceFilter dest, string t, HashSet<string> cols,
+                                        DynamicParameters p, bool transit, bool zoneMaster)
     {
         var where = new List<string> { "f.record_type = 'FREIGHT'", ValiditySql("f") };
+        var svc = transit ? "COALESCE(f.service_type, tr.service_code)" : "f.service_type";
 
         if (q.Carrier is not null) where.Add("f.carrier_code = @Carrier");
         foreach (var def in Filters)
         {
             if (q.GetFilter(def.Key) is not { } value || FilterColumn(def, cols) is not { } col) continue;
             p.Add($"F_{def.Key}", value);
-            var match = $"f.{col}::text = @F_{def.Key}";
+            var colExpr = def.Key == "service" ? svc : $"f.{col}";
+            var match = $"{colExpr}::text = @F_{def.Key}";
             if (def.AnyValue is not null) match += $" OR f.{col}::text = '{def.AnyValue}'";
             if (def.NullMatchesAll) match += $" OR f.{col} IS NULL";
             where.Add($"({match})");
@@ -395,8 +437,8 @@ public sealed class TariffRepository
         var anyCountry = origin.Country is not null || dest.Country is not null;
         foreach (var s in new[]
                  {
-                     SideSql("origin", t, origin, anyCountry, cols, p),
-                     SideSql("dest", t, dest, anyCountry, cols, p),
+                     SideSql("origin", t, origin, anyCountry, cols, p, zoneMaster),
+                     SideSql("dest", t, dest, anyCountry, cols, p, zoneMaster),
                  })
             if (s is not null) where.Add(s);
 
@@ -405,14 +447,35 @@ public sealed class TariffRepository
             ? "COALESCE(f.volumetric_kg_per_cbm, 1000000 / NULLIF(f.volumetric_divisor, 0))"
             : "f.volumetric_kg_per_cbm";
 
+        var transitOwn = cols.Contains("transit_time") ? "f.transit_time::text" : "NULL::text";
+        var eff = transit
+            ? $"{svc} AS eff_service, COALESCE(tr.transit_hours::text || ' hrs', {transitOwn}) AS eff_transit"
+            : $"f.service_type AS eff_service, {transitOwn} AS eff_transit";
+        var join = transit
+            ? """
+              LEFT JOIN tariff.air_transit tr
+                     ON f.service_type IS NULL
+                    AND tr.carrier_id = f.carrier_id
+                    AND tr.origin_airport = f.origin_airport AND tr.dest_airport = f.dest_airport
+                    AND tr.service_level IS NOT DISTINCT FROM f.service_level
+                    AND tr.valid_from <= @ShipDate::date AND (tr.valid_to IS NULL OR tr.valid_to >= @ShipDate::date)
+              """
+            : "";
+
         // Chargeable weight. No weight and no volume means no chargeable weight — not the minimum.
+        // A rate with a weight step (express: 0.5 kg) bills the weight rounded up to the step: 30.7 kg -> 31.0 kg.
+        var rawKg = $"GREATEST(@Kg::numeric, @Cbm::numeric * {kgPerCbm}, f.min_chargeable_weight_kg)";
+        var stepped = cols.Contains("weight_step_kg")
+            ? $"CASE WHEN f.weight_step_kg IS NULL THEN {rawKg} ELSE ceil({rawKg} / f.weight_step_kg) * f.weight_step_kg END"
+            : rawKg;
         return $"""
             cand AS (
-                SELECT f.*,
+                SELECT f.*, {eff},
                        CASE WHEN @Kg::numeric IS NULL AND @Cbm::numeric IS NULL THEN NULL
-                            ELSE GREATEST(@Kg::numeric, @Cbm::numeric * {kgPerCbm}, f.min_chargeable_weight_kg)
+                            ELSE {stepped}
                        END AS chargeable_kg
                 FROM {t} f
+                {join}
                 WHERE {string.Join("\n  AND ", where)}
             )
             """;
@@ -460,16 +523,18 @@ public sealed class TariffRepository
         string Opt(string c) => cols.Contains(c) ? $"p.{c}::text AS {c}" : $"NULL::text AS {c}";
         var detailCols = string.Join(", ", new[]
         {
-            "service_name", "piece_type", "rate_group", "transit_time",
+            "service_name", "service_level", "piece_type", "rate_group",
             "origin_region", "origin_city", "origin_airport", "dest_region", "dest_city", "dest_airport",
         }.Select(Opt));
+
+        var levelOrder = cols.Contains("service_level") ? "p.service_level NULLS LAST, " : "";
 
         var distanceCols = hasDistance
             ? "p.distance_from_km, p.distance_to_km"
             : "NULL::numeric AS distance_from_km, NULL::numeric AS distance_to_km";
 
         var sql = $"""
-            WITH {CandidatesCte(q, origin, dest, t, cols, p)},
+            WITH {CandidatesCte(q, origin, dest, t, cols, p, UsesTransit(q.Mode), UsesZoneMaster(q.Mode))},
             banded AS (
                 SELECT c.*,
                        CASE WHEN {weightKnown} AND {distanceKnown} THEN
@@ -516,7 +581,7 @@ public sealed class TariffRepository
                         WHERE s.record_type = 'SURCHARGE'
                           AND s.auto_apply
                           AND s.carrier_code = p.carrier_code
-                          AND (s.service_type IS NULL OR s.service_type = p.service_type)
+                          AND (s.service_type IS NULL OR s.service_type = p.eff_service)
                           AND (s.lane_type IS NULL OR s.lane_type = p.lane_type)
                           AND (s.lane_code IS NULL OR s.lane_code = p.lane_code)
                           AND (s.applies_to_cargo IS NULL OR s.applies_to_cargo = p.cargo_category)
@@ -533,16 +598,16 @@ public sealed class TariffRepository
                     FROM {t} r
                     WHERE r.record_type = 'FUEL_RULE'
                       AND r.carrier_code = p.carrier_code
-                      AND (r.service_type IS NULL OR r.service_type = p.service_type)
+                      AND (r.service_type IS NULL OR r.service_type = p.eff_service)
                       AND {ValiditySql("r")}
                     ORDER BY (r.service_type IS NULL), r.valid_from DESC NULLS LAST
                     LIMIT 1
                 ) fu ON TRUE
             )
-            SELECT p.carrier_code, p.service_type, p.lane_code, p.lane_type,
+            SELECT p.carrier_code, p.eff_service AS service_type, p.lane_code, p.lane_type,
                    p.origin_point_type, p.origin_country_code::text AS origin_country_code, {LanePlaceSql("origin", cols)} AS origin_place,
                    p.dest_point_type, p.dest_country_code::text AS dest_country_code, {LanePlaceSql("dest", cols)} AS dest_place,
-                   {detailCols},
+                   {detailCols}, p.eff_transit AS transit_time,
                    p.weight_from_kg, p.weight_to_kg, {distanceCols},
                    p.rate_value AS rate, p.charge_basis, p.min_charge, p.chargeable_kg, p.raw_freight, p.base_freight,
                    p.surcharge_amount, p.surcharge_codes, p.surcharge_unpriced, p.surcharge_other_currency,
@@ -552,7 +617,7 @@ public sealed class TariffRepository
             FROM totalled p
             -- Currencies are never compared: group by currency, then by service so each service is listed together,
             -- cheapest first within each service, unpriced last.
-            ORDER BY p.currency_code, p.service_type NULLS LAST, p.estimated_total NULLS LAST, p.base_freight NULLS LAST,
+            ORDER BY p.currency_code, p.eff_service NULLS LAST, {levelOrder} p.estimated_total NULLS LAST, p.base_freight NULLS LAST,
                      p.carrier_code, p.lane_code, p.weight_from_kg NULLS FIRST
             LIMIT {MaxResults + 1}
             """;
@@ -564,7 +629,56 @@ public sealed class TariffRepository
         return (rows, truncated);
     }
 
-    private bool? _hasAirAccessorial;
+    private volatile Tuple<DateTime, Dictionary<string, AirportInfo>>? _airports;
+
+    /// <summary>
+    /// Airport names from tariff.airport by IATA code, so the screen can show "DLC - Zhoushuizi Airport, Dalian"
+    /// instead of the bare code. Empty while the table is missing; re-read after <see cref="CacheMaxAge"/>.
+    /// </summary>
+    public Dictionary<string, AirportInfo> Airports()
+    {
+        var cur = _airports;
+        if (cur is not null && DateTime.UtcNow - cur.Item1 < CacheMaxAge) return cur.Item2;
+        var map = new Dictionary<string, AirportInfo>(StringComparer.OrdinalIgnoreCase);
+        if (TableExists("tariff.airport"))
+        {
+            using var conn = Open();
+            foreach (var a in conn.Query<AirportInfo>(
+                         "SELECT iata_code::text AS Code, airport_name AS Name, city_name AS City, country_code::text AS Country FROM tariff.airport"))
+                map[a.Code.Trim()] = a;
+        }
+        _airports = Tuple.Create(DateTime.UtcNow, map);
+        return map;
+    }
+
+    private readonly ConcurrentDictionary<string, bool> _tables = new();
+
+    /// <summary>True once the table exists; re-checked until it does, so installing a table later needs no restart.</summary>
+    private bool TableExists(string table)
+    {
+        if (_tables.TryGetValue(table, out var yes) && yes) return true;
+        using var conn = Open();
+        var found = conn.ExecuteScalar<bool>("SELECT to_regclass(@T) IS NOT NULL", new { T = table });
+        _tables[table] = found;
+        return found;
+    }
+
+    /// <summary>Zone-priced air carriers are matched to countries through tariff.air_zone_master.</summary>
+    private bool UsesZoneMaster(TariffMode mode) => mode == TariffMode.Air && TableExists("tariff.air_zone_master");
+
+    /// <summary>Air lane rates stored once for every service are expanded through tariff.air_transit.</summary>
+    private bool UsesTransit(TariffMode mode) => mode == TariffMode.Air && TableExists("tariff.air_transit");
+
+    /// <summary>Which accessorial sides each service carries (tariff.service_type). Empty when the table is missing.</summary>
+    public Dictionary<string, (bool Origin, bool Destination)> ServiceRules()
+    {
+        if (!TableExists("tariff.service_type")) return new();
+        using var conn = Open();
+        return conn.Query<(string Code, bool Origin, bool Destination)>(
+                "SELECT service_code, includes_origin, includes_destination FROM tariff.service_type")
+            .ToDictionary(r => r.Code, r => (r.Origin, r.Destination));
+    }
+
 
     /// <summary>
     /// Active accessorial charges (tariff.air_accessorial, named by tariff.charge_type) of the given carriers and
@@ -577,11 +691,8 @@ public sealed class TariffRepository
         var sv = services.Distinct().ToArray();
         if (mode != TariffMode.Air || c.Length == 0 || sv.Length == 0) return new();
 
+        if (!TableExists("tariff.air_accessorial") || !TableExists("tariff.charge_type")) return new();
         using var conn = Open();
-        // Re-checked until found, so installing the table later needs no app restart.
-        if (_hasAirAccessorial != true) _hasAirAccessorial = conn.ExecuteScalar<bool>(
-            "SELECT to_regclass('tariff.air_accessorial') IS NOT NULL AND to_regclass('tariff.charge_type') IS NOT NULL");
-        if (_hasAirAccessorial != true) return new();
 
         const string sql = """
             SELECT a.carrier_code, a.service_type,
@@ -594,7 +705,7 @@ public sealed class TariffRepository
             FROM tariff.air_accessorial a
             JOIN tariff.charge_type t ON t.charge_code = a.charge_code
             WHERE a.carrier_code = ANY(@Carriers)
-              AND a.service_type = ANY(@Services)
+              AND (a.service_type IS NULL OR a.service_type = ANY(@Services))
               AND a.status = 'ACTIVE'
               AND a.valid_from <= @ShipDate::date AND (a.valid_to IS NULL OR a.valid_to >= @ShipDate::date)
             ORDER BY CASE t.charge_side WHEN 'ORIGIN' THEN 0 WHEN 'MAIN' THEN 1 ELSE 2 END, a.accessorial_id
@@ -625,15 +736,15 @@ public sealed class TariffRepository
             : "";
 
         var sql = $"""
-            WITH {CandidatesCte(q, origin, dest, t, cols, p)}
-            SELECT c.carrier_code, c.service_type, c.lane_code,
+            WITH {CandidatesCte(q, origin, dest, t, cols, p, UsesTransit(q.Mode), UsesZoneMaster(q.Mode))}
+            SELECT c.carrier_code, c.eff_service AS service_type, c.lane_code,
                    max(c.weight_to_kg) AS top_band_kg, min(c.chargeable_kg) AS chargeable_kg
             FROM cand c
             WHERE c.chargeable_kg IS NOT NULL {distanceMatch}
               AND EXISTS (SELECT 1 FROM {t} r
                           WHERE r.record_type = 'RULE' AND r.charge_code = 'ADDER' AND r.status = 'ACTIVE'
                             AND r.carrier_code = c.carrier_code)
-            GROUP BY c.carrier_code, c.service_type, c.lane_code
+            GROUP BY c.carrier_code, c.eff_service, c.lane_code
             HAVING bool_and(c.weight_to_kg IS NOT NULL AND c.chargeable_kg > c.weight_to_kg)
             ORDER BY 1, 2, 3
             """;

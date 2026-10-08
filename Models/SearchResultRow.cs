@@ -17,6 +17,8 @@ public class SearchResultRow
     public string? DestPlace { get; set; }
     /// <summary>Lane detail that tells otherwise identical rows apart (null where the table has no such column).</summary>
     public string? ServiceName { get; set; }
+    /// <summary>Speed level (SL0 .. SL3) when the card has levels.</summary>
+    public string? ServiceLevel { get; set; }
     public string? PieceType { get; set; }
     public string? RateGroup { get; set; }
     public string? TransitTime { get; set; }
@@ -29,6 +31,9 @@ public class SearchResultRow
     /// <summary>Readable lane ends, built by SearchService from the three fields above and the master data.</summary>
     public string? OriginDesc { get; set; }
     public string? DestDesc { get; set; }
+    /// <summary>Tooltip of the From / To cell: the full airport name for an airport lane.</summary>
+    public string? OriginTitle { get; set; }
+    public string? DestTitle { get; set; }
     /// <summary>Same offer appears in more than one zone because the carrier splits the country by station.</summary>
     public bool ZoneDependsOnAddress { get; set; }
     public decimal? WeightFromKg { get; set; }
@@ -89,7 +94,8 @@ public class AdderGapRow
 public class AccessorialRow
 {
     public string CarrierCode { get; set; } = "";
-    public string ServiceType { get; set; } = "";
+    /// <summary>Empty = a lane charge for every service that includes its side.</summary>
+    public string? ServiceType { get; set; }
     public string? OriginPointType { get; set; }
     public string? OriginCountryCode { get; set; }
     public string? OriginRegion { get; set; }

@@ -37,6 +37,11 @@ public class SearchViewModel
     /// <summary>The table has place columns (ground); air lanes are country to country.</summary>
     public bool SupportsPlaces { get; set; }
     public bool SupportsPostcode { get; set; }
+    /// <summary>Airports in the chosen origin / destination country (air), shown in their own dropdown.</summary>
+    public List<Option> OriginAirports { get; set; } = new();
+    public List<Option> DestAirports { get; set; } = new();
+    /// <summary>The table has airport columns (air).</summary>
+    public bool SupportsAirports { get; set; }
     /// <summary>Carriers priced by zone without any zone chart: they cannot be matched to a country or place.</summary>
     public List<string> UnzonedCarriers { get; set; } = new();
     public bool SupportsDistance { get; set; }

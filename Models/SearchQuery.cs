@@ -11,6 +11,7 @@ public class SearchQuery
 
     public string? Carrier { get; set; }
     public string? Service { get; set; }
+    public string? ServiceLevel { get; set; }
     public string? PieceType { get; set; }
     public string? DeliveryAddress { get; set; }
     public string? LaneType { get; set; }
@@ -25,10 +26,13 @@ public class SearchQuery
     public string? OriginPlaceType { get; set; }
     public string? OriginPlace { get; set; }
     public string? OriginPostcode { get; set; }
+    /// <summary>IATA code picked in the separate Airport dropdown (air only).</summary>
+    public string? OriginAirport { get; set; }
     public string? DestCountry { get; set; }
     public string? DestPlaceType { get; set; }
     public string? DestPlace { get; set; }
     public string? DestPostcode { get; set; }
+    public string? DestAirport { get; set; }
 
     public decimal? WeightKg { get; set; }
     public decimal? VolumeCbm { get; set; }
@@ -48,6 +52,7 @@ public class SearchQuery
     public string? GetFilter(string key) => key switch
     {
         "service" => Service,
+        "level" => ServiceLevel,
         "piece" => PieceType,
         "delivery" => DeliveryAddress,
         "lanetype" => LaneType,
@@ -64,6 +69,7 @@ public class SearchQuery
         switch (key)
         {
             case "service": Service = value; break;
+            case "level": ServiceLevel = value; break;
             case "piece": PieceType = value; break;
             case "delivery": DeliveryAddress = value; break;
             case "lanetype": LaneType = value; break;
