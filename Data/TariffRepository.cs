@@ -529,6 +529,20 @@ public sealed class TariffRepository
 
         var levelOrder = cols.Contains("service_level") ? "p.service_level NULLS LAST, " : "";
 
+        // Index / published fuel (tariff.fuel_charge) for carriers with a carrier_fuel_rule; a FUEL_RULE row in the
+        // rate table still wins where a carrier has one.
+        var fuelFn = UsesFuelFunction(q.Mode);
+        var fxJoin = fuelFn
+            ? """
+              LEFT JOIN LATERAL tariff.fuel_charge(p.carrier_id, @ShipDate::date,
+                    COALESCE(p.origin_country_code::text, @OriginCountry::text)::char(2), p.currency_code::char(3),
+                    p.chargeable_kg, @Kg::numeric, p.base_freight) fx ON TRUE
+              """
+            : "";
+        var fxFound = fuelFn ? "(fx.note IS NOT NULL)" : "FALSE";
+        var fxAmount = fuelFn ? "fx.amount" : "NULL::numeric";
+        var fxNote = fuelFn ? "fx.note" : "NULL::text";
+
         var distanceCols = hasDistance
             ? "p.distance_from_km, p.distance_to_km"
             : "NULL::numeric AS distance_from_km, NULL::numeric AS distance_to_km";
@@ -558,13 +572,16 @@ public sealed class TariffRepository
                 SELECT p.*,
                        sc.amount AS surcharge_amount, sc.codes AS surcharge_codes,
                        COALESCE(sc.unpriced, 0) AS surcharge_unpriced, COALESCE(sc.other_ccy, 0) AS surcharge_other_currency,
-                       COALESCE(fu.found, FALSE) AS has_fuel_rule, fu.amt AS fuel_amount,
+                       (COALESCE(fu.found, FALSE) OR {fxFound}) AS has_fuel_rule,
+                       CASE WHEN fu.found THEN fu.amt ELSE {fxAmount} END AS fuel_amount,
+                       CASE WHEN fu.found THEN NULL ELSE {fxNote} END AS fuel_note,
                        CASE WHEN p.base_freight IS NULL
                               OR COALESCE(sc.unpriced, 0) > 0
                               OR COALESCE(sc.other_ccy, 0) > 0
                               OR (fu.found AND fu.amt IS NULL)
+                              OR (fu.found IS NULL AND {fxFound} AND {fxAmount} IS NULL)
                             THEN NULL
-                            ELSE p.base_freight + COALESCE(sc.amount, 0) + COALESCE(fu.amt, 0)
+                            ELSE p.base_freight + COALESCE(sc.amount, 0) + COALESCE(CASE WHEN fu.found THEN fu.amt ELSE {fxAmount} END, 0)
                        END AS estimated_total
                 FROM priced p
                 LEFT JOIN LATERAL (
@@ -603,6 +620,7 @@ public sealed class TariffRepository
                     ORDER BY (r.service_type IS NULL), r.valid_from DESC NULLS LAST
                     LIMIT 1
                 ) fu ON TRUE
+                {fxJoin}
             )
             SELECT p.carrier_code, p.eff_service AS service_type, p.lane_code, p.lane_type,
                    p.origin_point_type, p.origin_country_code::text AS origin_country_code, {LanePlaceSql("origin", cols)} AS origin_place,
@@ -611,7 +629,7 @@ public sealed class TariffRepository
                    p.weight_from_kg, p.weight_to_kg, {distanceCols},
                    p.rate_value AS rate, p.charge_basis, p.min_charge, p.chargeable_kg, p.raw_freight, p.base_freight,
                    p.surcharge_amount, p.surcharge_codes, p.surcharge_unpriced, p.surcharge_other_currency,
-                   p.has_fuel_rule, p.fuel_amount, p.estimated_total,
+                   p.has_fuel_rule, p.fuel_amount, p.fuel_note, p.estimated_total,
                    p.currency_code AS currency, p.valid_from, p.valid_to,
                    p.source_ref::text AS source_ref, p.source_sheet::text AS source_sheet, p.source_row::text AS source_row
             FROM totalled p
@@ -662,6 +680,9 @@ public sealed class TariffRepository
         _tables[table] = found;
         return found;
     }
+
+    /// <summary>Fuel worked out by tariff.fuel_charge (jet fuel index or keyed-in published %), when installed.</summary>
+    private bool UsesFuelFunction(TariffMode mode) => mode == TariffMode.Air && TableExists("tariff.carrier_fuel_rule");
 
     /// <summary>Zone-priced air carriers are matched to countries through tariff.air_zone_master.</summary>
     private bool UsesZoneMaster(TariffMode mode) => mode == TariffMode.Air && TableExists("tariff.air_zone_master");

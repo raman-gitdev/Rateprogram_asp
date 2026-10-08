@@ -52,6 +52,8 @@ public class SearchResultRow
     public int SurchargeOtherCurrency { get; set; }
     public bool HasFuelRule { get; set; }
     public decimal? FuelAmount { get; set; }
+    /// <summary>How the fuel was worked out, or what is missing (e.g. prices not loaded yet). From tariff.fuel_charge.</summary>
+    public string? FuelNote { get; set; }
     public decimal? EstimatedTotal { get; set; }
     public string? Currency { get; set; }
     public DateTime? ValidFrom { get; set; }
@@ -69,7 +71,7 @@ public class SearchResultRow
         : BaseFreight is null ? NoFreightReason
         : SurchargeOtherCurrency > 0 ? "an auto surcharge is in another currency"
         : SurchargeUnpriced > 0 ? "an auto surcharge could not be priced"
-        : HasFuelRule && FuelAmount is null ? "fuel rule could not be priced"
+        : HasFuelRule && FuelAmount is null ? FuelNote ?? "fuel rule could not be priced"
         : "not priced";
 
     private string NoFreightReason => ChargeBasis switch

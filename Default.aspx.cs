@@ -344,7 +344,14 @@ namespace TariffHub
                 sb.Append(HttpUtility.HtmlEncode(Money(r.SurchargeAmount)))
                   .Append("<div class=\"small muted\">").Append(HttpUtility.HtmlEncode(r.SurchargeCodes ?? "")).Append("</div>");
             if (r.HasFuelRule)
-                sb.Append("<div class=\"small\">fuel ").Append(HttpUtility.HtmlEncode(Money(r.FuelAmount))).Append("</div>");
+            {
+                sb.Append("<div class=\"small\"");
+                if (!string.IsNullOrEmpty(r.FuelNote)) sb.Append(" title=\"").Append(HttpUtility.HtmlAttributeEncode(r.FuelNote)).Append('"');
+                sb.Append(">fuel ").Append(HttpUtility.HtmlEncode(Money(r.FuelAmount))).Append("</div>");
+                // Not priced: say why (prices not loaded yet, % not keyed in, actual weight needed ...)
+                if (r.FuelAmount is null && !string.IsNullOrEmpty(r.FuelNote))
+                    sb.Append("<div class=\"small muted\">").Append(HttpUtility.HtmlEncode(r.FuelNote)).Append("</div>");
+            }
             return sb.ToString();
         }
 
