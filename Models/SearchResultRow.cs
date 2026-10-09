@@ -71,7 +71,7 @@ public class SearchResultRow
         : BaseFreight is null ? NoFreightReason
         : SurchargeOtherCurrency > 0 ? "an auto surcharge is in another currency"
         : SurchargeUnpriced > 0 ? "an auto surcharge could not be priced"
-        : HasFuelRule && FuelAmount is null ? FuelNote ?? "fuel rule could not be priced"
+        : HasFuelRule && FuelAmount is null ? "fuel pending"
         : "not priced";
 
     private string NoFreightReason => ChargeBasis switch
@@ -98,6 +98,8 @@ public class AccessorialRow
     public string CarrierCode { get; set; } = "";
     /// <summary>Empty = a lane charge for every service that includes its side.</summary>
     public string? ServiceType { get; set; }
+    /// <summary>Carrier-wide charges (point type ANY) only: DOMESTIC, INTERNATIONAL, EXPORT or IMPORT; empty = all.</summary>
+    public string? AppliesToMovement { get; set; }
     public string? OriginPointType { get; set; }
     public string? OriginCountryCode { get; set; }
     public string? OriginRegion { get; set; }

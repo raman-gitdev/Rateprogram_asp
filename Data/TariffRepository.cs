@@ -321,8 +321,22 @@ public sealed class TariffRepository
     /// ZONE lanes of a carrier without a zone chart are excluded whenever any country is named: nothing
     /// proves which countries the zone covers.
     /// </summary>
+    /// <summary>
+    /// A zone row with a postcode range answers only for postcodes inside it. No postcode entered (or one of a
+    /// different length, e.g. a partial one) keeps every range, so the user sees each zone tagged "depends on address".
+    /// </summary>
+    private const string ZmPostcodeSql = """
+
+                              AND (zm.origin_postcode_from IS NULL OR @ZmOriginPc::text IS NULL
+                                   OR length(@ZmOriginPc::text) <> length(zm.origin_postcode_from)
+                                   OR @ZmOriginPc::text BETWEEN zm.origin_postcode_from AND zm.origin_postcode_to)
+                              AND (zm.dest_postcode_from IS NULL OR @ZmDestPc::text IS NULL
+                                   OR length(@ZmDestPc::text) <> length(zm.dest_postcode_from)
+                                   OR @ZmDestPc::text BETWEEN zm.dest_postcode_from AND zm.dest_postcode_to)
+""";
+
     private static string? SideSql(string side, string t, PlaceFilter pf, bool anyCountry, HashSet<string> cols, DynamicParameters p,
-                                   bool zoneMaster)
+                                   bool zoneMaster, bool zonePostcodes)
     {
         var pt = $"f.{side}_point_type";
         var P = side == "origin" ? "Origin" : "Dest";
@@ -351,7 +365,7 @@ public sealed class TariffRepository
                               AND zm.status = 'ACTIVE'
                               AND zm.valid_from <= @ShipDate::date AND (zm.valid_to IS NULL OR zm.valid_to >= @ShipDate::date)
                               AND (@OriginCountry::text IS NULL OR zm.origin_country_code = @OriginCountry::text)
-                              AND (@DestCountry::text IS NULL OR zm.dest_country_code = @DestCountry::text)))
+                              AND (@DestCountry::text IS NULL OR zm.dest_country_code = @DestCountry::text){(zonePostcodes ? ZmPostcodeSql : "")}))
                 """;
 
         if (pf.Country is null)
@@ -417,7 +431,7 @@ public sealed class TariffRepository
     /// rows that name their own service pass through unchanged. Shared by search and the adder check.
     /// </summary>
     private static string CandidatesCte(SearchQuery q, PlaceFilter origin, PlaceFilter dest, string t, HashSet<string> cols,
-                                        DynamicParameters p, bool transit, bool zoneMaster)
+                                        DynamicParameters p, bool transit, bool zoneMaster, bool zonePostcodes = false)
     {
         var where = new List<string> { "f.record_type = 'FREIGHT'", ValiditySql("f") };
         var svc = transit ? "COALESCE(f.service_type, tr.service_code)" : "f.service_type";
@@ -437,8 +451,8 @@ public sealed class TariffRepository
         var anyCountry = origin.Country is not null || dest.Country is not null;
         foreach (var s in new[]
                  {
-                     SideSql("origin", t, origin, anyCountry, cols, p, zoneMaster),
-                     SideSql("dest", t, dest, anyCountry, cols, p, zoneMaster),
+                     SideSql("origin", t, origin, anyCountry, cols, p, zoneMaster, zonePostcodes),
+                     SideSql("dest", t, dest, anyCountry, cols, p, zoneMaster, zonePostcodes),
                  })
             if (s is not null) where.Add(s);
 
@@ -481,6 +495,13 @@ public sealed class TariffRepository
             """;
     }
 
+    private static string? NormalisePostcode(string? pc)
+    {
+        if (string.IsNullOrWhiteSpace(pc)) return null;
+        var t = new string(pc!.Where(char.IsLetterOrDigit).ToArray()).ToUpperInvariant();
+        return t.Length == 0 ? null : t;
+    }
+
     private static DynamicParameters BaseParameters(SearchQuery q, PlaceFilter origin, PlaceFilter dest)
     {
         var p = new DynamicParameters();
@@ -491,6 +512,9 @@ public sealed class TariffRepository
         p.Add("Kg", q.WeightKg, DbType.Decimal);
         p.Add("Cbm", q.EffectiveVolumeCbm, DbType.Decimal);
         p.Add("Km", q.DistanceKm, DbType.Decimal);
+        // Postcodes for zone charts that split a country by postcode (air_zone_master ranges): spaces and dashes removed.
+        p.Add("ZmOriginPc", NormalisePostcode(q.OriginPostcode), DbType.String);
+        p.Add("ZmDestPc", NormalisePostcode(q.DestPostcode), DbType.String);
         return p;
     }
 
@@ -532,11 +556,16 @@ public sealed class TariffRepository
         // Index / published fuel (tariff.fuel_charge) for carriers with a carrier_fuel_rule; a FUEL_RULE row in the
         // rate table still wins where a carrier has one.
         var fuelFn = UsesFuelFunction(q.Mode);
+        // Script 37 scopes fuel rules by service and market (two more arguments); before it, the 7-argument call.
+        var fuelScoped = fuelFn && ColumnExists("tariff", "carrier_fuel_rule", "market");
+        var fxScope = fuelScoped
+            ? ", p.eff_service::varchar, " + (cols.Contains("market") ? "p.market::varchar" : "NULL::varchar")
+            : "";
         var fxJoin = fuelFn
-            ? """
+            ? $"""
               LEFT JOIN LATERAL tariff.fuel_charge(p.carrier_id, @ShipDate::date,
                     COALESCE(p.origin_country_code::text, @OriginCountry::text)::char(2), p.currency_code::char(3),
-                    p.chargeable_kg, @Kg::numeric, p.base_freight) fx ON TRUE
+                    p.chargeable_kg, @Kg::numeric, p.base_freight{fxScope}) fx ON TRUE
               """
             : "";
         var fxFound = fuelFn ? "(fx.note IS NOT NULL)" : "FALSE";
@@ -548,7 +577,7 @@ public sealed class TariffRepository
             : "NULL::numeric AS distance_from_km, NULL::numeric AS distance_to_km";
 
         var sql = $"""
-            WITH {CandidatesCte(q, origin, dest, t, cols, p, UsesTransit(q.Mode), UsesZoneMaster(q.Mode))},
+            WITH {CandidatesCte(q, origin, dest, t, cols, p, UsesTransit(q.Mode), UsesZoneMaster(q.Mode), ZonePostcodesInstalled(q.Mode))},
             banded AS (
                 SELECT c.*,
                        CASE WHEN {weightKnown} AND {distanceKnown} THEN
@@ -684,6 +713,46 @@ public sealed class TariffRepository
     /// <summary>Fuel worked out by tariff.fuel_charge (jet fuel index or keyed-in published %), when installed.</summary>
     private bool UsesFuelFunction(TariffMode mode) => mode == TariffMode.Air && TableExists("tariff.carrier_fuel_rule");
 
+    private volatile Tuple<DateTime, bool>? _zonePostcodeRows;
+
+    /// <summary>air_zone_master has postcode columns (script 35).</summary>
+    private bool ZonePostcodesInstalled(TariffMode mode) =>
+        UsesZoneMaster(mode) && ColumnExists("tariff", "air_zone_master", "dest_postcode_from");
+
+    /// <summary>
+    /// True when some air zone chart splits a country by postcode, so the page offers a Postcode box in Air mode.
+    /// Re-checked after <see cref="CacheMaxAge"/>.
+    /// </summary>
+    public bool AirZonePostcodes()
+    {
+        var cur = _zonePostcodeRows;
+        if (cur is not null && DateTime.UtcNow - cur.Item1 < CacheMaxAge) return cur.Item2;
+        var any = false;
+        if (ZonePostcodesInstalled(TariffMode.Air))
+        {
+            using var conn = Open();
+            any = conn.ExecuteScalar<bool>(
+                "SELECT EXISTS (SELECT 1 FROM tariff.air_zone_master WHERE origin_postcode_from IS NOT NULL OR dest_postcode_from IS NOT NULL)");
+        }
+        _zonePostcodeRows = Tuple.Create(DateTime.UtcNow, any);
+        return any;
+    }
+
+    private readonly ConcurrentDictionary<string, bool> _columnsSeen = new();
+
+    /// <summary>True once the column exists; re-checked until it does.</summary>
+    private bool ColumnExists(string schema, string table, string column)
+    {
+        var key = $"{schema}.{table}.{column}";
+        if (_columnsSeen.TryGetValue(key, out var yes) && yes) return true;
+        using var conn = Open();
+        var found = conn.ExecuteScalar<bool>(
+            "SELECT EXISTS (SELECT 1 FROM information_schema.columns WHERE table_schema = @S AND table_name = @T AND column_name = @C)",
+            new { S = schema, T = table, C = column });
+        _columnsSeen[key] = found;
+        return found;
+    }
+
     /// <summary>Zone-priced air carriers are matched to countries through tariff.air_zone_master.</summary>
     private bool UsesZoneMaster(TariffMode mode) => mode == TariffMode.Air && TableExists("tariff.air_zone_master");
 
@@ -715,8 +784,11 @@ public sealed class TariffRepository
         if (!TableExists("tariff.air_accessorial") || !TableExists("tariff.charge_type")) return new();
         using var conn = Open();
 
-        const string sql = """
-            SELECT a.carrier_code, a.service_type,
+        var movement = ColumnExists("tariff", "air_accessorial", "applies_to_movement")
+            ? "a.applies_to_movement"
+            : "NULL::text";
+        var sql = $"""
+            SELECT a.carrier_code, a.service_type, {movement} AS applies_to_movement,
                    a.origin_point_type, a.origin_country_code::text AS origin_country_code, a.origin_region, a.origin_city,
                    a.origin_airport::text AS origin_airport,
                    a.dest_point_type, a.dest_country_code::text AS dest_country_code, a.dest_region, a.dest_city,
@@ -757,7 +829,7 @@ public sealed class TariffRepository
             : "";
 
         var sql = $"""
-            WITH {CandidatesCte(q, origin, dest, t, cols, p, UsesTransit(q.Mode), UsesZoneMaster(q.Mode))}
+            WITH {CandidatesCte(q, origin, dest, t, cols, p, UsesTransit(q.Mode), UsesZoneMaster(q.Mode), ZonePostcodesInstalled(q.Mode))}
             SELECT c.carrier_code, c.eff_service AS service_type, c.lane_code,
                    max(c.weight_to_kg) AS top_band_kg, min(c.chargeable_kg) AS chargeable_kg
             FROM cand c

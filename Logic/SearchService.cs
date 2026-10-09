@@ -106,7 +106,9 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
             }
 
             vm.SupportsPlaces = TariffRepository.PlaceTypesSupported(cols).Any();
-            vm.SupportsPostcode = cols.Contains("origin_postcode") && cols.Contains("dest_postcode");
+            // Ground tables carry postcodes on the lanes; air zone charts can split a country by postcode.
+            vm.SupportsPostcode = (cols.Contains("origin_postcode") && cols.Contains("dest_postcode"))
+                                  || (q.Mode == TariffMode.Air && repo.AirZonePostcodes());
             vm.SupportsAirports = cols.Contains("origin_airport") && cols.Contains("dest_airport");
             vm.OriginAirports = AirportOptions(vm, q.Mode, q.Carrier, "origin", q.OriginCountry);
             vm.DestAirports = AirportOptions(vm, q.Mode, q.Carrier, "dest", q.DestCountry);
@@ -307,6 +309,9 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
                 r.SourceSheet = redactor.Mask(r.SourceSheet, ref withheld);
             }
             MarkAddressDependent(rows);
+            if (vm.SupportsPostcode && rows.Any(r => r.ZoneDependsOnAddress)
+                && string.IsNullOrWhiteSpace(q.OriginPostcode) && string.IsNullOrWhiteSpace(q.DestPostcode))
+                vm.Notices.Add("Some carriers price this country by postcode area: enter the postcode for the exact zone and price.");
             vm.Results = rows;
             vm.Truncated = truncated;
             vm.AdderGaps = repo.AdderGaps(q, origin, dest)
@@ -338,7 +343,11 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
         if (all.Count == 0) return;
 
         var rules = repo.ServiceRules();
-        var byLane = all.ToLookup(a => LaneKey(a.CarrierCode,
+        // Point type ANY on both sides = a carrier-wide charge (express accessorial list): it goes on every row of
+        // the carrier, limited by movement.
+        static bool IsCarrierWide(AccessorialRow a) => a.OriginPointType == "ANY" && a.DestPointType == "ANY";
+        var carrierWide = all.Where(IsCarrierWide).ToLookup(a => a.CarrierCode.Trim().ToUpperInvariant());
+        var byLane = all.Where(a => !IsCarrierWide(a)).ToLookup(a => LaneKey(a.CarrierCode,
             a.OriginPointType, a.OriginCountryCode, a.OriginRegion, a.OriginCity, a.OriginAirport,
             a.DestPointType, a.DestCountryCode, a.DestRegion, a.DestCity, a.DestAirport));
         foreach (var r in rows)
@@ -346,9 +355,29 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
             var key = LaneKey(r.CarrierCode,
                 r.OriginPointType, r.OriginCountryCode, r.OriginRegion, r.OriginCity, r.OriginAirport,
                 r.DestPointType, r.DestCountryCode, r.DestRegion, r.DestCity, r.DestAirport);
-            r.Accessorials = byLane[key].Where(a => Applies(a, r.ServiceType, rules))
+            r.Accessorials = byLane[key].Concat(carrierWide[r.CarrierCode.Trim().ToUpperInvariant()]
+                                                    .Where(a => MovementMatches(a.AppliesToMovement, r.LaneType)))
+                                        .Where(a => Applies(a, r.ServiceType, rules))
                                         .Select(a => PriceAccessorial(a, r, q)).ToList();
         }
+    }
+
+    /// <summary>
+    /// A carrier-wide charge (movement DOMESTIC / INTERNATIONAL / EXPORT / IMPORT) against the row's lane type:
+    /// EXPORT = OUTBOUND, IMPORT = INBOUND, INTERNATIONAL = either. No movement, or no lane type, matches all.
+    /// </summary>
+    private static bool MovementMatches(string? movement, string? laneType)
+    {
+        if (string.IsNullOrWhiteSpace(movement) || string.IsNullOrWhiteSpace(laneType)) return true;
+        var lane = laneType!.Trim().ToUpperInvariant();
+        return movement!.Trim().ToUpperInvariant() switch
+        {
+            "DOMESTIC" => lane == "DOMESTIC",
+            "EXPORT" => lane is "OUTBOUND" or "EXPORT",
+            "IMPORT" => lane is "INBOUND" or "IMPORT",
+            "INTERNATIONAL" => lane is "OUTBOUND" or "INBOUND" or "EXPORT" or "IMPORT" or "CROSS_TRADE",
+            _ => true,
+        };
     }
 
     /// <summary>

@@ -1,0 +1,49 @@
+<mxfile host="Electron" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) draw.io/29.0.3 Chrome/140.0.7339.249 Electron/38.7.0 Safari/537.36" version="29.0.3">
+  <diagram name="Page-1" id="_CMigbliBjqZLvQZAQgw">
+    <mxGraphModel dx="1369" dy="694" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="850" pageHeight="1100" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="Gf8JdI0XfQhssEwN7MA0-13" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Gf8JdI0XfQhssEwN7MA0-1" target="Gf8JdI0XfQhssEwN7MA0-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gf8JdI0XfQhssEwN7MA0-1" value="Zone&lt;br&gt;Doc / Non Doc&lt;br&gt;Import/Export (Tems)&lt;br&gt;service Level&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="190" y="120" width="210" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Gf8JdI0XfQhssEwN7MA0-14" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Gf8JdI0XfQhssEwN7MA0-2" target="Gf8JdI0XfQhssEwN7MA0-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gf8JdI0XfQhssEwN7MA0-2" value="service Level&lt;br&gt;services type&lt;br&gt;Tems&lt;br&gt;Country&lt;br&gt;Airport" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="440" y="120" width="210" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="Gf8JdI0XfQhssEwN7MA0-5" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Gf8JdI0XfQhssEwN7MA0-3" target="Gf8JdI0XfQhssEwN7MA0-2">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gf8JdI0XfQhssEwN7MA0-8" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Gf8JdI0XfQhssEwN7MA0-3" target="Gf8JdI0XfQhssEwN7MA0-1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gf8JdI0XfQhssEwN7MA0-3" value="Mode AIR Carrier Type of tarrif" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="240" y="20" width="360" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Gf8JdI0XfQhssEwN7MA0-6" value="Table 1 (air Tarrif)&lt;br&gt;all the info like country to coutnry, airport toi airport rates like carrier B!C08 and only rates for zone type carrier." style="whiteSpace=wrap;html=1;aspect=fixed;" vertex="1" parent="1">
+          <mxGeometry x="140" y="390" width="180" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="Gf8JdI0XfQhssEwN7MA0-7" value="Zone Master Table&lt;br&gt;- Zone&lt;br&gt;- origin country&lt;br&gt;- dest country&lt;br&gt;- carrier names&lt;br&gt;- inbound / outbound (as per tarif file)&lt;br&gt;&lt;br&gt;which carrier is link with which zone and with contry entry so it could get the correct zone rates to pic and display.&lt;div&gt;&lt;br&gt;&lt;/div&gt;" style="rounded=0;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="425" y="390" width="330" height="180" as="geometry" />
+        </mxCell>
+        <mxCell id="Gf8JdI0XfQhssEwN7MA0-16" value="" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="Gf8JdI0XfQhssEwN7MA0-12" target="Gf8JdI0XfQhssEwN7MA0-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gf8JdI0XfQhssEwN7MA0-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=0;entryDx=0;entryDy=0;" edge="1" parent="1" source="Gf8JdI0XfQhssEwN7MA0-12" target="Gf8JdI0XfQhssEwN7MA0-6">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="Gf8JdI0XfQhssEwN7MA0-12" value="Need Two table table 1 with all teh rates and Table 2 Zone master to get the correct rate for the zone tyoe carrier as the first table will have all the rates filterd so sense in dividing those rates files." style="rounded=1;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="160" y="260" width="540" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="Gf8JdI0XfQhssEwN7MA0-18" value="carrier  (exists: B1C07, B1C08 ...)&#xa;                            │&#xa;        ┌───────────────────┼─────────────────────┐&#xa;        ▼                   ▼                     ▼&#xa;  1. air_tariff       2. air_zone_master    3. air_transit&#xa;     the rates           country pair → zone    lane × speed level × service → hours&#xa;        │                   (zone carriers)        (lane carriers)&#xa;        │&#xa;        └── air_accessorial (exists)   pickup, delivery, brokerage ... per lane" style="text;whiteSpace=wrap;" vertex="1" parent="1">
+          <mxGeometry x="130" y="610" width="450" height="170" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

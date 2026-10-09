@@ -302,7 +302,10 @@ namespace TariffHub
         /// <summary>The total, in a span the page script re-adds ticked accessorials to (data-base = total without them).</summary>
         protected static string TotalCell(SearchResultRow r) =>
             r.EstimatedTotal is null
-                ? "<span class=\"small muted\" style=\"font-weight:normal\">— " + HttpUtility.HtmlEncode(r.NoTotalReason) + "</span>"
+                ? "<span class=\"small muted\" style=\"font-weight:normal\""
+                  + (r.HasFuelRule && r.FuelAmount is null && !string.IsNullOrEmpty(r.FuelNote)
+                        ? " title=\"" + HttpUtility.HtmlAttributeEncode(r.FuelNote) + "\"" : "")
+                  + ">— " + HttpUtility.HtmlEncode(r.NoTotalReason) + "</span>"
                 : "<span class=\"tot\" data-base=\"" + r.EstimatedTotal.Value.ToString("0.00", Inv) + "\" data-ccy=\""
                   + HttpUtility.HtmlAttributeEncode(r.Currency) + "\">" + HttpUtility.HtmlEncode(Money(r.EstimatedTotal) + " " + r.Currency) + "</span>";
 
@@ -345,12 +348,13 @@ namespace TariffHub
                   .Append("<div class=\"small muted\">").Append(HttpUtility.HtmlEncode(r.SurchargeCodes ?? "")).Append("</div>");
             if (r.HasFuelRule)
             {
+                // The note (how it was worked out, or what is missing) is the tooltip; the cell stays one short line.
                 sb.Append("<div class=\"small\"");
                 if (!string.IsNullOrEmpty(r.FuelNote)) sb.Append(" title=\"").Append(HttpUtility.HtmlAttributeEncode(r.FuelNote)).Append('"');
-                sb.Append(">fuel ").Append(HttpUtility.HtmlEncode(Money(r.FuelAmount))).Append("</div>");
-                // Not priced: say why (prices not loaded yet, % not keyed in, actual weight needed ...)
-                if (r.FuelAmount is null && !string.IsNullOrEmpty(r.FuelNote))
-                    sb.Append("<div class=\"small muted\">").Append(HttpUtility.HtmlEncode(r.FuelNote)).Append("</div>");
+                sb.Append(">fuel ");
+                if (r.FuelAmount is null) sb.Append("<span class=\"tag warn\">pending</span>");
+                else sb.Append(HttpUtility.HtmlEncode(Money(r.FuelAmount)));
+                sb.Append("</div>");
             }
             return sb.ToString();
         }
