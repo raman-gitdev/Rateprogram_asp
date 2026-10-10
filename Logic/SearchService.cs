@@ -107,8 +107,9 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
 
             vm.SupportsPlaces = TariffRepository.PlaceTypesSupported(cols).Any();
             // Ground tables carry postcodes on the lanes; air zone charts can split a country by postcode.
+            // Air always offers a postcode (optional): carriers that price by postcode zone use it, others ignore it.
             vm.SupportsPostcode = (cols.Contains("origin_postcode") && cols.Contains("dest_postcode"))
-                                  || (q.Mode == TariffMode.Air && repo.AirZonePostcodes());
+                                  || q.Mode == TariffMode.Air;
             vm.SupportsAirports = cols.Contains("origin_airport") && cols.Contains("dest_airport");
             vm.OriginAirports = AirportOptions(vm, q.Mode, q.Carrier, "origin", q.OriginCountry);
             vm.DestAirports = AirportOptions(vm, q.Mode, q.Carrier, "dest", q.DestCountry);
@@ -309,7 +310,7 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
                 r.SourceSheet = redactor.Mask(r.SourceSheet, ref withheld);
             }
             MarkAddressDependent(rows);
-            if (vm.SupportsPostcode && rows.Any(r => r.ZoneDependsOnAddress)
+            if (vm.SupportsPostcode && (q.Mode != TariffMode.Air || repo.AirZonePostcodes()) && rows.Any(r => r.ZoneDependsOnAddress)
                 && string.IsNullOrWhiteSpace(q.OriginPostcode) && string.IsNullOrWhiteSpace(q.DestPostcode))
                 vm.Notices.Add("Some carriers price this country by postcode area: enter the postcode for the exact zone and price.");
             vm.Results = rows;

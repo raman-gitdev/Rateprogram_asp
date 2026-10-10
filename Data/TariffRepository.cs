@@ -65,6 +65,10 @@ public sealed class TariffRepository
     public static string TableName(TariffMode mode) =>
         mode == TariffMode.Ground ? "tariff.ground_tariff" : "tariff.air_tariff";
 
+    /// <summary>Zone chart of the mode: country / area / postcode -> zone -> rate_group (scripts 30 and 44).</summary>
+    public static string ZoneMasterTable(TariffMode mode) =>
+        mode == TariffMode.Ground ? "tariff.ground_zone_master" : "tariff.air_zone_master";
+
     /// <summary>Columns the SQL below cannot work without, in both tables.</summary>
     private static readonly string[] RequiredColumns =
     [
@@ -85,6 +89,7 @@ public sealed class TariffRepository
     {
         new("service", "Service", ["service_type"]),
         new("level", "Service level", ["service_level"]),
+        new("load", "Load type", ["load_type"]),
         new("lanetype", "Lane type", ["lane_type"]),
         new("ratetag", "Rate tag", ["rate_tag"]),
         new("piece", "Piece type", ["piece_type"], AnyValue: "ANY"),
@@ -216,14 +221,15 @@ public sealed class TariffRepository
             // (c = the country the carrier's lanes are in, so the page only mentions it for that country)
             $"SELECT 'unzoned', f.carrier_code, COALESCE(f.origin_country_code, f.dest_country_code)::text FROM {t} f WHERE f.record_type = 'FREIGHT' AND 'ZONE' IN (f.origin_point_type, f.dest_point_type) " +
             $"AND NOT EXISTS (SELECT 1 FROM {t} z WHERE z.record_type = 'ZONE_MAP' AND z.carrier_code = f.carrier_code)" +
-            (UsesZoneMaster(mode) ? " AND NOT EXISTS (SELECT 1 FROM tariff.air_zone_master zm WHERE zm.carrier_id = f.carrier_id)" : "") +
+            (UsesZoneMaster(mode) ? $" AND NOT EXISTS (SELECT 1 FROM {ZoneMasterTable(mode)} zm WHERE zm.carrier_id = f.carrier_id)" : "") +
             " GROUP BY 2, 3",
         };
-        // Countries reachable through an air zone chart (tariff.air_zone_master).
+        // Countries reachable through a zone chart (air_zone_master / ground_zone_master).
         if (UsesZoneMaster(mode))
         {
-            parts.Add("SELECT 'ocountry', zm.origin_country_code::text, zm.carrier_code FROM tariff.air_zone_master zm WHERE zm.status = 'ACTIVE' GROUP BY 2, 3");
-            parts.Add("SELECT 'dcountry', zm.dest_country_code::text, zm.carrier_code FROM tariff.air_zone_master zm WHERE zm.status = 'ACTIVE' GROUP BY 2, 3");
+            var zmt = ZoneMasterTable(mode);
+            parts.Add($"SELECT 'ocountry', zm.origin_country_code::text, zm.carrier_code FROM {zmt} zm WHERE zm.status = 'ACTIVE' AND zm.rate_group IS NOT NULL GROUP BY 2, 3");
+            parts.Add($"SELECT 'dcountry', zm.dest_country_code::text, zm.carrier_code FROM {zmt} zm WHERE zm.status = 'ACTIVE' AND zm.rate_group IS NOT NULL GROUP BY 2, 3");
         }
         foreach (var def in Filters)
         {
@@ -336,7 +342,7 @@ public sealed class TariffRepository
 """;
 
     private static string? SideSql(string side, string t, PlaceFilter pf, bool anyCountry, HashSet<string> cols, DynamicParameters p,
-                                   bool zoneMaster, bool zonePostcodes)
+                                   bool zoneMaster, bool zonePostcodes, string zoneMasterTable)
     {
         var pt = $"f.{side}_point_type";
         var P = side == "origin" ? "Origin" : "Dest";
@@ -358,7 +364,7 @@ public sealed class TariffRepository
         if (zoneMaster)
             zoneMapped = $"""
                 ({zoneMapped}
-                 OR EXISTS (SELECT 1 FROM tariff.air_zone_master zm
+                 OR EXISTS (SELECT 1 FROM {zoneMasterTable} zm
                             WHERE zm.carrier_id = f.carrier_id
                               AND zm.rate_group = f.rate_group
                               AND (zm.service_type IS NULL OR zm.service_type = f.service_type)
@@ -451,8 +457,8 @@ public sealed class TariffRepository
         var anyCountry = origin.Country is not null || dest.Country is not null;
         foreach (var s in new[]
                  {
-                     SideSql("origin", t, origin, anyCountry, cols, p, zoneMaster, zonePostcodes),
-                     SideSql("dest", t, dest, anyCountry, cols, p, zoneMaster, zonePostcodes),
+                     SideSql("origin", t, origin, anyCountry, cols, p, zoneMaster, zonePostcodes, ZoneMasterTable(q.Mode)),
+                     SideSql("dest", t, dest, anyCountry, cols, p, zoneMaster, zonePostcodes, ZoneMasterTable(q.Mode)),
                  })
             if (s is not null) where.Add(s);
 
@@ -532,6 +538,13 @@ public sealed class TariffRepository
             (c.chargeable_kg IS NULL OR ((c.weight_from_kg IS NULL OR c.chargeable_kg > c.weight_from_kg)
                                      AND (c.weight_to_kg IS NULL OR c.chargeable_kg <= c.weight_to_kg)))
             """;
+        // A vehicle whose payload (tariff.equipment_type, script 44) is below the chargeable weight cannot carry it.
+        if (cols.Contains("equipment_type") && TableExists("tariff.equipment_type"))
+            bandMatch += """
+                 AND (c.equipment_type IS NULL OR c.chargeable_kg IS NULL OR NOT EXISTS (
+                        SELECT 1 FROM tariff.equipment_type e
+                        WHERE e.equipment_code = c.equipment_type AND e.max_payload_kg < c.chargeable_kg))
+                """;
         var weightKnown = "(c.chargeable_kg IS NOT NULL OR (c.weight_from_kg IS NULL AND c.weight_to_kg IS NULL))";
         var distanceKnown = "TRUE";
         if (hasDistance)
@@ -552,6 +565,15 @@ public sealed class TariffRepository
         }.Select(Opt));
 
         var levelOrder = cols.Contains("service_level") ? "p.service_level NULLS LAST, " : "";
+
+        // Step pricing (script 44): base at the band start + each further step ("+3.29 per 5 kg above 100 kg").
+        var stepSql = "";
+        if (cols.Contains("base_amount") && cols.Contains("weight_step_kg"))
+            stepSql += "\n                               WHEN c.charge_basis = 'PER_STEP' THEN c.base_amount" +
+                       " + ceil((c.chargeable_kg - c.weight_from_kg) / c.weight_step_kg) * c.rate_value";
+        if (cols.Contains("base_amount") && cols.Contains("distance_step_km") && hasDistance)
+            stepSql += "\n                               WHEN c.charge_basis = 'PER_KM_STEP' THEN c.base_amount" +
+                       $" + ceil(({km} - c.distance_from_km) / c.distance_step_km) * c.rate_value";
 
         // Index / published fuel (tariff.fuel_charge) for carriers with a carrier_fuel_rule; a FUEL_RULE row in the
         // rate table still wins where a carrier has one.
@@ -585,7 +607,7 @@ public sealed class TariffRepository
                                WHEN c.charge_basis = 'PER_KG'    THEN c.rate_value * c.chargeable_kg
                                WHEN c.charge_basis = 'PER_100KG' THEN c.rate_value * c.chargeable_kg / 100
                                WHEN c.charge_basis = 'PER_KM'    THEN c.rate_value * {km}
-                               WHEN c.charge_basis IN ({SqlList(FlatBases)}) THEN c.rate_value
+                               WHEN c.charge_basis IN ({SqlList(FlatBases)}) THEN c.rate_value{stepSql}
                            END
                        END AS raw_freight
                 FROM cand c
@@ -717,7 +739,7 @@ public sealed class TariffRepository
 
     /// <summary>air_zone_master has postcode columns (script 35).</summary>
     private bool ZonePostcodesInstalled(TariffMode mode) =>
-        UsesZoneMaster(mode) && ColumnExists("tariff", "air_zone_master", "dest_postcode_from");
+        UsesZoneMaster(mode) && ColumnExists("tariff", ZoneMasterTable(mode).Substring("tariff.".Length), "dest_postcode_from");
 
     /// <summary>
     /// True when some air zone chart splits a country by postcode, so the page offers a Postcode box in Air mode.
@@ -754,7 +776,7 @@ public sealed class TariffRepository
     }
 
     /// <summary>Zone-priced air carriers are matched to countries through tariff.air_zone_master.</summary>
-    private bool UsesZoneMaster(TariffMode mode) => mode == TariffMode.Air && TableExists("tariff.air_zone_master");
+    private bool UsesZoneMaster(TariffMode mode) => TableExists(ZoneMasterTable(mode));
 
     /// <summary>Air lane rates stored once for every service are expanded through tariff.air_transit.</summary>
     private bool UsesTransit(TariffMode mode) => mode == TariffMode.Air && TableExists("tariff.air_transit");

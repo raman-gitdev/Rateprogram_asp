@@ -123,7 +123,7 @@ All other pricing logic is SQL inside the app.
 - **Air (B1C07 and future zone carriers):** a rate row has `ZONE` at one end and a `rate_group`.
   The search keeps it when `air_zone_master` has a row for the same carrier and `rate_group` whose
   origin and destination countries match the user's countries.
-- **Ground (older carriers):** `ZONE_MAP` rows in the same table.
+- **Ground:** `ground_zone_master` (script 44), same rule as air. The old `ZONE_MAP` rows were moved there.
 - Zone carriers with no zone chart are excluded whenever a country is named. Never guess a zone.
 
 ### Pricing arithmetic
@@ -168,7 +168,7 @@ names.
 | **B1C08** | 9 | Air | Airport-to-airport bid template, USD, 2026. Fuel: jet fuel index, weekly |
 | **B1C09** | 10 | Air | Bid template (1-year proposal), USD. Fuel: weekly |
 | **B1C10** | 11 | Air | Bid template (1-year proposal), USD. Fuel: weekly |
-| **B1C11** | 12 | Air | "BA" bid template, SL0–SL3, USD. Fuel: **monthly**. Ground "BG" sheet not loaded yet |
+| **B1C11** | 12 | Air + Ground | "BA" bid template, SL0–SL3, USD. Fuel: **monthly**. Ground (next-flight-out backup): car / van / box truck per lane, fuel included (script 52) |
 | **T1C12** | 13 | Air | Belgium express toolbox, **zone-priced with postcode zones**, EUR, valid from 2026-08-02 (assumed). Air only; Standard (ground) not loaded. Fuel: weekly published %, two series, less 55% / 65% |
 
 ### Air row counts (check after any reload)
@@ -421,7 +421,13 @@ There is **no authentication**: anyone on the LAN who reaches the port sees ever
 | 35 | `35_schema_zone_postcode.sql`: postcode ranges on `air_zone_master`; express services | **to run** |
 | 36 | `36_load_air_t1c12.sql`: T1C12 carrier, 3,100 zone rows, 14,828 rates (replaces T1C12) | **to run** |
 | 37 | `37_schema_fuel_scope_accessorial_any.sql`: `air_tariff.market`; fuel rules by service / market; published series; new `fuel_charge`; carrier-wide accessorials (`ANY`, `applies_to_movement`); 30 charge codes | **to run** |
-| 38 | `38_load_t1c12_fuel_accessorial.sql`: T1C12 22 fuel rules, 37 accessorials, carrier notes | **to run** |
+| 38 | `38_load_t1c12_fuel_accessorial.sql`: T1C12 22 fuel rules, 37 accessorials, carrier notes | run 2026-10-09 |
+| 39–42 | client A1 schema and A1C10 / A1C13 / A1C14 air | run 2026-10-09 |
+| 43 | `43_schema_carrier_service.sql` (then the levels / types correction UPDATE) | run 2026-10-09 |
+| 44 | `44_schema_ground_v2.sql`: ground masters, load type, step pricing, ground zone master. **Empties ground_tariff** | **to run** |
+| 45–51 | reload A1C01, A1C02 (46 in two parts), A1C03, A1C04, B1C04, B1C05, B1C06 (prices unchanged) | **to run right after 44** |
+| 52 | `52_load_ground_b1c11.sql` | **to run** |
+| 53 | `53_load_ground_t1c12_std.sql` | **to run** |
 
 **Do not run:**
 - `RUN_ALL.sql`;
@@ -480,6 +486,17 @@ There is **no authentication**: anyone on the LAN who reaches the port sees ever
 ---
 
 ## 12. Change log
+
+**2026-10-09 (ground)**
+- Ground v2 (44): masters for load type, equipment, charge basis, piece type; ground services in the
+  service master; `ground_zone_master`; step pricing by weight and by distance; pallet bands.
+- All ground carriers reloaded (45–51) from their previous rows: prices unchanged (79,568 rows
+  compared one by one). Fixes: A1C04 / B1C04 above 100 kg and B1C06 groupage above 100 kg and charter
+  trucks beyond the last distance band now price (the "adder" rules were never used by the search).
+  B1C05 service code UPS_GROUND renamed GROUND_PARCEL.
+- New: B1C11 ground (52), T1C12 Standard (53).
+- App: zone master per mode, Load type filter, step pricing, vehicle payload check.
+  Files: `Data/TariffRepository.cs`, `Models/SearchQuery.cs`, `Default.aspx`.
 
 **2026-10-09**
 - DB: 35 (postcode zones, express services), 36 (T1C12 air), 37 (market column, fuel rule scope,

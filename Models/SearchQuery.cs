@@ -14,6 +14,7 @@ public class SearchQuery
     public string? ServiceLevel { get; set; }
     public string? PieceType { get; set; }
     public string? DeliveryAddress { get; set; }
+    public string? LoadType { get; set; }
     public string? LaneType { get; set; }
     public string? RateTag { get; set; }
     public string? CargoType { get; set; }
@@ -55,6 +56,7 @@ public class SearchQuery
         "level" => ServiceLevel,
         "piece" => PieceType,
         "delivery" => DeliveryAddress,
+        "load" => LoadType,
         "lanetype" => LaneType,
         "ratetag" => RateTag,
         "cargo" => CargoType,
@@ -72,6 +74,7 @@ public class SearchQuery
             case "level": ServiceLevel = value; break;
             case "piece": PieceType = value; break;
             case "delivery": DeliveryAddress = value; break;
+            case "load": LoadType = value; break;
             case "lanetype": LaneType = value; break;
             case "ratetag": RateTag = value; break;
             case "cargo": CargoType = value; break;

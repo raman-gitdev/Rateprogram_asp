@@ -23,6 +23,7 @@
             </label>
             <label>Carrier <asp:DropDownList ID="ddlCarrier" runat="server" AutoPostBack="true" /></label>
             <%= Filter("service", "All services", "The carrier's service: LTL, full truck, container, oversize, dedicated truck, surface.") %>
+            <%= Filter("load", "Any load type", "How the goods move: parcel, part load (LTL), full truck (FTL), container (FCL) or out of gauge.") %>
             <%= Filter("level", "All levels", "Air service level (SL0 fastest to SL3 slowest), as priced by the carrier.") %>
             <%= Filter("piece", "Any piece type", "Parcel carriers price a letter, a document, a pak, a package and a hundredweight consignment differently off the same lane.") %>
             <%= Filter("delivery", "Any address type", "Some carriers charge more to a residential address than a commercial one on the identical lane.") %>
