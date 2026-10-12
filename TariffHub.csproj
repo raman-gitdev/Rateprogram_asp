@@ -85,6 +85,25 @@
     <Compile Include="Models\SearchViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="bin\Dapper.dll" />
+    <Content Include="bin\Microsoft.Bcl.AsyncInterfaces.dll" />
+    <Content Include="bin\Microsoft.Bcl.HashCode.dll" />
+    <Content Include="bin\Microsoft.Extensions.DependencyInjection.Abstractions.dll" />
+    <Content Include="bin\Microsoft.Extensions.Logging.Abstractions.dll" />
+    <Content Include="bin\Npgsql.dll" />
+    <Content Include="bin\System.Buffers.dll" />
+    <Content Include="bin\System.Collections.Immutable.dll" />
+    <Content Include="bin\System.Diagnostics.DiagnosticSource.dll" />
+    <Content Include="bin\System.Memory.dll" />
+    <Content Include="bin\System.Numerics.Vectors.dll" />
+    <Content Include="bin\System.Runtime.CompilerServices.Unsafe.dll" />
+    <Content Include="bin\System.Text.Encodings.Web.dll" />
+    <Content Include="bin\System.Text.Json.dll" />
+    <Content Include="bin\System.Threading.Channels.dll" />
+    <Content Include="bin\System.Threading.Tasks.Extensions.dll" />
+    <Content Include="bin\System.ValueTuple.dll" />
+    <Content Include="bin\TariffHub.dll" />
+    <Content Include="bin\TariffHub.pdb" />
     <Content Include="db\master\001_master_schema.sql" />
     <Content Include="db\master\002_master_seed.sql" />
     <Content Include="Global.asax" />
@@ -110,6 +129,7 @@
     <Content Include="db\master\data\unit_conversions.json" />
     <Content Include="db\master\tools\build_master.py" />
     <Content Include="db\master\tools\extract_rate_card_geography.py" />
+    <Content Include="bin\TariffHub.dll.config" />
     <None Include="Secrets.config.example" />
   </ItemGroup>
   <PropertyGroup>
