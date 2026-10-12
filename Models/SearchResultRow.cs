@@ -56,6 +56,10 @@ public class SearchResultRow
     public string? FuelNote { get; set; }
     public decimal? EstimatedTotal { get; set; }
     public string? Currency { get; set; }
+    /// <summary>The card's currency when the row was converted for display ("Show prices in"); null when shown as on the card.</summary>
+    public string? OriginalCurrency { get; set; }
+    /// <summary>Multiplier used for that conversion (card currency -> Currency), rate valid on the ship date.</summary>
+    public decimal? FxRate { get; set; }
     public DateTime? ValidFrom { get; set; }
     public DateTime? ValidTo { get; set; }
     public string? SourceRef { get; set; }
@@ -131,6 +135,9 @@ public class AccessorialCharge
     public decimal? MinCharge { get; set; }
     public decimal? MaxCharge { get; set; }
     public string Currency { get; set; } = "";
+    /// <summary>Currency and amount as quoted on the card, when <see cref="Amount"/> was converted (into the freight or display currency).</summary>
+    public string? QuotedCurrency { get; set; }
+    public decimal? QuotedAmount { get; set; }
     /// <summary>Amount for this shipment after min / max; null when it cannot be priced (see <see cref="NotPricedReason"/>).</summary>
     public decimal? Amount { get; set; }
     public string? NotPricedReason { get; set; }

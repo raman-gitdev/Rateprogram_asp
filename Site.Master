@@ -13,8 +13,8 @@
     <header class="top">
         <strong>Tariff Hub</strong> <span class="muted">· ground and air, every carrier</span>
         <nav>
-            <a class="button on" href="<%: ResolveUrl("~/") %>">Search rates</a>
-            <span class="button off" title="Not built yet">Loaded tariffs</span>
+            <a class="<%: NavClass("Default") %>" href="<%: ResolveUrl("~/") %>">Search rates</a>
+            <a class="<%: NavClass("Loaded") %>" href="<%: ResolveUrl("~/Loaded.aspx") %>">Loaded tariffs</a>
         </nav>
     </header>
     <form id="form1" runat="server">

@@ -164,11 +164,15 @@ names.
 | B1C04 | | Ground | Europe, zone-priced. 21 of 31 rate cards and 502 air sheets still unloaded |
 | B1C05 | 6 | Ground + Air | US parcel, zone-priced with **no zone chart** |
 | B1C06 | | Ground | Japan domestic; 9 of 13 districts assumed (`db/master/data/carriers/B1C06.json`) |
-| **B1C07** | 8 | Air | China express, **zone-priced**, CNY (assumed), valid from 2026-01-01 (assumed). Fuel: carrier's weekly published %, less 30% |
+| **B1C07** | 8 | Air | Express, **zone-priced**, 18 country cards (script 56), 2026-01-01 to 2026-12-31. USD; IN card INR, PL card PLN. Above the last band: adder (`PER_STEP`) or multiplier (`PER_KG`) as each card says. MY local zones read like the China matrix. Fuel: carrier's weekly published %, less 30% |
 | **B1C08** | 9 | Air | Airport-to-airport bid template, USD, 2026. Fuel: jet fuel index, weekly |
 | **B1C09** | 10 | Air | Bid template (1-year proposal), USD. Fuel: weekly |
 | **B1C10** | 11 | Air | Bid template (1-year proposal), USD. Fuel: weekly |
 | **B1C11** | 12 | Air + Ground | "BA" bid template, SL0–SL3, USD. Fuel: **monthly**. Ground (next-flight-out backup): car / van / box truck per lane, fuel included (script 52) |
+| **M1C15** | 21 | Ground | Road from the Gliwice (PL) warehouse, EUR (assumed), 2026-09-23 to 2026-12-31 (file name). LTL by postcode area to 17 countries; hub routes HU / RO / SI / BG as two separate legs; PL domestic by branch (postcode ranges in `ground_zone_master`); shuttle / FTL; parcels (two price lists). Fuel (quarterly diesel formula) not loaded |
+| **M1C16** | 18 | Ground | Italy LTL, postcode area to postcode area, EUR, from 2020-07-01 |
+| **M1C17** | 19 | Ground | EMEA LTL, award sheet "NEW RATE AWARDED (Ext & GRI (2)", EUR / CZK, validity per lane as on the card (mostly to 2026-03-31; loaded anyway, test data) |
+| **M1C18** | 20 | Air | Forwarder RFQ award, airport to airport, CON / B2B, currency per lane, 2026-06-15 to 2026-12-31. Fuel per kg per lane per month (FUEL_RULE rows); GRI per kg; origin / destination charges per lane |
 | **T1C12** | 13 | Air | Belgium express toolbox, **zone-priced with postcode zones**, EUR, valid from 2026-08-02 (assumed). Air only; Standard (ground) not loaded. Fuel: weekly published %, two series, less 55% / 65% |
 
 ### Air row counts (check after any reload)
@@ -356,6 +360,9 @@ prices.
 
 ```
 Default.aspx/.cs          search page (UpdatePanel, no full reloads); results grid; airport + place dropdowns
+Loaded.aspx/.cs           Loaded tariffs tab: coverage world map (Ground / Air, click a country) + rows per carrier;
+                          live from the rate tables, cached 10 min, ?refresh=1 reads again. Content/coverage/ holds
+                          d3 7.9.0, topojson-client 3.1.0 and world.js (world-atlas 50m + ISO codes): no CDN
 Global.asax.cs            builds Repository, Redactor, MasterData at app start
 Data/TariffRepository.cs  every SQL string; checks which optional tables exist (air_transit,
                           air_zone_master, carrier_fuel_rule ...) so the page works before a script is run
@@ -428,6 +435,13 @@ There is **no authentication**: anyone on the LAN who reaches the port sees ever
 | 45–51 | reload A1C01, A1C02 (46 in two parts), A1C03, A1C04, B1C04, B1C05, B1C06 (prices unchanged) | **to run right after 44** |
 | 52 | `52_load_ground_b1c11.sql` | **to run** |
 | 53 | `53_load_ground_t1c12_std.sql` | **to run** |
+| 54 | `54_load_ground_m1c16.sql`: M1C16 Italy LTL | **to run** |
+| 55 | `55_schema_air_step.sql`: air step (adder) pricing, wider zone areas, zone key with direction | **to run** |
+| 56 | `56_load_air_b1c07.sql`: B1C07, 18 country cards (replaces the China load) | **to run after 55** |
+| 57 | `57_load_ground_m1c17.sql`: M1C17 EMEA LTL | **to run** |
+| 58 | `58_load_air_m1c18.sql`: M1C18 air forwarder (needs the app update for fuel per lane) | **to run** |
+| 59 | `59_schema_currency.sql`: currency + exchange rates + fx functions | **to run** |
+| 60 | `60_load_ground_m1c15.sql`: M1C15 road from Gliwice | **to run** |
 
 **Do not run:**
 - `RUN_ALL.sql`;
@@ -447,7 +461,10 @@ There is **no authentication**: anyone on the LAN who reaches the port sees ever
 - **T1C12:** confirm the assumptions (section 4); load Standard (ground) after the carrier-variants
   discussion.
 - **Raman's idea:** to discuss (raised 2026-10-08, parked).
-- **B1C07:** confirm the currency (CNY assumed) and the validity date (2026-01-01 assumed).
+- **Exchange rates:** add new rates to `tariff.exchange_rate` regularly (script 59 has the template); only the ECB rates of 2026-10-09 are loaded.
+- **M1C15:** fuel (quarterly diesel formula: base 0.9771 EUR/l, 17.5% share, ±10% tolerance) needs a diesel index; currency (EUR) assumed.
+- **M1C17:** almost all lanes ended 2026-03-31 (loaded as on the card); the terms & conditions sheets (surcharges, fuel) not loaded.
+- **M1C18:** fuel rows exist to 2026-10-31 only; add later months when the forwarder publishes them. AIR-0001-EB airport AMS taken from "BEAMS".
 - **B1C11 ground sheet (BG, 523 truck lanes):** load it when we do the ground part. Fuel is
   included in those rates.
 - **Not loaded yet:** out-of-gauge (OOG) sheets and the pass-through list (B1C09/B1C10). The B1C09
@@ -486,6 +503,20 @@ There is **no authentication**: anyone on the LAN who reaches the port sees ever
 ---
 
 ## 12. Change log
+
+**2026-10-12**
+- New carriers: M1C16 (54), B1C07 18 country cards (56, replaces the China load), M1C17 (57), M1C18 (58), M1C15 (60).
+- Schema: air step pricing (55); currency + exchange rates (59).
+- App: "Show prices in" (default USD) converts every price with the rate of the ship date; extras, surcharges and fuel in
+  another currency are converted into the freight currency instead of being left unpriced; FUEL_RULE rows can belong to one
+  lane and service level. Files: `Data/TariffRepository.cs`, `Logic/SearchService.cs`, `Models/SearchQuery.cs`,
+  `Models/SearchResultRow.cs`, `Models/SearchViewModel.cs`, `Default.aspx`, `Default.aspx.cs`.
+- Diagrams: full ERD and business views (air / ground) as draw.io files.
+- B1C07 card currencies: PL PLN, IN INR, GB GBP, NL/IT/FR/DE/BE EUR, rest USD (61 fixes an earlier load; 56 regenerated).
+- 62_verify_load.sql: read-only check of everything 44-61 loaded (98 lines, all OK on .26).
+- App: "Loaded tariffs" tab (Loaded.aspx) with the coverage map and a per-carrier table, read live from the database.
+  Files: `Loaded.aspx`, `Loaded.aspx.cs`, `Loaded.aspx.designer.cs`, `Content/coverage/*`, `Site.Master`, `Site.Master.cs`,
+  `Data/TariffRepository.cs` (CoverageLanes, CoveragePostcodePairs, LoadedCarriers), `TariffHub.csproj`.
 
 **2026-10-09 (ground)**
 - Ground v2 (44): masters for load type, equipment, charge basis, piece type; ground services in the

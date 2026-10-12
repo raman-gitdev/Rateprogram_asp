@@ -45,6 +45,8 @@ public class SearchViewModel
     /// <summary>Carriers priced by zone without any zone chart: they cannot be matched to a country or place.</summary>
     public List<string> UnzonedCarriers { get; set; } = new();
     public bool SupportsDistance { get; set; }
+    /// <summary>Currencies with an exchange rate (script 59), offered in "Show prices in"; empty = conversion not installed.</summary>
+    public List<Option> Currencies { get; set; } = new();
 
     /// <summary>Notices about inputs that were cleared or ignored, shown above the form.</summary>
     public List<string> Notices { get; set; } = new();

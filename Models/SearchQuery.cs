@@ -8,6 +8,8 @@ public class SearchQuery
 {
     public TariffMode Mode { get; set; } = TariffMode.Ground;
     public DateTime? ShipDate { get; set; }
+    /// <summary>Currency every price is shown in ("USD"); empty = as on the card. Converted with tariff.exchange_rate (script 59).</summary>
+    public string? ShowCurrency { get; set; }
 
     public string? Carrier { get; set; }
     public string? Service { get; set; }

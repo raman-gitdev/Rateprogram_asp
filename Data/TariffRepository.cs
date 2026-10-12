@@ -594,6 +594,19 @@ public sealed class TariffRepository
         var fxAmount = fuelFn ? "fx.amount" : "NULL::numeric";
         var fxNote = fuelFn ? "fx.note" : "NULL::text";
 
+        // A FUEL_RULE row can belong to one lane and service level (forwarder rates with fuel per kg per lane, script 58);
+        // the most specific row wins. Rows without lane_code / service_level still apply carrier-wide.
+        var fuelLevel = cols.Contains("service_level")
+            ? "AND (r.service_level IS NULL OR r.service_level IS NOT DISTINCT FROM p.service_level)"
+            : "";
+
+        // A surcharge or fuel row quoted in another currency than the freight is converted with the rate on the ship
+        // date (tariff.exchange_rate, script 59); without the table (or a rate) it stays unpriced, as before.
+        var fxInstalled = TableExists("tariff.exchange_rate");
+        string FxSql(string a) => fxInstalled
+            ? $"tariff.fx_rate({a}.currency_code::char(3), p.currency_code::char(3), @ShipDate::date)"
+            : "NULL::numeric";
+
         var distanceCols = hasDistance
             ? "p.distance_from_km, p.distance_to_km"
             : "NULL::numeric AS distance_from_km, NULL::numeric AS distance_to_km";
@@ -643,8 +656,12 @@ public sealed class TariffRepository
                     FROM (
                         SELECT s.charge_code,
                                (s.currency_code IS NOT NULL AND s.currency_code <> p.currency_code
-                                AND s.charge_basis NOT IN ({SqlList(PercentBases)})) AS other_ccy,
-                               {ChargeAmountSql("s", km)} AS amt
+                                AND s.charge_basis NOT IN ({SqlList(PercentBases)}) AND {FxSql("s")} IS NULL) AS other_ccy,
+                               CASE WHEN s.currency_code IS NOT NULL AND s.currency_code <> p.currency_code
+                                         AND s.charge_basis NOT IN ({SqlList(PercentBases)})
+                                    THEN round({ChargeAmountSql("s", km)} * {FxSql("s")}, 2)
+                                    ELSE {ChargeAmountSql("s", km)}
+                               END AS amt
                         FROM {t} s
                         WHERE s.record_type = 'SURCHARGE'
                           AND s.auto_apply
@@ -660,15 +677,17 @@ public sealed class TariffRepository
                     SELECT TRUE AS found,
                            CASE WHEN r.currency_code IS NOT NULL AND r.currency_code <> p.currency_code
                                      AND r.charge_basis NOT IN ({SqlList(PercentBases)})
-                                THEN NULL
+                                THEN round({ChargeAmountSql("r", km)} * {FxSql("r")}, 2)
                                 ELSE {ChargeAmountSql("r", km)}
                            END AS amt
                     FROM {t} r
                     WHERE r.record_type = 'FUEL_RULE'
                       AND r.carrier_code = p.carrier_code
                       AND (r.service_type IS NULL OR r.service_type = p.eff_service)
+                      AND (r.lane_code IS NULL OR r.lane_code = p.lane_code)
+                      {fuelLevel}
                       AND {ValiditySql("r")}
-                    ORDER BY (r.service_type IS NULL), r.valid_from DESC NULLS LAST
+                    ORDER BY (r.lane_code IS NULL), (r.service_type IS NULL), r.valid_from DESC NULLS LAST
                     LIMIT 1
                 ) fu ON TRUE
                 {fxJoin}
@@ -793,6 +812,42 @@ public sealed class TariffRepository
 
 
     /// <summary>
+    /// Exchange rates valid on a date as units per EUR (EUR = 1), from tariff.exchange_rate (script 59): the latest
+    /// rate on or before the date, else the earliest loaded. Empty when the table is not installed.
+    /// </summary>
+    public Dictionary<string, decimal> FxRates(DateTime date)
+    {
+        var rates = new Dictionary<string, decimal>(StringComparer.OrdinalIgnoreCase);
+        if (!TableExists("tariff.exchange_rate")) return rates;
+        using var conn = Open();
+        const string sql = """
+            SELECT c.currency_code::text AS code, tariff.fx_units_per_eur(c.currency_code, @D::date) AS rate
+            FROM tariff.currency c
+            WHERE tariff.fx_units_per_eur(c.currency_code, @D::date) IS NOT NULL
+            """;
+        foreach (var r in conn.Query(sql, new { D = date.Date }))
+            rates[((string)r.code).Trim()] = (decimal)r.rate;
+        return rates;
+    }
+
+    /// <summary>Currencies offered in "Show prices in": those with an exchange rate, USD and EUR first.</summary>
+    public List<Option> FxCurrencies()
+    {
+        if (!TableExists("tariff.exchange_rate")) return new();
+        using var conn = Open();
+        const string sql = """
+            SELECT c.currency_code::text AS code, c.currency_name AS name
+            FROM tariff.currency c
+            WHERE c.show_in_search
+              AND (c.currency_code = 'EUR' OR EXISTS (SELECT 1 FROM tariff.exchange_rate x WHERE x.currency_code = c.currency_code))
+            ORDER BY CASE c.currency_code WHEN 'USD' THEN 0 WHEN 'EUR' THEN 1 ELSE 2 END, c.currency_code
+            """;
+        return conn.Query(sql)
+            .Select(r => new Option(((string)r.code).Trim(), ((string)r.code).Trim() + " - " + (string)r.name))
+            .ToList();
+    }
+
+    /// <summary>
     /// Active accessorial charges (tariff.air_accessorial, named by tariff.charge_type) of the given carriers and
     /// services, in force on the ship date. Air only; empty when the table is not installed. Matching a charge to
     /// a result row's lane is done by the caller.
@@ -866,5 +921,159 @@ public sealed class TariffRepository
 
         using var conn = Open();
         return conn.Query<AdderGapRow>(sql, p).ToList();
+    }
+
+    // ------------------------------------------------- coverage (Loaded tariffs page)
+
+    /// <summary>Freight rows of one carrier between two countries, at the finest detail priced (POSTCODE / CITY / COUNTRY,
+    /// and AIRPORT for air). O and D are null for rows that have no country pair (they are not drawn on the map).
+    /// N = distinct postcode pairs (ground) or airport pairs (air); Rows = freight rows.</summary>
+    public sealed class CoverageLane
+    {
+        public string C { get; set; } = "";
+        public string? O { get; set; }
+        public string? D { get; set; }
+        public string Lvl { get; set; } = "";
+        public int N { get; set; }
+        public long Rows { get; set; }
+    }
+
+    /// <summary>Ground country pair priced postcode to postcode: lanes, origin / destination areas, carriers.</summary>
+    public sealed class CoveragePostcodePair
+    {
+        public string O { get; set; } = "";
+        public string D { get; set; } = "";
+        public int Lanes { get; set; }
+        public int FromAreas { get; set; }
+        public int ToAreas { get; set; }
+        public string Carriers { get; set; } = "";
+    }
+
+    /// <summary>What one carrier has loaded in one mode.</summary>
+    public sealed class LoadedCarrierRow
+    {
+        public string Mode { get; set; } = "";
+        public string CarrierCode { get; set; } = "";
+        public long RateRows { get; set; }
+        public long FreightRows { get; set; }
+        public string? Services { get; set; }
+        public string? Currencies { get; set; }
+        public DateTime? ValidFrom { get; set; }
+        public DateTime? ValidTo { get; set; }
+        public DateTime? LastLoaded { get; set; }
+        public long ZoneRows { get; set; }
+        public long ExtraRows { get; set; }
+        public long TransitRows { get; set; }
+    }
+
+    // Country pair of every freight row: its own countries, or, for zone rows, the countries of the zone chart rows with the
+    // same carrier and rate_group (scripts 30 / 35 / 44). Postcode-range zone rows count as postcode detail.
+    private static string CoverageRowsCte(TariffMode mode)
+    {
+        var air = mode == TariffMode.Air;
+        var t = TableName(mode);
+        var z = ZoneMasterTable(mode);
+        var pair = air
+            ? "CASE WHEN t.origin_airport IS NOT NULL AND t.dest_airport IS NOT NULL THEN t.origin_airport || '>' || t.dest_airport END"
+            : """
+              CASE WHEN t.origin_point_type = 'POSTCODE' AND t.dest_point_type = 'POSTCODE' THEN t.origin_postcode || '>' || t.dest_postcode
+                   WHEN z.origin_postcode_from IS NOT NULL OR z.dest_postcode_from IS NOT NULL
+                        THEN '~' || coalesce(z.origin_postcode_from, '') || '>~' || coalesce(z.dest_postcode_from, '') END
+              """;
+        var level = air
+            ? "WHEN t.origin_airport IS NOT NULL AND t.dest_airport IS NOT NULL THEN 4"
+            : "WHEN t.origin_point_type = 'POSTCODE' AND t.dest_point_type = 'POSTCODE' THEN 3";
+        return $"""
+            r AS (
+              SELECT t.tariff_id, t.carrier_code AS c,
+                     coalesce(t.origin_country_code, z.origin_country_code) AS o,
+                     coalesce(t.dest_country_code, z.dest_country_code) AS d,
+                     CASE {level}
+                          WHEN z.origin_postcode_from IS NOT NULL OR z.dest_postcode_from IS NOT NULL THEN 3
+                          WHEN t.origin_point_type = 'CITY' AND t.dest_point_type = 'CITY' THEN 2
+                          ELSE 1 END AS lv,
+                     {pair} AS pp
+              FROM {t} t
+              LEFT JOIN {z} z
+                     ON (t.origin_country_code IS NULL OR t.dest_country_code IS NULL OR 'ZONE' IN (t.origin_point_type, t.dest_point_type))
+                    AND z.carrier_id = t.carrier_id AND z.rate_group = t.rate_group
+                    AND (t.origin_country_code IS NULL OR z.origin_country_code = t.origin_country_code)
+                    AND (t.dest_country_code IS NULL OR z.dest_country_code = t.dest_country_code)
+              WHERE t.record_type = 'FREIGHT')
+            """;
+    }
+
+    /// <summary>Carrier x country pair coverage of one mode (rows without a pair come back with O / D null).</summary>
+    public List<CoverageLane> CoverageLanes(TariffMode mode)
+    {
+        var sql = $"""
+            WITH {CoverageRowsCte(mode)}
+            SELECT c AS "C",
+                   CASE WHEN o IS NOT NULL AND d IS NOT NULL THEN o END AS "O",
+                   CASE WHEN o IS NOT NULL AND d IS NOT NULL THEN d END AS "D",
+                   (ARRAY['COUNTRY', 'CITY', 'POSTCODE', 'AIRPORT'])[max(lv)] AS "Lvl",
+                   count(DISTINCT pp)::int AS "N",
+                   count(DISTINCT tariff_id) AS "Rows"
+            FROM r
+            GROUP BY 1, 2, 3
+            ORDER BY 2, 3, 1
+            """;
+        using var conn = Open();
+        return conn.Query<CoverageLane>(sql, commandTimeout: 120).ToList();
+    }
+
+    /// <summary>Ground country pairs priced postcode to postcode (all carriers together).</summary>
+    public List<CoveragePostcodePair> CoveragePostcodePairs()
+    {
+        var sql = $"""
+            WITH {CoverageRowsCte(TariffMode.Ground)}
+            SELECT o AS "O", d AS "D",
+                   count(DISTINCT c || ':' || pp)::int AS "Lanes",
+                   count(DISTINCT split_part(pp, '>', 1))::int AS "FromAreas",
+                   count(DISTINCT split_part(pp, '>', 2))::int AS "ToAreas",
+                   string_agg(DISTINCT c, ', ') AS "Carriers"
+            FROM r
+            WHERE o IS NOT NULL AND d IS NOT NULL AND pp IS NOT NULL
+            GROUP BY 1, 2
+            ORDER BY 1, 2
+            """;
+        using var conn = Open();
+        return conn.Query<CoveragePostcodePair>(sql, commandTimeout: 120).ToList();
+    }
+
+    /// <summary>One row per carrier and mode (air services: service_type, else service_level): rate rows, freight rows, services, currencies, validity, last load,
+    /// zone chart rows, extra-charge rows (air_accessorial) and transit rows (air_transit).</summary>
+    public List<LoadedCarrierRow> LoadedCarriers()
+    {
+        const string perTable = """
+            SELECT carrier_code,
+                   count(*) AS rate_rows,
+                   count(*) FILTER (WHERE record_type = 'FREIGHT') AS freight_rows,
+                   string_agg(DISTINCT {1}, ', ') FILTER (WHERE record_type = 'FREIGHT') AS services,
+                   string_agg(DISTINCT currency_code, ', ') AS currencies,
+                   min(valid_from) AS valid_from, max(valid_to) AS valid_to, max(created_at) AS last_loaded
+            FROM {0} GROUP BY carrier_code
+            """;
+        var sql = $"""
+            WITH g AS ({string.Format(perTable, "tariff.ground_tariff", "service_type")}),
+                 a AS ({string.Format(perTable, "tariff.air_tariff", "coalesce(service_type, service_level)")}),
+                 gz AS (SELECT carrier_code, count(*) AS n FROM tariff.ground_zone_master GROUP BY 1),
+                 az AS (SELECT carrier_code, count(*) AS n FROM tariff.air_zone_master GROUP BY 1),
+                 ac AS (SELECT carrier_code, count(*) AS n, max(created_at) AS last_loaded FROM tariff.air_accessorial GROUP BY 1),
+                 tr AS (SELECT carrier_code, count(*) AS n, max(created_at) AS last_loaded FROM tariff.air_transit GROUP BY 1)
+            SELECT 'Ground' AS "Mode", g.carrier_code AS "CarrierCode", g.rate_rows AS "RateRows", g.freight_rows AS "FreightRows",
+                   g.services AS "Services", g.currencies AS "Currencies", g.valid_from AS "ValidFrom", g.valid_to AS "ValidTo",
+                   g.last_loaded AS "LastLoaded", coalesce(gz.n, 0) AS "ZoneRows", 0::bigint AS "ExtraRows", 0::bigint AS "TransitRows"
+            FROM g LEFT JOIN gz USING (carrier_code)
+            UNION ALL
+            SELECT 'Air', coalesce(a.carrier_code, ac.carrier_code, tr.carrier_code), coalesce(a.rate_rows, 0), coalesce(a.freight_rows, 0),
+                   a.services, a.currencies, a.valid_from, a.valid_to,
+                   GREATEST(a.last_loaded, ac.last_loaded, tr.last_loaded),
+                   coalesce(az.n, 0), coalesce(ac.n, 0), coalesce(tr.n, 0)
+            FROM a FULL JOIN ac USING (carrier_code) FULL JOIN tr USING (carrier_code) LEFT JOIN az USING (carrier_code)
+            ORDER BY 1 DESC, 2
+            """;
+        using var conn = Open();
+        return conn.Query<LoadedCarrierRow>(sql, commandTimeout: 120).ToList();
     }
 }

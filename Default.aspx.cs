@@ -24,7 +24,8 @@ namespace TariffHub
 
         protected void Page_Load(object sender, EventArgs e)
         {
-            var query = IsPostBack ? ReadQuery() : new SearchQuery();
+            // First visit: prices in USD when exchange rates are loaded (script 59); the page then keeps the user's choice.
+            var query = IsPostBack ? ReadQuery() : new SearchQuery { ShowCurrency = "USD" };
             var service = new SearchService(Global.Repository, Global.Redactor, Global.Master);
             var vm = service.BuildForm(query);
 
@@ -57,6 +58,7 @@ namespace TariffHub
                 HeightCm = Dec(F(txtHeight)),
                 Pieces = int.TryParse(F(txtPieces), NumberStyles.Integer, Inv, out var n) ? n : null,
                 DistanceKm = Dec(F(txtDistance)),
+                ShowCurrency = Code(Request.Form["show_ccy"]),
             };
             foreach (var def in TariffRepository.Filters)
                 q.SetFilter(def.Key, Request.Form["f_" + def.Key]);
@@ -174,6 +176,26 @@ namespace TariffHub
             if (n == 0 && vm.AdderGaps.Count == 0)
                 sb.Append("<p class=\"muted\">No tariff matches these filters. Check the kind of place (city, postcode, region or province) and the ship date.</p>");
             return sb.ToString();
+        }
+
+        /// <summary>
+        /// "Show prices in": every price converted with the exchange rate valid on the ship date (tariff.exchange_rate,
+        /// script 59). "As on the card" keeps each carrier's own currency. Hidden until exchange rates are loaded.
+        /// </summary>
+        protected string CurrencyField()
+        {
+            if (_vm.Currencies.Count == 0) return "";
+            var selected = _vm.Query.ShowCurrency ?? "";
+            var sb = new StringBuilder("<label title=\"Every price is converted into this currency with the exchange rate valid on the ship date. "
+                + "Choose 'As on the card' to see each carrier's own currency.\">Show prices in <select id=\"show_ccy\" name=\"show_ccy\">");
+            sb.Append("<option value=\"\"").Append(selected == "" ? " selected" : "").Append(">As on the card</option>");
+            foreach (var o in _vm.Currencies)
+            {
+                sb.Append("<option value=\"").Append(HttpUtility.HtmlAttributeEncode(o.Value)).Append('"');
+                if (string.Equals(o.Value, selected, StringComparison.OrdinalIgnoreCase)) sb.Append(" selected");
+                sb.Append('>').Append(HttpUtility.HtmlEncode(o.Label)).Append("</option>");
+            }
+            return sb.Append("</select></label>").ToString();
         }
 
         /// <summary>One filter as a labelled select, or nothing when the column is not in this mode's table.</summary>
@@ -307,7 +329,11 @@ namespace TariffHub
                         ? " title=\"" + HttpUtility.HtmlAttributeEncode(r.FuelNote) + "\"" : "")
                   + ">— " + HttpUtility.HtmlEncode(r.NoTotalReason) + "</span>"
                 : "<span class=\"tot\" data-base=\"" + r.EstimatedTotal.Value.ToString("0.00", Inv) + "\" data-ccy=\""
-                  + HttpUtility.HtmlAttributeEncode(r.Currency) + "\">" + HttpUtility.HtmlEncode(Money(r.EstimatedTotal) + " " + r.Currency) + "</span>";
+                  + HttpUtility.HtmlAttributeEncode(r.Currency) + "\""
+                  + (r.OriginalCurrency is null ? "" : " title=\"" + HttpUtility.HtmlAttributeEncode(
+                        $"Converted from {r.OriginalCurrency} (1 {r.OriginalCurrency} = {r.FxRate?.ToString("0.######", Inv)} {r.Currency}, rate on the ship date)") + "\"")
+                  + ">" + HttpUtility.HtmlEncode(Money(r.EstimatedTotal) + " " + r.Currency) + "</span>"
+                  + (r.OriginalCurrency is null ? "" : " <span class=\"small muted\">(card " + HttpUtility.HtmlEncode(r.OriginalCurrency) + ")</span>");
 
         // ------------------------------------------------- row detail and accessorials
 
@@ -423,13 +449,15 @@ namespace TariffHub
                     sb.Append("<input type=\"checkbox\" disabled title=\"Cannot be priced\" />");
                 sb.Append("</td><td class=\"small\">").Append(a.ChargeSide == "ORIGIN" ? "Origin" : a.ChargeSide == "DESTINATION" ? "Destination" : E(a.ChargeSide))
                   .Append("</td><td>").Append(E(a.ChargeName))
-                  .Append("</td><td class=\"num\">").Append(E(Rate(a.Rate))).Append(" <span class=\"small muted\">").Append(E(BasisLabel(a.ChargeBasis))).Append("</span>")
+                  .Append("</td><td class=\"num\">").Append(E(Rate(a.Rate) + (a.QuotedCurrency is null ? "" : " " + a.QuotedCurrency))).Append(" <span class=\"small muted\">").Append(E(BasisLabel(a.ChargeBasis))).Append("</span>")
                   .Append("</td><td class=\"num\">").Append(a.MinCharge is null ? "" : E(Money(a.MinCharge)))
                   .Append("</td><td class=\"num\">").Append(a.MaxCharge is null ? "" : E(Money(a.MaxCharge)))
                   .Append("</td><td class=\"num\">");
                 if (a.Amount is { } v)
                 {
                     sb.Append(E(Money(v) + " " + a.Currency));
+                    if (a.QuotedCurrency is not null && a.QuotedAmount is { } qa)
+                        sb.Append(" <span class=\"small muted\">(from ").Append(E(Money(qa) + " " + a.QuotedCurrency)).Append(")</span>");
                     if (a.LimitApplied is not null) sb.Append(" <span class=\"tag\">").Append(E(a.LimitApplied)).Append(" applied</span>");
                 }
                 else sb.Append("<span class=\"small muted\">— ").Append(E(a.NotPricedReason)).Append("</span>");

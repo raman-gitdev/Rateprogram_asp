@@ -15,6 +15,7 @@
         <fieldset>
             <legend>Shipment</legend>
             <label>Ship date <asp:TextBox ID="txtShipDate" runat="server" TextMode="Date" /></label>
+            <%= CurrencyField() %>
             <label title="Which tariff table is searched. Ground and Air are separate tables with different columns, so changing this reloads every filter below.">Mode (transport)
                 <asp:DropDownList ID="ddlMode" runat="server" AutoPostBack="true">
                     <asp:ListItem Value="Ground" Text="Ground" />
@@ -148,7 +149,8 @@
             </table>
         </div>
         <p class="small muted">Rows are ordered by currency, then service, cheapest first; a heavier line marks where the service changes.
-            Totals are never compared across currencies. Accessorials are not in the total until you tick them. Hover a lane code for its validity and source.</p>
+            Prices are shown in the currency chosen under Shipment (converted with the exchange rate on the ship date; hover a total for the rate).
+            With "As on the card" each carrier keeps its own currency and totals are never compared across currencies. Accessorials are not in the total until you tick them. Hover a lane code for its validity and source.</p>
     </asp:PlaceHolder>
     </ContentTemplate>
     </asp:UpdatePanel>

@@ -37,6 +37,7 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
         {
             var cols = repo.Columns(q.Mode);
             var modeName = q.Mode.ToString().ToLowerInvariant();
+            vm.Currencies = repo.FxCurrencies();
 
             // Carrier first: every other list is scoped to it.
             var all = repo.FilterOptions(q.Mode, null);
@@ -288,8 +289,10 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
             var dest = Resolve(q.DestCountry, q.DestPlaceType, q.DestPlace, q.DestPostcode, q.DestAirport);
             var (rows, truncated) = repo.Search(q, origin, dest);
             vm.WithheldCarrierCodes += rows.RemoveAll(r => !TariffRepository.IsAnonymisedCode(r.CarrierCode));
+            var fx = repo.FxRates(q.ShipDate ?? DateTime.Today);
             // Before masking: the lane key must use the stored values.
-            AttachAccessorials(q, rows);
+            AttachAccessorials(q, rows, fx);
+            ConvertForDisplay(vm, q, rows, fx);
             var withheld = 0;
             foreach (var r in rows)
             {
@@ -335,7 +338,7 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
     /// Gives every row the accessorial charges of its carrier, service and lane (all lane columns equal, empty = empty),
     /// priced for this shipment. They are listed, not added: the user picks which apply.
     /// </summary>
-    private void AttachAccessorials(SearchQuery q, List<SearchResultRow> rows)
+    private void AttachAccessorials(SearchQuery q, List<SearchResultRow> rows, Dictionary<string, decimal> fx)
     {
         if (rows.Count == 0) return;
         var all = repo.Accessorials(q.Mode, rows.Select(r => r.CarrierCode),
@@ -359,7 +362,7 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
             r.Accessorials = byLane[key].Concat(carrierWide[r.CarrierCode.Trim().ToUpperInvariant()]
                                                     .Where(a => MovementMatches(a.AppliesToMovement, r.LaneType)))
                                         .Where(a => Applies(a, r.ServiceType, rules))
-                                        .Select(a => PriceAccessorial(a, r, q)).ToList();
+                                        .Select(a => PriceAccessorial(a, r, q, fx)).ToList();
         }
     }
 
@@ -402,20 +405,26 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
         string.Join("|", parts.Select(x => x?.Trim().ToUpperInvariant() ?? ""));
 
     /// <summary>
-    /// One charge for one row: rate by its basis, then held between min and max. Null amount (with a reason)
-    /// when an input is missing or the currency differs from the freight - never zero.
+    /// One charge for one row: rate by its basis, then held between min and max (in the charge's own currency),
+    /// then converted into the freight currency when they differ (rate on the ship date, script 59). Null amount
+    /// (with a reason) when an input or the exchange rate is missing - never zero.
     /// </summary>
-    private static AccessorialCharge PriceAccessorial(AccessorialRow a, SearchResultRow r, SearchQuery q)
+    private static AccessorialCharge PriceAccessorial(AccessorialRow a, SearchResultRow r, SearchQuery q, Dictionary<string, decimal> fx)
     {
         var c = new AccessorialCharge
         {
             ChargeCode = a.ChargeCode, ChargeName = a.ChargeName, ChargeSide = a.ChargeSide, ChargeBasis = a.ChargeBasis,
             Rate = a.RateValue, MinCharge = a.MinCharge, MaxCharge = a.MaxCharge, Currency = a.CurrencyCode,
         };
+        decimal? toFreight = 1m;
         if (a.ChargeBasis != "PCT_OF_FREIGHT" && !string.Equals(a.CurrencyCode, r.Currency, StringComparison.OrdinalIgnoreCase))
         {
-            c.NotPricedReason = $"quoted in {a.CurrencyCode}, freight in {r.Currency}";
-            return c;
+            toFreight = Fx(fx, a.CurrencyCode, r.Currency);
+            if (toFreight is null)
+            {
+                c.NotPricedReason = $"quoted in {a.CurrencyCode}, freight in {r.Currency}, no exchange rate";
+                return c;
+            }
         }
 
         decimal? raw = a.ChargeBasis switch
@@ -442,7 +451,68 @@ public sealed class SearchService(TariffRepository repo, Redactor redactor, Mast
         if (a.MinCharge is { } min && amount < min) { amount = min; c.LimitApplied = "min"; }
         if (a.MaxCharge is { } max && amount > max) { amount = max; c.LimitApplied = "max"; }
         c.Amount = Math.Round(amount, 2, MidpointRounding.AwayFromZero);
+        if (toFreight != 1m && r.Currency is not null)
+        {
+            c.QuotedCurrency = a.CurrencyCode;
+            c.QuotedAmount = c.Amount;
+            c.Amount = Math.Round(amount * toFreight!.Value, 2, MidpointRounding.AwayFromZero);
+            c.Currency = r.Currency;
+        }
         return c;
+    }
+
+    /// <summary>Multiplier from one currency to another with the rates of the ship date (units per EUR); null when unknown.</summary>
+    private static decimal? Fx(Dictionary<string, decimal> fx, string? from, string? to)
+    {
+        if (string.IsNullOrWhiteSpace(from) || string.IsNullOrWhiteSpace(to)) return null;
+        if (string.Equals(from!.Trim(), to!.Trim(), StringComparison.OrdinalIgnoreCase)) return 1m;
+        return fx.TryGetValue(from.Trim(), out var a) && fx.TryGetValue(to.Trim(), out var b) ? b / a : null;
+    }
+
+    /// <summary>
+    /// "Show prices in": converts every money value of a row (and its priced accessorials) into the chosen currency
+    /// with the rate valid on the ship date, keeps the card currency for the tooltip, and re-sorts so one list runs
+    /// cheapest first across carriers. Rows whose currency has no rate stay as they are (and are reported).
+    /// </summary>
+    private static void ConvertForDisplay(SearchViewModel vm, SearchQuery q, List<SearchResultRow> rows, Dictionary<string, decimal> fx)
+    {
+        var show = q.ShowCurrency?.Trim().ToUpperInvariant();
+        if (string.IsNullOrEmpty(show) || rows.Count == 0) return;
+        var missing = new SortedSet<string>(StringComparer.Ordinal);
+        foreach (var r in rows)
+        {
+            if (r.Currency is null || string.Equals(r.Currency.Trim(), show, StringComparison.OrdinalIgnoreCase)) continue;
+            if (Fx(fx, r.Currency, show) is not { } f) { missing.Add(r.Currency.Trim()); continue; }
+            decimal? M(decimal? v) => v is { } x ? Math.Round(x * f, 2, MidpointRounding.AwayFromZero) : null;
+            r.OriginalCurrency = r.Currency.Trim();
+            r.FxRate = f;
+            r.Rate = r.Rate is { } rate ? Math.Round(rate * f, 4, MidpointRounding.AwayFromZero) : null;
+            r.MinCharge = M(r.MinCharge);
+            r.RawFreight = M(r.RawFreight);
+            r.BaseFreight = M(r.BaseFreight);
+            r.SurchargeAmount = M(r.SurchargeAmount);
+            r.FuelAmount = M(r.FuelAmount);
+            r.EstimatedTotal = M(r.EstimatedTotal);
+            foreach (var a in r.Accessorials.Where(a => a.Amount is not null))
+            {
+                if (a.QuotedCurrency is null) { a.QuotedCurrency = a.Currency; a.QuotedAmount = a.Amount; }
+                a.Amount = M(a.Amount);
+                a.Currency = show!;
+            }
+            r.Currency = show;
+        }
+        if (missing.Count > 0)
+            vm.Notices.Add($"No exchange rate for {string.Join(", ", missing)}: those rows are shown in their own currency.");
+        var sorted = rows.Select((r, i) => (r, i))
+            .OrderBy(x => x.r.Currency, StringComparer.Ordinal)
+            .ThenBy(x => x.r.ServiceType is null).ThenBy(x => x.r.ServiceType, StringComparer.Ordinal)
+            .ThenBy(x => x.r.ServiceLevel is null).ThenBy(x => x.r.ServiceLevel, StringComparer.Ordinal)
+            .ThenBy(x => x.r.EstimatedTotal is null).ThenBy(x => x.r.EstimatedTotal)
+            .ThenBy(x => x.r.BaseFreight is null).ThenBy(x => x.r.BaseFreight)
+            .ThenBy(x => x.i)
+            .Select(x => x.r).ToList();
+        rows.Clear();
+        rows.AddRange(sorted);
     }
 
     /// <summary>

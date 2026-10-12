@@ -68,6 +68,13 @@
     <Compile Include="Default.aspx.designer.cs">
       <DependentUpon>Default.aspx</DependentUpon>
     </Compile>
+    <Compile Include="Loaded.aspx.cs">
+      <DependentUpon>Loaded.aspx</DependentUpon>
+      <SubType>ASPXCodeBehind</SubType>
+    </Compile>
+    <Compile Include="Loaded.aspx.designer.cs">
+      <DependentUpon>Loaded.aspx</DependentUpon>
+    </Compile>
     <Compile Include="Data\TariffRepository.cs" />
     <Compile Include="Logic\SearchService.cs" />
     <Compile Include="Logic\Polyfills.cs" />
@@ -83,9 +90,13 @@
     <Content Include="Global.asax" />
     <Content Include="Site.Master" />
     <Content Include="Default.aspx" />
+    <Content Include="Loaded.aspx" />
     <Content Include="Web.config" />
     <Content Include="favicon.ico" />
     <Content Include="Content\site.css" />
+    <Content Include="Content\coverage\d3.min.js" />
+    <Content Include="Content\coverage\topojson-client.min.js" />
+    <Content Include="Content\coverage\world.js" />
     <Content Include="db\master\data\carriers\B1C04_service_areas.json" />
     <Content Include="db\master\data\carriers\B1C06.json" />
     <Content Include="db\master\data\carrier_country_codes.json" />
