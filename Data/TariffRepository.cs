@@ -143,8 +143,9 @@ public sealed class TariffRepository
 
     // ---------------------------------------------------------- anonymisation
 
-    /// <summary>Client letter + digit, then the carrier part, e.g. A1C01.</summary>
-    private static readonly Regex AnonymisedCode = new("^[A-Z][0-9][A-Z0-9]+$", RegexOptions.Compiled);
+    /// <summary>Client prefix (1-4 letters then a digit), then the carrier part, e.g. A1C01 or PTRC19.
+    /// Still blocks real names: a code is all upper-case, has no spaces and contains a digit.</summary>
+    private static readonly Regex AnonymisedCode = new("^[A-Z]{1,4}[0-9][A-Z0-9]*$", RegexOptions.Compiled);
 
     public static bool IsAnonymisedCode(string? code) => code is not null && AnonymisedCode.IsMatch(code);
 
@@ -670,6 +671,14 @@ public sealed class TariffRepository
                           AND (s.lane_type IS NULL OR s.lane_type = p.lane_type)
                           AND (s.lane_code IS NULL OR s.lane_code = p.lane_code)
                           AND (s.applies_to_cargo IS NULL OR s.applies_to_cargo = p.cargo_category)
+                          -- a surcharge can be scoped to a destination country (e.g. M1C22 maut: 6.2% to DE/CH/AT/CZ/HU/PL/SE)
+                          AND (s.dest_country_code IS NULL OR s.dest_country_code = p.dest_country_code)
+                          -- and to the rate tag, so CONTRACT surcharges apply to CONTRACT rates and SPOT to SPOT, and an
+                          -- all-inclusive rate (rate_tag not CONTRACT) takes no CONTRACT surcharge (e.g. M1C22 FR57 -> ES/PT)
+                          AND (s.rate_tag IS NULL OR s.rate_tag = p.rate_tag)
+                          -- a surcharge can be scoped to a weight range (e.g. PTRC19 toll: 4.2% <=2500 kg, 8% above)
+                          AND (s.weight_from_kg IS NULL OR p.chargeable_kg IS NULL OR p.chargeable_kg > s.weight_from_kg)
+                          AND (s.weight_to_kg   IS NULL OR p.chargeable_kg IS NULL OR p.chargeable_kg <= s.weight_to_kg)
                           AND {ValiditySql("s")}
                     ) x
                 ) sc ON TRUE
@@ -1075,5 +1084,206 @@ public sealed class TariffRepository
             """;
         using var conn = Open();
         return conn.Query<LoadedCarrierRow>(sql, commandTimeout: 120).ToList();
+    }
+
+    // ----------------------------------------------------------------- ocean
+    // Ocean is a separate transport mode with its own tables (script 70). FCL is priced per container
+    // (equipment type), LCL by weight/measure. The search drills country -> port (-> city), on both ends.
+
+    public bool OceanInstalled() => TableExists("tariff.ocean_tariff");
+
+    /// <summary>Carrier codes that have an ocean tariff.</summary>
+    public List<string> OceanCarriers()
+    {
+        if (!OceanInstalled()) return new();
+        using var conn = Open();
+        return conn.Query<string>("SELECT DISTINCT carrier_code FROM tariff.ocean_tariff ORDER BY 1").ToList();
+    }
+
+    /// <summary>The countries served at one end (origin or destination) for a service, with the carrier optional.</summary>
+    public List<string> OceanCountries(bool origin, string service, string? carrier)
+    {
+        if (!OceanInstalled()) return new();
+        var col = origin ? "origin_country_code" : "dest_country_code";
+        var sql = $"""
+            SELECT DISTINCT {col} FROM tariff.ocean_tariff
+            WHERE service = @Service AND {col} IS NOT NULL
+              AND (@Carrier IS NULL OR carrier_code = @Carrier)
+            ORDER BY 1
+            """;
+        using var conn = Open();
+        return conn.Query<string>(sql, new { Service = service, Carrier = carrier }).ToList();
+    }
+
+    /// <summary>The ports of a country at one end, each with the number of pickup / delivery cities that feed it.</summary>
+    public List<OceanPort> OceanPorts(bool origin, string service, string? carrier, string country)
+    {
+        if (!OceanInstalled()) return new();
+        var pcol = origin ? "origin_port_code" : "dest_port_code";
+        var ccol = origin ? "origin_country_code" : "dest_country_code";
+        var citycol = origin ? "origin_city" : "dest_city";
+        var sql = $"""
+            SELECT {pcol} AS "Code", count(DISTINCT {citycol}) AS "CityCount"
+            FROM tariff.ocean_tariff
+            WHERE service = @Service AND {ccol} = @Country AND {pcol} IS NOT NULL
+              AND (@Carrier IS NULL OR carrier_code = @Carrier)
+            GROUP BY {pcol} ORDER BY {pcol}
+            """;
+        using var conn = Open();
+        return conn.Query<OceanPort>(sql, new { Service = service, Carrier = carrier, Country = country }).ToList();
+    }
+
+    /// <summary>The cities that feed one port at one end (so a port used by several can be narrowed).</summary>
+    public List<string> OceanCities(bool origin, string service, string? carrier, string country, string port)
+    {
+        if (!OceanInstalled()) return new();
+        var pcol = origin ? "origin_port_code" : "dest_port_code";
+        var ccol = origin ? "origin_country_code" : "dest_country_code";
+        var citycol = origin ? "origin_city" : "dest_city";
+        var sql = $"""
+            SELECT DISTINCT {citycol} FROM tariff.ocean_tariff
+            WHERE service = @Service AND {ccol} = @Country AND {pcol} = @Port AND {citycol} IS NOT NULL
+              AND (@Carrier IS NULL OR carrier_code = @Carrier)
+            ORDER BY 1
+            """;
+        using var conn = Open();
+        return conn.Query<string>(sql, new { Service = service, Carrier = carrier, Country = country, Port = port }).ToList();
+    }
+
+    /// <summary>The equipment types priced under FCL (20GP, 40HC, out-of-gauge flat racks ...), in a sensible order.</summary>
+    public List<string> OceanEquipment()
+    {
+        if (!OceanInstalled()) return new();
+        const string sql = """
+            SELECT DISTINCT equipment_type FROM tariff.ocean_tariff
+            WHERE service = 'FCL' AND equipment_type IS NOT NULL
+            ORDER BY equipment_type
+            """;
+        using var conn = Open();
+        return conn.Query<string>(sql).ToList();
+    }
+
+    /// <summary>
+    /// Every charge line of the lanes matching the search, for the default trailer (STANDARD, non air-ride).
+    /// A port chosen without a city returns each city-lane under that port pair (prices can differ by city).
+    /// Capped so a wide country-to-country search stays quick.
+    /// </summary>
+    public List<OceanChargeRow> OceanCharges(OceanQuery q, int maxLanes)
+    {
+        if (!OceanInstalled()) return new();
+        var sql = $"""
+            WITH lanes AS (
+                SELECT DISTINCT origin_city, origin_port_code, dest_city, dest_port_code
+                FROM tariff.ocean_tariff
+                WHERE service = @Service AND routing = @Routing
+                  AND (@Carrier IS NULL OR carrier_code = @Carrier)
+                  AND (@OCountry IS NULL OR origin_country_code = @OCountry)
+                  AND (@OPort    IS NULL OR origin_port_code   = @OPort)
+                  AND (@OCity    IS NULL OR origin_city        = @OCity)
+                  AND (@DCountry IS NULL OR dest_country_code  = @DCountry)
+                  AND (@DPort    IS NULL OR dest_port_code     = @DPort)
+                  AND (@DCity    IS NULL OR dest_city          = @DCity)
+                  AND (@Equip    IS NULL OR equipment_type     = @Equip)
+                ORDER BY origin_city, origin_port_code, dest_city, dest_port_code
+                LIMIT @MaxLanes
+            )
+            SELECT t.origin_city AS "OriginCity", t.origin_port_code AS "OriginPort",
+                   t.dest_city AS "DestCity", t.dest_port_code AS "DestPort",
+                   t.leg AS "Leg", t.charge_code AS "ChargeCode", t.charge_name AS "ChargeName",
+                   t.charge_basis AS "ChargeBasis", t.rate_value AS "RateValue",
+                   t.min_charge AS "MinCharge", t.max_charge AS "MaxCharge"
+            FROM tariff.ocean_tariff t
+            JOIN lanes l ON l.origin_city = t.origin_city AND l.origin_port_code = t.origin_port_code
+                        AND l.dest_city = t.dest_city AND l.dest_port_code = t.dest_port_code
+            WHERE t.service = @Service AND t.routing = @Routing
+              AND (@Carrier IS NULL OR t.carrier_code = @Carrier)
+              AND (@Equip IS NULL OR t.equipment_type = @Equip)
+              AND (t.trailer_variant IS NULL OR t.trailer_variant = 'STANDARD')
+              AND (t.air_ride IS NULL OR t.air_ride = FALSE)
+            ORDER BY t.origin_city, t.origin_port_code, t.dest_city, t.dest_port_code,
+                     CASE t.leg WHEN 'ORIGIN' THEN 1 WHEN 'OCEAN' THEN 2 ELSE 3 END, t.charge_code
+            """;
+        var p = new
+        {
+            q.Service, q.Routing, Carrier = q.Carrier,
+            OCountry = q.OriginCountry, OPort = q.OriginPort, OCity = q.OriginCity,
+            DCountry = q.DestCountry, DPort = q.DestPort, DCity = q.DestCity,
+            Equip = q.IsFcl ? q.Equipment : null, MaxLanes = maxLanes,
+        };
+        using var conn = Open();
+        return conn.Query<OceanChargeRow>(sql, p, commandTimeout: 60).ToList();
+    }
+
+    /// <summary>Carrier and currency of the matching ocean lanes (one carrier per code); empty when nothing matches.</summary>
+    public (string Carrier, string Currency)? OceanCarrierOf(OceanQuery q)
+    {
+        if (!OceanInstalled()) return null;
+        const string sql = """
+            SELECT carrier_code AS "Carrier", currency_code AS "Currency" FROM tariff.ocean_tariff
+            WHERE service = @Service AND routing = @Routing
+              AND (@Carrier IS NULL OR carrier_code = @Carrier)
+              AND (@OPort IS NULL OR origin_port_code = @OPort)
+              AND (@DPort IS NULL OR dest_port_code = @DPort)
+            LIMIT 1
+            """;
+        using var conn = Open();
+        var r = conn.QueryFirstOrDefault<(string Carrier, string Currency)>(sql,
+            new { q.Service, q.Routing, Carrier = q.Carrier, OPort = q.OriginPort, DPort = q.DestPort });
+        return r.Carrier is null ? null : r;
+    }
+
+    /// <summary>The month's Ocean Rate Increase adder for a POL -> POD x equipment, valid on the ship date; null when none.</summary>
+    public decimal? OceanOri(string originPort, string destPort, string equipment, DateTime shipDate)
+    {
+        if (!OceanInstalled()) return null;
+        const string sql = """
+            SELECT adder FROM tariff.ocean_ori
+            WHERE origin_port_code = @OPort AND dest_port_code = @DPort AND equipment_type = @Equip
+              AND @Ship BETWEEN valid_from AND COALESCE(valid_to, DATE '9999-12-31')
+            ORDER BY valid_from DESC LIMIT 1
+            """;
+        using var conn = Open();
+        return conn.QueryFirstOrDefault<decimal?>(sql,
+            new { OPort = originPort, DPort = destPort, Equip = equipment, Ship = shipDate.Date });
+    }
+
+    /// <summary>Carrier x country-pair ocean coverage: level PORT, N = distinct port pairs, Rows = charge-line rows.</summary>
+    public List<CoverageLane> OceanCoverage()
+    {
+        if (!OceanInstalled()) return new();
+        const string sql = """
+            SELECT carrier_code AS "C", origin_country_code AS "O", dest_country_code AS "D",
+                   'PORT' AS "Lvl",
+                   count(DISTINCT origin_port_code || '>' || dest_port_code)::int AS "N",
+                   count(*) AS "Rows"
+            FROM tariff.ocean_tariff
+            WHERE origin_country_code IS NOT NULL AND dest_country_code IS NOT NULL
+            GROUP BY 1, 2, 3 ORDER BY 2, 3, 1
+            """;
+        using var conn = Open();
+        return conn.Query<CoverageLane>(sql, commandTimeout: 120).ToList();
+    }
+
+    /// <summary>Per-carrier ocean summary for the Loaded tariffs page (reads live).</summary>
+    public List<OceanLoadedRow> OceanLoaded()
+    {
+        if (!OceanInstalled()) return new();
+        const string sql = """
+            SELECT carrier_code AS "CarrierCode",
+                   string_agg(DISTINCT currency_code, ', ') AS "Currencies",
+                   count(*) FILTER (WHERE service = 'FCL') AS "FclRows",
+                   count(*) FILTER (WHERE service = 'LCL') AS "LclRows",
+                   count(DISTINCT CASE WHEN service='FCL' THEN origin_port_code||'>'||dest_port_code||'/'||equipment_type END) AS "FclLanes",
+                   count(DISTINCT CASE WHEN service='LCL' THEN origin_port_code||'>'||dest_port_code END) AS "LclLanes",
+                   count(DISTINCT origin_country_code) AS "OriginCountries",
+                   count(DISTINCT dest_country_code) AS "DestCountries",
+                   (SELECT count(*) FROM tariff.ocean_ori o WHERE o.carrier_code = t.carrier_code) AS "OriRows",
+                   (SELECT count(*) FROM tariff.ocean_accessorial a WHERE a.carrier_code = t.carrier_code) AS "AccessorialRows",
+                   min(valid_from) AS "ValidFrom", max(valid_to) AS "ValidTo", max(created_at) AS "LastLoaded"
+            FROM tariff.ocean_tariff t
+            GROUP BY carrier_code ORDER BY carrier_code
+            """;
+        using var conn = Open();
+        return conn.Query<OceanLoadedRow>(sql, commandTimeout: 120).ToList();
     }
 }

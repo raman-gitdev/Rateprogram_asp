@@ -15,22 +15,27 @@
         <fieldset>
             <legend>Shipment</legend>
             <label>Ship date <asp:TextBox ID="txtShipDate" runat="server" TextMode="Date" /></label>
-            <%= CurrencyField() %>
-            <label title="Which tariff table is searched. Ground and Air are separate tables with different columns, so changing this reloads every filter below.">Mode (transport)
+            <label title="Which tariff is searched. Ground, Air and Ocean are separate tables with different columns, so changing this reloads the form below.">Mode (transport)
                 <asp:DropDownList ID="ddlMode" runat="server" AutoPostBack="true">
                     <asp:ListItem Value="Ground" Text="Ground" />
                     <asp:ListItem Value="Air" Text="Air" />
+                    <asp:ListItem Value="Ocean" Text="Ocean" />
                 </asp:DropDownList>
             </label>
-            <label>Carrier <asp:DropDownList ID="ddlCarrier" runat="server" AutoPostBack="true" /></label>
-            <%= Filter("service", "All services", "The carrier's service: LTL, full truck, container, oversize, dedicated truck, surface.") %>
-            <%= Filter("load", "Any load type", "How the goods move: parcel, part load (LTL), full truck (FTL), container (FCL) or out of gauge.") %>
-            <%= Filter("level", "All levels", "Air service level (SL0 fastest to SL3 slowest), as priced by the carrier.") %>
-            <%= Filter("piece", "Any piece type", "Parcel carriers price a letter, a document, a pak, a package and a hundredweight consignment differently off the same lane.") %>
-            <%= Filter("delivery", "Any address type", "Some carriers charge more to a residential address than a commercial one on the identical lane.") %>
-            <%= Filter("lanetype", "Any", "Route type as written in the tariff file.") %>
-            <%= Filter("ratetag", "Contract and spot", null) %>
+            <asp:PlaceHolder ID="phGaFilters" runat="server">
+                <%= CurrencyField() %>
+                <label>Carrier <asp:DropDownList ID="ddlCarrier" runat="server" AutoPostBack="true" /></label>
+                <%= Filter("service", "All services", "The carrier's service: LTL, full truck, container, oversize, dedicated truck, surface.") %>
+                <%= Filter("load", "Any load type", "How the goods move: parcel, part load (LTL), full truck (FTL), container (FCL) or out of gauge.") %>
+                <%= Filter("level", "All levels", "Air service level (SL0 fastest to SL3 slowest), as priced by the carrier.") %>
+                <%= Filter("piece", "Any piece type", "Parcel carriers price a letter, a document, a pak, a package and a hundredweight consignment differently off the same lane.") %>
+                <%= Filter("delivery", "Any address type", "Some carriers charge more to a residential address than a commercial one on the identical lane.") %>
+                <%= Filter("lanetype", "Any", "Route type as written in the tariff file.") %>
+                <%= Filter("ratetag", "Contract and spot", null) %>
+            </asp:PlaceHolder>
+            <asp:Literal ID="litOceanShip" runat="server" />
         </fieldset>
+        <asp:PlaceHolder ID="phGaForm" runat="server">
 
         <fieldset>
             <legend>From</legend>
@@ -93,6 +98,8 @@
                 <asp:Literal ID="litDistanceNote" runat="server" />
             </fieldset>
         </asp:PlaceHolder>
+        </asp:PlaceHolder>
+        <asp:Literal ID="litOcean" runat="server" />
 
         <div class="actions">
             <asp:Button ID="btnSearch" runat="server" Text="Search" CssClass="primary" />
@@ -100,6 +107,7 @@
         </div>
     </div>
 
+    <asp:PlaceHolder ID="phGaResults" runat="server">
     <asp:Repeater ID="rptGaps" runat="server" ItemType="TariffHub.Models.AdderGapRow">
         <ItemTemplate>
             <div class="info">
@@ -152,6 +160,8 @@
             Prices are shown in the currency chosen under Shipment (converted with the exchange rate on the ship date; hover a total for the rate).
             With "As on the card" each carrier keeps its own currency and totals are never compared across currencies. Accessorials are not in the total until you tick them. Hover a lane code for its validity and source.</p>
     </asp:PlaceHolder>
+    </asp:PlaceHolder>
+    <asp:Literal ID="litOceanResults" runat="server" />
     </ContentTemplate>
     </asp:UpdatePanel>
 

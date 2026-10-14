@@ -6,6 +6,7 @@ using System.Text;
 using System.Web;
 using System.Web.UI;
 using System.Web.UI.WebControls;
+using System.Web.Script.Serialization;
 using TariffHub.Data;
 using TariffHub.Logic;
 using TariffHub.Models;
@@ -24,6 +25,18 @@ namespace TariffHub
 
         protected void Page_Load(object sender, EventArgs e)
         {
+            // Mode is read first: Ocean is a separate table and form; Ground / Air share the pipeline below.
+            var mode = IsPostBack && Enum.TryParse<TariffMode>(Request.Form[ddlMode.UniqueID], out var m) ? m : TariffMode.Ground;
+            ddlMode.SelectedValue = mode.ToString();
+            var ocean = mode == TariffMode.Ocean;
+            phGaFilters.Visible = phGaForm.Visible = phGaResults.Visible = !ocean;
+
+            if (ocean) LoadOcean();
+            else LoadGroundAir();
+        }
+
+        private void LoadGroundAir()
+        {
             // First visit: prices in USD when exchange rates are loaded (script 59); the page then keeps the user's choice.
             var query = IsPostBack ? ReadQuery() : new SearchQuery { ShowCurrency = "USD" };
             var service = new SearchService(Global.Repository, Global.Redactor, Global.Master);
@@ -31,10 +44,61 @@ namespace TariffHub
 
             // Only the Search button posts its own name; AutoPostBack from mode, carrier and country does not.
             if (IsPostBack && Request.Form[btnSearch.UniqueID] is not null)
+            {
                 service.Search(vm);
+                LogGroundAir(vm);
+            }
 
             Bind(vm);
+            litOceanShip.Text = litOcean.Text = litOceanResults.Text = "";
         }
+
+        /// <summary>Records a ground / air search in the usage log (best-effort; never blocks the page).</summary>
+        private void LogGroundAir(SearchViewModel vm)
+        {
+            var q = vm.Query;
+            var filters = new Dictionary<string, string?>
+            {
+                ["mode"] = q.Mode.ToString(), ["carrier"] = q.Carrier,
+                ["originCountry"] = q.OriginCountry, ["originPlaceType"] = q.OriginPlaceType, ["originPlace"] = q.OriginPlace,
+                ["originPostcode"] = q.OriginPostcode, ["originAirport"] = q.OriginAirport,
+                ["destCountry"] = q.DestCountry, ["destPlaceType"] = q.DestPlaceType, ["destPlace"] = q.DestPlace,
+                ["destPostcode"] = q.DestPostcode, ["destAirport"] = q.DestAirport,
+                ["service"] = q.Service, ["serviceLevel"] = q.ServiceLevel, ["pieceType"] = q.PieceType,
+                ["deliveryAddress"] = q.DeliveryAddress, ["loadType"] = q.LoadType, ["laneType"] = q.LaneType,
+                ["rateTag"] = q.RateTag, ["cargoType"] = q.CargoType, ["temperature"] = q.Temperature,
+                ["equipment"] = q.Equipment, ["oversizeClass"] = q.OversizeClass,
+                ["weightKg"] = Num(q.WeightKg), ["volumeCbm"] = Num(q.EffectiveVolumeCbm),
+                ["pieces"] = q.Pieces?.ToString(Inv), ["distanceKm"] = Num(q.DistanceKm), ["showCurrency"] = q.ShowCurrency,
+            };
+            Global.Audit.Log(new SearchAudit
+            {
+                ClientIp = ClientIp(), ForwardedFor = Request.Headers["X-Forwarded-For"], UserAgent = Trunc(Request.UserAgent, 400),
+                Page = "Search", Action = "SEARCH", Mode = q.Mode.ToString(), Carrier = q.Carrier,
+                OriginCountry = q.OriginCountry, OriginPlace = Trunc(q.OriginPlace ?? q.OriginAirport ?? q.OriginPostcode, 120),
+                DestCountry = q.DestCountry, DestPlace = Trunc(q.DestPlace ?? q.DestAirport ?? q.DestPostcode, 120),
+                Service = q.Service, ShipDate = q.ShipDate, WeightKg = q.WeightKg, VolumeCbm = q.EffectiveVolumeCbm,
+                ShowCurrency = q.ShowCurrency, Filters = Json(filters),
+                ResultCount = vm.Searched ? vm.Results.Count : (int?)null,
+                WithheldCount = vm.WithheldCarrierCodes + vm.WithheldValues,
+            });
+        }
+
+        /// <summary>Caller IP: first entry of X-Forwarded-For when behind a proxy, otherwise the remote address.</summary>
+        private string? ClientIp()
+        {
+            var xff = Request.Headers["X-Forwarded-For"];
+            if (!string.IsNullOrWhiteSpace(xff)) return Trunc(xff.Split(',')[0].Trim(), 64);
+            return Trunc(Request.UserHostAddress, 64);
+        }
+
+        private static string? Trunc(string? s, int n) =>
+            string.IsNullOrWhiteSpace(s) ? null : (s!.Length <= n ? s : s.Substring(0, n));
+
+        /// <summary>Non-empty filter fields as a compact JSON object.</summary>
+        private static string Json(Dictionary<string, string?> d) =>
+            new JavaScriptSerializer().Serialize(d.Where(kv => !string.IsNullOrWhiteSpace(kv.Value))
+                                                  .ToDictionary(kv => kv.Key, kv => kv.Value));
 
         // ------------------------------------------------------------ read form
 
@@ -496,5 +560,232 @@ namespace TariffHub
 
         protected static string BasisLabel(string? b) =>
             b is null ? "" : Global.Master.Label("charge_basis", b) is var l && l != b ? l : Bases.TryGetValue(b, out var label) ? label : b;
+
+        // ============================================================ ocean mode
+        // Ocean is self-contained: plain HTML controls read from Request.Form (like show_ccy), cascading
+        // country -> port -> city on each end with a background form submit, and server-rendered results.
+
+        private void LoadOcean()
+        {
+            var q = IsPostBack ? ReadOceanQuery() : new OceanQuery();
+            var svc = new OceanService(Global.Repository, Global.Redactor, Global.Master);
+            var vm = svc.BuildForm(q);
+            if (IsPostBack && Request.Form[btnSearch.UniqueID] is not null)
+            {
+                svc.Search(vm);
+                LogOcean(vm);
+            }
+
+            txtShipDate.Text = q.ShipDate?.ToString("yyyy-MM-dd", Inv) ?? "";
+            litMessages.Text = OceanMessages(vm);
+            litResultHeading.Text = "";
+            if (!vm.Installed && vm.ConfigError is null)
+            {
+                litOceanShip.Text = "";
+                litOcean.Text = "<p class=\"notice\">The ocean tariff is not loaded yet (run scripts 70–73).</p>";
+                litOceanResults.Text = "";
+                return;
+            }
+            litOceanShip.Text = OceanShipHtml(vm);
+            litOcean.Text = OceanFormHtml(vm);
+            litOceanResults.Text = vm.Searched ? OceanResultsHtml(vm) : "";
+        }
+
+        /// <summary>Records an ocean search in the usage log (best-effort).</summary>
+        private void LogOcean(OceanViewModel vm)
+        {
+            var q = vm.Query;
+            var filters = new Dictionary<string, string?>
+            {
+                ["mode"] = "Ocean", ["service"] = q.Service, ["routing"] = q.Routing, ["carrier"] = q.Carrier,
+                ["originCountry"] = q.OriginCountry, ["originPort"] = q.OriginPort, ["originCity"] = q.OriginCity,
+                ["destCountry"] = q.DestCountry, ["destPort"] = q.DestPort, ["destCity"] = q.DestCity,
+                ["equipment"] = q.Equipment, ["containers"] = q.Containers?.ToString(Inv),
+                ["weightKg"] = Num(q.WeightKg), ["volumeCbm"] = Num(q.VolumeCbm),
+            };
+            string? Place(string? city, string? port) =>
+                Trunc(string.Join("/", new[] { city, port }.Where(x => !string.IsNullOrWhiteSpace(x))), 120);
+            Global.Audit.Log(new SearchAudit
+            {
+                ClientIp = ClientIp(), ForwardedFor = Request.Headers["X-Forwarded-For"], UserAgent = Trunc(Request.UserAgent, 400),
+                Page = "Search", Action = "SEARCH", Mode = "Ocean", Carrier = q.Carrier,
+                OriginCountry = q.OriginCountry, OriginPlace = Place(q.OriginCity, q.OriginPort),
+                DestCountry = q.DestCountry, DestPlace = Place(q.DestCity, q.DestPort),
+                Service = q.Service, ShipDate = q.ShipDate, WeightKg = q.WeightKg, VolumeCbm = q.VolumeCbm,
+                ShowCurrency = null, Filters = Json(filters),
+                ResultCount = vm.Searched ? vm.Results.Count : (int?)null,
+                WithheldCount = vm.WithheldCarrierCodes + vm.WithheldValues,
+            });
+        }
+
+        private OceanQuery ReadOceanQuery()
+        {
+            string? R(string name) => Request.Form[name];
+            return new OceanQuery
+            {
+                Service = R("o_service") ?? "FCL",
+                Routing = R("o_routing") ?? "PRIMARY",
+                ShipDate = DateTime.TryParseExact(Request.Form[txtShipDate.UniqueID], "yyyy-MM-dd", Inv, DateTimeStyles.None, out var d) ? d : null,
+                Carrier = Blank(R("o_carrier")),
+                OriginCountry = Blank(R("o_country")),
+                OriginPort = Blank(R("o_port")),
+                OriginCity = Blank(R("o_city")),
+                DestCountry = Blank(R("d_country")),
+                DestPort = Blank(R("d_port")),
+                DestCity = Blank(R("d_city")),
+                Equipment = Blank(R("o_equip")),
+                Containers = int.TryParse(R("o_containers"), NumberStyles.Integer, Inv, out var n) && n > 0 ? n : null,
+                WeightKg = Dec(R("o_weight")),
+                VolumeCbm = Dec(R("o_vol")),
+            };
+        }
+
+        private static string? Blank(string? s) => string.IsNullOrWhiteSpace(s) ? null : s!.Trim();
+
+        private static string OceanMessages(OceanViewModel vm)
+        {
+            var sb = new StringBuilder();
+            void Alert(string cls, string text) =>
+                sb.Append("<div class=\"").Append(cls).Append("\">").Append(HttpUtility.HtmlEncode(text)).Append("</div>");
+            if (vm.ConfigError is not null) Alert("err", vm.ConfigError);
+            foreach (var n in vm.Notices) Alert("notice", n);
+            if (vm.WithheldCarrierCodes > 0)
+                Alert("err", $"{vm.WithheldCarrierCodes} carrier code(s) do not follow the anonymised pattern and are withheld from display. Report this to the data owner.");
+            if (vm.WithheldValues > 0)
+                Alert("err", $"{vm.WithheldValues} value(s) on this page contain a real party name and are shown as {Redactor.Placeholder} or left out of the lists. Report this to the data owner.");
+            return sb.ToString();
+        }
+
+        /// <summary>A select that reloads the form on change (cascade), posting the current choices in the background.</summary>
+        private static string Cascade(string name, string firstLabel, IEnumerable<Option> options, string? selected, bool disabled = false)
+        {
+            var sb = new StringBuilder("<select name=\"").Append(name).Append('"');
+            if (disabled) sb.Append(" disabled");
+            else sb.Append(" onchange=\"document.forms[0].submit()\"");
+            sb.Append("><option value=\"\">").Append(HttpUtility.HtmlEncode(firstLabel)).Append("</option>");
+            foreach (var o in options)
+            {
+                sb.Append("<option value=\"").Append(HttpUtility.HtmlAttributeEncode(o.Value)).Append('"');
+                if (string.Equals(o.Value, selected, StringComparison.OrdinalIgnoreCase)) sb.Append(" selected");
+                sb.Append('>').Append(HttpUtility.HtmlEncode(o.Label)).Append("</option>");
+            }
+            return sb.Append("</select>").ToString();
+        }
+
+        private static string OceanShipHtml(OceanViewModel vm)
+        {
+            var q = vm.Query;
+            var sb = new StringBuilder();
+            // Service and routing reload the form (ports and equipment depend on the service).
+            sb.Append("<label title=\"FCL is priced per container (equipment size); LCL by weight or measure.\">Service ")
+              .Append(Cascade("o_service", "", new[] { new Option("FCL", "FCL (full container)"), new Option("LCL", "LCL (less than container)") }, q.Service))
+              .Append("</label>");
+            sb.Append("<label title=\"The primary routing, or the backup where the carrier prices one.\">Routing ")
+              .Append(Cascade("o_routing", "", new[] { new Option("PRIMARY", "Primary"), new Option("BACKUP", "Backup") }, q.Routing))
+              .Append("</label>");
+            sb.Append("<label>Carrier ")
+              .Append(Cascade("o_carrier", "All carriers", vm.Carriers.Select(c => new Option(c, c)), q.Carrier))
+              .Append("</label>");
+            return sb.ToString();
+        }
+
+        private static string OceanFormHtml(OceanViewModel vm)
+        {
+            var q = vm.Query;
+            var sb = new StringBuilder();
+
+            // From
+            sb.Append("<fieldset><legend>From</legend>");
+            sb.Append("<label>Country ").Append(Cascade("o_country", "Choose a country", vm.OriginCountries, q.OriginCountry)).Append("</label>");
+            sb.Append("<label>Port ").Append(PortSelect("o_port", vm.OriginPorts, q.OriginPort, q.OriginCountry is not null)).Append("</label>");
+            if (q.OriginPort is not null && vm.OriginCities.Count > 1)
+                sb.Append("<label title=\"This port is fed by several cities; prices can differ by city. Leave as 'Any city' to see them all.\">City ")
+                  .Append(Cascade("o_city", "Any city at this port", vm.OriginCities.Select(c => new Option(c, c)), q.OriginCity)).Append("</label>");
+            sb.Append("<p class=\"small muted\">Pick the country, then the port. A port fed by several cities can be narrowed to one.</p>");
+            sb.Append("</fieldset>");
+
+            // To
+            sb.Append("<fieldset><legend>To</legend>");
+            sb.Append("<label>Country ").Append(Cascade("d_country", "Choose a country", vm.DestCountries, q.DestCountry)).Append("</label>");
+            sb.Append("<label>Port ").Append(PortSelect("d_port", vm.DestPorts, q.DestPort, q.DestCountry is not null)).Append("</label>");
+            if (q.DestPort is not null && vm.DestCities.Count > 1)
+                sb.Append("<label title=\"This port is fed by several cities; prices can differ by city.\">City ")
+                  .Append(Cascade("d_city", "Any city at this port", vm.DestCities.Select(c => new Option(c, c)), q.DestCity)).Append("</label>");
+            sb.Append("</fieldset>");
+
+            // Cargo: FCL = equipment + containers; LCL = weight + volume.
+            sb.Append("<fieldset><legend>Cargo</legend>");
+            if (q.IsFcl)
+            {
+                sb.Append("<label>Container (equipment) ")
+                  .Append(Cascade("o_equip", "Choose a size", vm.Equipment.Select(ev => new Option(ev, ev)), q.Equipment)).Append("</label>");
+                sb.Append("<label>Containers <input type=\"number\" name=\"o_containers\" min=\"1\" step=\"1\" value=\"")
+                  .Append(q.Containers?.ToString(Inv) ?? "1").Append("\" /></label>");
+                sb.Append("<p class=\"small muted\">FCL is priced per container by size. The quote multiplies the per-container charges by the count.</p>");
+            }
+            else
+            {
+                sb.Append("<label>Weight (kg) <input type=\"number\" name=\"o_weight\" min=\"0\" step=\"any\" value=\"").Append(Num(q.WeightKg)).Append("\" /></label>");
+                sb.Append("<label>Volume (cbm) <input type=\"number\" name=\"o_vol\" min=\"0\" step=\"any\" value=\"").Append(Num(q.VolumeCbm)).Append("\" /></label>");
+                sb.Append("<p class=\"small muted\">LCL is priced by weight or measure (W/M), whichever is greater: 1 cbm = 1000 kg.</p>");
+            }
+            sb.Append("</fieldset>");
+            return sb.ToString();
+        }
+
+        private static string PortSelect(string name, List<OceanPort> ports, string? selected, bool countryChosen)
+        {
+            if (!countryChosen)
+                return "<select disabled><option value=\"\">Choose a country first</option></select>";
+            var opts = ports.Select(p => new Option(p.Code, p.CityCount > 1 ? $"{p.Code} ({p.CityCount} cities)" : p.Code));
+            return Cascade(name, "Any port in this country", opts, selected);
+        }
+
+        private static string OceanResultsHtml(OceanViewModel vm)
+        {
+            var sb = new StringBuilder();
+            var n = vm.Results.Count;
+            sb.Append("<h3>").Append(n).Append(n == 1 ? " lane" : " lanes").Append("</h3>");
+            if (n == 0)
+            {
+                sb.Append("<p class=\"muted\">No ocean lane matches this selection. Check the service (FCL / LCL), routing and the ports.</p>");
+                return sb.ToString();
+            }
+            string E(string? v) => HttpUtility.HtmlEncode(v ?? "");
+            foreach (var r in vm.Results)
+            {
+                sb.Append("<div class=\"scroll results\" style=\"margin-bottom:1rem\">");
+                sb.Append("<p><b>").Append(E(r.CarrierCode)).Append("</b> · ").Append(E(r.Service)).Append(' ').Append(E(r.Routing))
+                  .Append(" · ").Append(E(r.OriginDesc)).Append(" → ").Append(E(r.DestDesc))
+                  .Append(" · <span class=\"small muted\">").Append(E(r.Basis)).Append("</span></p>");
+                sb.Append("<table><thead><tr><th>Stage</th><th>Charge</th><th>Basis</th><th class=\"num\">Rate</th><th class=\"num\">Min</th><th class=\"num\">Max</th><th class=\"num\">Amount</th></tr></thead><tbody>");
+                foreach (var l in r.Lines)
+                {
+                    var stage = l.Leg == "ORIGIN" ? "Origin" : l.Leg == "DESTINATION" ? "Destination" : "Ocean";
+                    sb.Append("<tr><td class=\"small\">").Append(E(stage)).Append("</td><td>").Append(E(l.ChargeName ?? l.ChargeCode))
+                      .Append("</td><td class=\"small muted\">").Append(E(BasisLabel(l.ChargeBasis)))
+                      .Append("</td><td class=\"num\">").Append(E(Rate(l.Rate)))
+                      .Append("</td><td class=\"num\">").Append(l.MinCharge is null ? "" : E(Money(l.MinCharge)))
+                      .Append("</td><td class=\"num\">").Append(l.MaxCharge is null ? "" : E(Money(l.MaxCharge)))
+                      .Append("</td><td class=\"num\">");
+                    if (l.Amount is { } amt)
+                    {
+                        sb.Append(E(Money(amt) + " " + r.Currency));
+                        if (l.LimitApplied is not null) sb.Append(" <span class=\"tag\">").Append(E(l.LimitApplied)).Append(" applied</span>");
+                        if (l.Note is not null) sb.Append(" <span class=\"small muted\">").Append(E(l.Note)).Append("</span>");
+                    }
+                    else sb.Append("<span class=\"small muted\">— ").Append(E(l.Note)).Append("</span>");
+                    sb.Append("</td></tr>");
+                }
+                sb.Append("</tbody></table>");
+                sb.Append("<p class=\"small\">Port-to-port (ocean freight")
+                  .Append(r.Ori is not null ? " + rate increase" : "").Append("): <b>").Append(E(Money(r.PortToPort) + " " + r.Currency)).Append("</b>");
+                sb.Append(" · Door-to-door estimate: <b>").Append(E(Money(r.DoorToDoor) + " " + r.Currency)).Append("</b></p>");
+                foreach (var note in r.Notes) sb.Append("<p class=\"small muted\">").Append(E(note)).Append("</p>");
+                sb.Append("</div>");
+            }
+            sb.Append("<p class=\"small muted\">Door-to-door adds the standard (non air-ride) pickup and delivery. FCL per-container charges are multiplied by the container count; LCL is priced by weight or measure. Lanes are ordered cheapest door-to-door first.</p>");
+            return sb.ToString();
+        }
     }
 }

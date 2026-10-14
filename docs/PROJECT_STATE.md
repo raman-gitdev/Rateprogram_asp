@@ -174,6 +174,11 @@ names.
 | **M1C17** | 19 | Ground | EMEA LTL, award sheet "NEW RATE AWARDED (Ext & GRI (2)", EUR / CZK, validity per lane as on the card (mostly to 2026-03-31; loaded anyway, test data) |
 | **M1C18** | 20 | Air | Forwarder RFQ award, airport to airport, CON / B2B, currency per lane, 2026-06-15 to 2026-12-31. Fuel per kg per lane per month (FUEL_RULE rows); GRI per kg; origin / destination charges per lane |
 | **T1C12** | 13 | Air | Belgium express toolbox, **zone-priced with postcode zones**, EUR, valid from 2026-08-02 (assumed). Air only; Standard (ground) not loaded. Fuel: weekly published %, two series, less 55% / 65% |
+| **PTRC19** | 22 | Ground | Germany domestic LTL (client PTR), postcode area → area (2-digit), 90,712 rates over 46 bands, EUR, 2026-07-01 to 2027-04-30. Maut 4.2% ≤2500 kg / 8% above as a weight-scoped surcharge; 4 optional express upgrades. Facility / partner names not loaded |
+| **PTRC20** | 23 | Air + Ground | Zone express/freight (client PTR), BE/CZ/HU × export + import, **zone-priced like B1C07**. 17 products → service types; flat lumpsum to ~70 kg then per kg. Air 48,424 rates / 17,523 chart; road RE, REF 2,112 rates / 238 chart. BE EUR, CZ CZK, HU HUF. Validity 2026 (assumed; proposed net rates, test data). Zone charts shared across products (service_type NULL); single-zone countries stored country-level |
+| **M1C21** | 24 | Ground | Belgium LTL (BE origin → country + 2-digit area), 82,376 rates over 42 bands + per-lane minimum charge, EUR, 2026-02-18 to 2026-12-31. "OR" (on request) cells not loaded |
+| **M1C22** | 25 | Ground | Spain network: Standard LTL (postcode → postcode), parcels (ES-ES / ES-PT ≤15 kg), FR57 → ES/PT. 36,354 rates, EUR. Codes normalised UK→GB, PO→PL, SU→SE; postcodes stripped of spaces/dashes. Surcharges (68): 6% general + 6.20% maut (DE/CH/AT/CZ/HU/PL/SE) auto; FR57 → ES/PT retagged `ALLIN` (no 6%); 58 optional per-country customs / IMO / UK-collect rows |
+| **B1C23** | 26 | **Ocean** (new mode) | Port-to-port, USD. 36,671 charge rows in `ocean_tariff` (FCL per container; LCL per W/M min/max; FCL Primary 32,502 + Backup 143, LCL 4,026), monthly ORI adder 1,897 (`ocean_ori`), 16 pass-through accessorials (`ocean_accessorial`). New tables (70–73). LGB services kept as `LGB-A`/`LGB-B` (line name not stored). **Ocean search mode + Loaded-page section built (app)** |
 
 ### Air row counts (check after any reload)
 
@@ -503,6 +508,44 @@ There is **no authentication**: anyone on the LAN who reaches the port sees ever
 ---
 
 ## 12. Change log
+
+**2026-10-14**
+- New transport mode **Ocean** (client B1): tables `ocean_tariff` / `ocean_ori` / `ocean_accessorial` (70); carrier B1C23 loaded —
+  card (71), monthly ORI adder (72), accessorials (73). Card saved as-is (one row per lane × equipment × charge line); FCL by
+  container, LCL by W/M (min/max). Verified against the sheets (charge-cell total 35,161,306.90 both sides).
+- Run order after 69: **70 → 71 → 72 → 73**. No change to existing tables.
+- **Ocean search mode built** (app). New third mode on the rate search (`TariffMode.Ocean`), kept apart from the
+  ground/air pipeline: `Logic/OceanService.cs` + `Models/OceanModels.cs`, with the SQL in `Data/TariffRepository.cs`
+  (`OceanCountries` / `OceanPorts` / `OceanCities` / `OceanEquipment` / `OceanCharges` / `OceanCarrierOf` / `OceanOri`).
+  The form drills **country → port (→ city** when a port is fed by several, since prices can differ by city); FCL takes
+  an equipment size + container count, LCL takes weight and/or volume (W/M = max(cbm, kg/1000), clamped min/max). A port
+  chosen without a city quotes every city-lane under that port pair (capped at 50). The result shows every charge line by
+  leg (origin / ocean / destination, default STANDARD non-air pickup & delivery), adds the month's ORI to FCL ocean
+  freight, and gives both a port-to-port and a door-to-door total; lanes ordered cheapest door-to-door first.
+  `Default.aspx` hides the ground/air form when Ocean (plain HTML selects read from `Request.Form`, cascading by a
+  background form submit; the shared Search button runs the quote). Carrier codes still pass the anonymised check.
+- **Loaded-page Ocean section built.** `OceanCoverage()` + `OceanLoaded()` feed a third **Ocean** toggle on the coverage
+  map (port → port vs country-only) and an Ocean block in the per-carrier table (FCL/LCL rows, accessorials, ORI). Reads live.
+- Verified on scratch: FCL Ansan/PUS → Gloucester/NYC 40HC door-to-door = $8,306 (incl. $1,100 ORI); LCL 3 W/M lane = $1,437
+  with the delivery min-charge clamp. All nine app files delivered to the device and compared byte-for-byte.
+
+**2026-10-13 (later)**
+- New carriers (client M1): M1C21 Belgium LTL (66), M1C22 Spain network LTL + parcels + FR57 (67), M1C22 EXTRAS surcharges (68).
+- Both fit the existing code scheme. Run after 65: **66, 67, then 68**. 68 widens `ground_tariff.rate_tag` to allow `ALLIN`.
+- App (`Data/TariffRepository.cs`): surcharges can now be scoped by **destination country** and **rate tag**. This enables
+  M1C22's maut (per dest country) and excludes the all-inclusive FR57 → ES/PT rates from the 6% (they are tagged `ALLIN`).
+  It also makes the existing per-destination-country / SPOT vs CONTRACT surcharges (e.g. A1C01) apply only where they should,
+  instead of to every lane — rebuild and re-check A1C01 totals after deploying.
+- M1C22 conditional fees (per-TN, per-pallet-day, "according to liquidation") are not priced; they stay in the source card.
+
+**2026-10-13**
+- New carriers (client PTR): PTRC19 Germany domestic LTL (64), PTRC20 zone express/freight BE/CZ/HU (65).
+- Schema: `carrier_code` rule widened to a 1–4 letter client prefix so `PTRC19`/`PTRC20` are valid (63).
+- App (`Data/TariffRepository.cs`): the anonymised-code filter accepts the new prefix; **surcharges can be weight-scoped**
+  (what makes PTRC19's maut switch 4.2% → 8% at 2500 kg). No database schema change for the weight-scope part.
+- PTRC20 reuses the B1C07 zone model (no new tables): zone charts shared across products by leaving `service_type` NULL on
+  the chart; single-zone countries stored country-level (so UK-style prefixes that map to one zone need no postcode range).
+- Run order now 44 … 62, then **63 → 64 → 65**. 65 needs 35, 44, 55 and 63.
 
 **2026-10-12**
 - New carriers: M1C16 (54), B1C07 18 country cards (56, replaces the China load), M1C17 (57), M1C18 (58), M1C15 (60).

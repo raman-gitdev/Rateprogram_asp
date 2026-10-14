@@ -265,5 +265,23 @@ namespace TariffHub
         /// To modify move field declaration from designer file to code-behind file.
         /// </remarks>
         protected global::System.Web.UI.WebControls.Repeater rptResults;
+
+        /// <summary>phGaFilters control (ground / air Shipment filters).</summary>
+        protected global::System.Web.UI.WebControls.PlaceHolder phGaFilters;
+
+        /// <summary>litOceanShip control (ocean service / routing / carrier).</summary>
+        protected global::System.Web.UI.WebControls.Literal litOceanShip;
+
+        /// <summary>phGaForm control (ground / air From / To / Cargo / Vehicle).</summary>
+        protected global::System.Web.UI.WebControls.PlaceHolder phGaForm;
+
+        /// <summary>litOcean control (ocean From / To / Cargo form).</summary>
+        protected global::System.Web.UI.WebControls.Literal litOcean;
+
+        /// <summary>phGaResults control (ground / air results).</summary>
+        protected global::System.Web.UI.WebControls.PlaceHolder phGaResults;
+
+        /// <summary>litOceanResults control (ocean quote results).</summary>
+        protected global::System.Web.UI.WebControls.Literal litOceanResults;
     }
 }

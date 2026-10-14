@@ -1,7 +1,7 @@
 <%@ Page Title="Loaded tariffs" Language="C#" MasterPageFile="~/Site.Master" AutoEventWireup="true" CodeBehind="Loaded.aspx.cs" Inherits="TariffHub.Loaded" %>
 
 <asp:Content ID="Main" ContentPlaceHolderID="MainContent" runat="server">
-<%-- What is loaded: a world map of the country pairs every carrier prices (Ground / Air) and one row per carrier.
+<%-- What is loaded: a world map of the country pairs every carrier prices (Ground / Air / Ocean) and one row per carrier.
      Read live from the rate tables (cached 10 minutes; "Refresh now" reads again). Scripts come from the app itself (no CDN). --%>
 <style>
 .cov { --pc:#0e6b5c; --city:#58a693; --zone:#b9d8cf; --arc:#c2562d; --sel:#1d3557; --land:#e3e6ea; --sea:#eef3f8;
@@ -60,7 +60,7 @@
 
   <div class="bar">
     <div class="seg" role="group" aria-label="Mode">
-      <button type="button" id="tGround" aria-pressed="true">Ground</button><button type="button" id="tAir" aria-pressed="false">Air</button>
+      <button type="button" id="tGround" aria-pressed="true">Ground</button><button type="button" id="tAir" aria-pressed="false">Air</button><button type="button" id="tOcean" aria-pressed="false">Ocean</button>
     </div>
     <div class="stats" id="stats"></div>
   </div>
@@ -88,7 +88,7 @@ const DATA = <%= DataJson %>;
 if (!DATA || !window.d3 || !window.topojson || !window.TH_WORLD) { return; }
 const fmt = v => (+v).toLocaleString('en');
 const name = c => DATA.names[c] || c;
-const RANK = {COUNTRY:1, CITY:2, POSTCODE:3, AIRPORT:4};
+const RANK = {COUNTRY:1, CITY:2, POSTCODE:3, AIRPORT:4, PORT:2};
 const GLVL = {POSTCODE:'postcode → postcode', CITY:'city → city', COUNTRY:'zone / country'};
 const ALVL = ['', 'zone / country', 'city → city', 'postcode zone', 'airport → airport'];
 const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[ch]));
@@ -107,7 +107,7 @@ function pairsOf(lanes) {
   }
   return m;
 }
-const g = pairsOf(DATA.ground), a = pairsOf(DATA.air);
+const g = pairsOf(DATA.ground), a = pairsOf(DATA.air), o = pairsOf(DATA.ocean || []);
 const zipMap = new Map(DATA.zip.map(z => [z[0] + '>' + z[1], z]));
 function countryStats(pairs) {
   const m = new Map();
@@ -117,7 +117,7 @@ function countryStats(pairs) {
   }
   return m;
 }
-const gStats = countryStats(g), aStats = countryStats(a);
+const gStats = countryStats(g), aStats = countryStats(a), oStats = countryStats(o);
 
 // ---------- totals and the carrier table
 (function totals() {
@@ -126,15 +126,16 @@ const gStats = countryStats(g), aStats = countryStats(a);
   const st = (v, l) => `<div class="stat"><b>${fmt(v)}</b><span>${l}</span></div>`;
   document.getElementById('totals').innerHTML =
     st(cars.size, 'carriers') + st(rows, 'rows loaded (rates, zone charts, extra charges, transit)') +
-    st(g.size, 'ground country pairs') + st(a.size, 'air country pairs') +
-    st(new Set([...gStats.keys(), ...aStats.keys()]).size, 'countries covered');
+    st(g.size, 'ground country pairs') + st(a.size, 'air country pairs') + st(o.size, 'ocean country pairs') +
+    st(new Set([...gStats.keys(), ...aStats.keys(), ...oStats.keys()]).size, 'countries covered');
 
-  const pairs = {Ground: new Map(), Air: new Map()};
-  for (const [mode, lanes] of [['Ground', DATA.ground], ['Air', DATA.air]])
+  const pairs = {Ground: new Map(), Air: new Map(), Ocean: new Map()};
+  for (const [mode, lanes] of [['Ground', DATA.ground], ['Air', DATA.air], ['Ocean', DATA.ocean || []]])
     for (const l of lanes) pairs[mode].set(l[0], (pairs[mode].get(l[0]) || 0) + 1);
   let h = '<thead><tr><th>Carrier</th><th>Services</th><th class="n">Rate rows</th><th class="n">of which freight</th><th class="n">Zone chart rows</th>' +
           '<th class="n">Extra charges</th><th class="n">Transit rows</th><th class="n">Country pairs</th><th>Currencies</th><th>Valid from</th><th>Valid to</th><th>Last loaded</th></tr></thead><tbody>';
-  for (const mode of ['Ground', 'Air']) {
+  const pairCount = {Ground: g, Air: a, Ocean: o};
+  for (const mode of ['Ground', 'Air', 'Ocean']) {
     const list = C.filter(r => r[0] === mode); if (!list.length) continue;
     const t = [0, 0, 0, 0, 0];
     h += `<tr class="mode"><td colspan="12">${mode}</td></tr>`;
@@ -145,7 +146,7 @@ const gStats = countryStats(g), aStats = countryStats(a);
            `<td class="n">${np ? fmt(np) : ''}</td><td>${esc(r[5])}</td><td class="nw">${esc(r[6])}</td><td class="nw">${esc(r[7])}</td><td class="nw">${esc(r[8])}</td></tr>`;
     }
     h += `<tr class="tot"><td>${mode} total</td><td>${list.length} carriers</td><td class="n">${fmt(t[0])}</td><td class="n">${fmt(t[1])}</td><td class="n">${fmt(t[2])}</td>` +
-         `<td class="n">${fmt(t[3])}</td><td class="n">${fmt(t[4])}</td><td class="n">${fmt((mode === 'Ground' ? g : a).size)}</td><td colspan="4"></td></tr>`;
+         `<td class="n">${fmt(t[3])}</td><td class="n">${fmt(t[4])}</td><td class="n">${fmt(pairCount[mode].size)}</td><td colspan="4"></td></tr>`;
   }
   document.getElementById('carriers').innerHTML = h + '</tbody>';
 })();
@@ -176,17 +177,21 @@ svg.call(d3.zoom().scaleExtent([1, 12]).on('zoom', e => {
 
 let mode = 'GROUND', sel = null, dir = 'out';
 const tip = document.getElementById('tip');
-const cur = () => mode === 'GROUND' ? g : a;
-const curStats = () => mode === 'GROUND' ? gStats : aStats;
+const cur = () => mode === 'GROUND' ? g : mode === 'AIR' ? a : o;
+const curStats = () => mode === 'GROUND' ? gStats : mode === 'AIR' ? aStats : oStats;
 function fillFor(f) {
   const s = curStats().get(f.cc); if (!s) return 'var(--land)';
   if (mode === 'GROUND') return s.best >= 3 ? 'var(--pc)' : s.best === 2 ? 'var(--city)' : 'var(--zone)';
+  if (mode === 'OCEAN') return s.best >= 2 ? 'var(--city)' : 'var(--zone)';
   return s.best === 4 ? 'var(--a4)' : s.best === 3 ? 'var(--a3)' : s.best === 2 ? 'var(--a2)' : 'var(--a1)';
 }
 function legend() {
-  const none = '<div><i style="background:var(--land);border:1px solid var(--line)"></i>no ' + (mode === 'GROUND' ? 'ground' : 'air') + ' rates</div>';
+  const noun = mode === 'GROUND' ? 'ground' : mode === 'OCEAN' ? 'ocean' : 'air';
+  const none = '<div><i style="background:var(--land);border:1px solid var(--line)"></i>no ' + noun + ' rates</div>';
   document.getElementById('legend').innerHTML = mode === 'GROUND'
     ? '<b>Ground: finest detail priced</b><div><i style="background:var(--pc)"></i>postcode → postcode</div><div><i style="background:var(--city)"></i>city → city</div><div><i style="background:var(--zone)"></i>zone / country only</div>' + none
+    : mode === 'OCEAN'
+    ? '<b>Ocean: port coverage</b><div><i style="background:var(--city)"></i>port → port</div><div><i style="background:var(--zone)"></i>country only</div>' + none
     : '<b>Air: finest detail priced</b><div><i style="background:var(--a4)"></i>airport → airport</div><div><i style="background:var(--a3)"></i>postcode zone</div><div><i style="background:var(--a2)"></i>city → city</div><div><i style="background:var(--a1)"></i>zone / country only</div>' + none;
 }
 function stats() {
@@ -194,6 +199,8 @@ function stats() {
   const c = [0, 0, 0, 0, 0]; let n = 0; cur().forEach(p => { c[p.best]++; n += p.n; });
   document.getElementById('stats').innerHTML = mode === 'GROUND'
     ? st(g.size, 'country pairs') + st(c[3], 'postcode → postcode') + st(n, 'postcode-area lanes') + st(c[2], 'city → city only') + st(c[1], 'zone / country only')
+    : mode === 'OCEAN'
+    ? st(o.size, 'country pairs') + st(c[2], 'port → port') + st(n, 'port-pair lanes') + st(c[1], 'country only')
     : st(a.size, 'country pairs') + st(c[4], 'airport → airport') + st(n, 'airport-pair lanes') + st(c[3], 'postcode zone') + st(c[2], 'city → city') + st(c[1], 'zone / country only');
 }
 function arc(o, d) {
@@ -212,17 +219,21 @@ function drawArcs() {
   for (const {c, p} of partners()) {
     const dd = arc(dir === 'out' ? sel : c, dir === 'out' ? c : sel); if (!dd) continue;
     const col = mode === 'GROUND' ? (p.best >= 3 ? 'var(--pc)' : p.best === 2 ? 'var(--city)' : 'var(--arc)')
+              : mode === 'OCEAN' ? (p.best >= 2 ? 'var(--city)' : 'var(--arc)')
                                   : (p.best === 4 ? 'var(--a4)' : p.best >= 2 ? 'var(--a3)' : 'var(--arc)');
-    const w = mode === 'GROUND' ? (p.best >= 3 ? 1.8 : 1.1) : Math.min(.6 + p.carriers.size * .45, 3.5);
+    const w = mode === 'GROUND' ? (p.best >= 3 ? 1.8 : 1.1)
+            : mode === 'OCEAN' ? Math.min(.8 + p.carriers.size * .4, 3) : Math.min(.6 + p.carriers.size * .45, 3.5);
     arcs.append('path').attr('class', 'arc').attr('d', dd).attr('stroke', col).attr('data-w', w).attr('stroke-width', w / k);
   }
 }
-const lvShort = lv => ({POSTCODE: 'postcode', CITY: 'city', COUNTRY: 'zone', AIRPORT: 'airport'}[lv]);
+const lvShort = lv => ({POSTCODE: 'postcode', CITY: 'city', COUNTRY: 'zone', AIRPORT: 'airport', PORT: 'port'}[lv]);
 function panel() {
   const P = document.getElementById('panel');
   if (!sel) {
     P.innerHTML = mode === 'GROUND'
       ? '<h3>Ground coverage</h3><p class="muted">Pick a country on the map. Dark green countries have postcode-level lanes; the table then lists every connected country, the carriers and how many postcode-area lanes each pair has.</p>' + topZip()
+      : mode === 'OCEAN'
+      ? '<h3>Ocean coverage</h3><p class="muted">Pick a country on the map to see every country it is priced to or from, how many port pairs each connection has and by which carriers. Open the Ocean mode on the rate search to quote a lane.</p>'
       : '<h3>Air coverage</h3><p class="muted">Pick a country on the map to see every country it is priced to or from, at what detail (airport pair, postcode zone, city or country zone) and by which carriers.</p>';
     return;
   }
@@ -231,7 +242,8 @@ function panel() {
           `<div class="seg" role="group" aria-label="Direction"><button type="button" data-dir="out" aria-pressed="${dir === 'out'}">From ${sel} (${s ? s.out : 0})</button>` +
           `<button type="button" data-dir="in" aria-pressed="${dir === 'in'}">To ${sel} (${s ? s.in : 0})</button></div>`;
   if (!list.length) { P.innerHTML = h + '<p class="muted">No rates in this direction.</p>'; bindDir(); return; }
-  h += `<table><thead><tr><th>${dir === 'out' ? 'To' : 'From'}</th><th>Detail</th><th>Carriers</th><th class="n">${mode === 'GROUND' ? 'Postcode lanes' : 'Airport pairs'}</th></tr></thead><tbody>`;
+  const nHead = mode === 'GROUND' ? 'Postcode lanes' : mode === 'OCEAN' ? 'Port pairs' : 'Airport pairs';
+  h += `<table><thead><tr><th>${dir === 'out' ? 'To' : 'From'}</th><th>Detail</th><th>Carriers</th><th class="n">${nHead}</th></tr></thead><tbody>`;
   for (const {c, p} of list) {
     const cars = [...p.carriers.entries()].map(([k, v]) => k + (v !== p.lvl ? ' (' + lvShort(v) + ')' : '')).join(', ');
     let n = p.n ? fmt(p.n) : '';
@@ -251,11 +263,17 @@ countries.on('click', (e, f) => { sel = sel === f.cc ? null : f.cc; render(); })
   .on('mousemove', (e, f) => {
     const s = curStats().get(f.cc), box = document.getElementById('mapbox').getBoundingClientRect();
     tip.hidden = false; tip.style.left = (e.clientX - box.left + 12) + 'px'; tip.style.top = (e.clientY - box.top + 12) + 'px';
-    tip.textContent = name(f.cc || '') + (s ? ` · ${s.out} to, ${s.in} from · best: ` + (mode === 'GROUND' ? GLVL[['', 'COUNTRY', 'CITY', 'POSTCODE'][Math.min(s.best, 3)]] : ALVL[s.best]) : ' · no rates');
+    const lvl = mode === 'GROUND' ? GLVL[['', 'COUNTRY', 'CITY', 'POSTCODE'][Math.min(s ? s.best : 0, 3)]]
+              : mode === 'OCEAN' ? (s && s.best >= 2 ? 'port → port' : 'country only') : ALVL[s ? s.best : 0];
+    tip.textContent = name(f.cc || '') + (s ? ` · ${s.out} to, ${s.in} from · best: ` + lvl : ' · no rates');
   })
   .on('mouseleave', () => tip.hidden = true);
-for (const [id, m] of [['tGround', 'GROUND'], ['tAir', 'AIR']]) document.getElementById(id).onclick = () => {
-  mode = m; document.getElementById('tGround').setAttribute('aria-pressed', m === 'GROUND'); document.getElementById('tAir').setAttribute('aria-pressed', m === 'AIR'); render();
+for (const [id, m] of [['tGround', 'GROUND'], ['tAir', 'AIR'], ['tOcean', 'OCEAN']]) document.getElementById(id).onclick = () => {
+  mode = m; sel = null; dir = 'out';
+  document.getElementById('tGround').setAttribute('aria-pressed', m === 'GROUND');
+  document.getElementById('tAir').setAttribute('aria-pressed', m === 'AIR');
+  document.getElementById('tOcean').setAttribute('aria-pressed', m === 'OCEAN');
+  render();
 };
 
 // ---------- footnote: what the map cannot show

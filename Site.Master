@@ -15,6 +15,7 @@
         <nav>
             <a class="<%: NavClass("Default") %>" href="<%: ResolveUrl("~/") %>">Search rates</a>
             <a class="<%: NavClass("Loaded") %>" href="<%: ResolveUrl("~/Loaded.aspx") %>">Loaded tariffs</a>
+            <a class="<%: NavClass("Audit") %>" href="<%: ResolveUrl("~/Audit.aspx") %>">Search log</a>
         </nav>
     </header>
     <form id="form1" runat="server">

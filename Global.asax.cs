@@ -9,6 +9,7 @@ namespace TariffHub
     public class Global : HttpApplication
     {
         public static TariffRepository Repository { get; private set; } = null!;
+        public static AuditRepository Audit { get; private set; } = null!;
         public static Redactor Redactor { get; private set; } = null!;
         public static MasterData Master { get; private set; } = null!;
 
@@ -22,6 +23,7 @@ namespace TariffHub
                 connectionString = ConfigurationManager.AppSettings["TariffHub.ConnectionString"];
 
             Repository = new TariffRepository(connectionString);
+            Audit = new AuditRepository(connectionString);
             Redactor = new Redactor(ConfigurationManager.AppSettings["TariffHub.RedactTerms"]);
             // Reference data (countries, subdivisions, labels, carrier districts) from db/master/data/*.json.
             Master = new MasterData(System.IO.Path.Combine(HttpRuntime.AppDomainAppPath, "db", "master", "data"));

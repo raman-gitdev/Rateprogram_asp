@@ -1,7 +1,7 @@
 using System;
 namespace TariffHub.Models;
 
-public enum TariffMode { Ground, Air }
+public enum TariffMode { Ground, Air, Ocean }
 
 /// <summary>Form binding model for the search page. Every field is optional.</summary>
 public class SearchQuery
