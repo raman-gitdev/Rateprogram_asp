@@ -1123,7 +1123,7 @@ public sealed class TariffRepository
         var ccol = origin ? "origin_country_code" : "dest_country_code";
         var citycol = origin ? "origin_city" : "dest_city";
         var sql = $"""
-            SELECT {pcol} AS "Code", count(DISTINCT {citycol}) AS "CityCount"
+            SELECT {pcol} AS "Code", count(DISTINCT {citycol})::int AS "CityCount"
             FROM tariff.ocean_tariff
             WHERE service = @Service AND {ccol} = @Country AND {pcol} IS NOT NULL
               AND (@Carrier IS NULL OR carrier_code = @Carrier)
